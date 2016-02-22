@@ -298,17 +298,35 @@ u32 (*arch_gettimeoffset)(void) = default_arch_gettimeoffset;
 static inline u32 arch_gettimeoffset(void) { return 0; }
 #endif
 
+static inline s64 timekeeping_delta_to_ns(struct tk_read_base *tkr,
+					  cycle_t delta)
+{
+	s64 nsec;
+
+	nsec = delta * tkr->mult + tkr->xtime_nsec;
+	nsec >>= tkr->shift;
+
+	/* If arch requires, add in get_arch_timeoffset() */
+	return nsec + arch_gettimeoffset();
+}
+
 static inline s64 timekeeping_get_ns(struct tk_read_base *tkr)
 {
 	cycle_t delta;
 	u64 nsec;
 
 	delta = timekeeping_get_delta(tkr);
+	return timekeeping_delta_to_ns(tkr, delta);
+}
 
-	nsec = (delta * tkr->mult + tkr->xtime_nsec) >> tkr->shift;
+static inline s64 timekeeping_cycles_to_ns(struct tk_read_base *tkr,
+					    cycle_t cycles)
+{
+	cycle_t delta;
 
-	/* If arch requires, add in get_arch_timeoffset() */
-	return nsec + arch_gettimeoffset();
+	/* calculate the delta since the last update_wall_time */
+	delta = clocksource_delta(cycles, tkr->cycle_last, tkr->mask);
+	return timekeeping_delta_to_ns(tkr, delta);
 }
 
 /**
