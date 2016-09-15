@@ -2092,3 +2092,8 @@ static inline void cpufreq_update_this_cpu(struct rq *rq, unsigned int flags) {}
 #else /* arch_scale_freq_capacity */
 #define arch_scale_freq_invariant()     (false)
 #endif
+
+/*
+ * task_may_not_preempt - check whether a task may not be preemptible soon
+ */
+extern bool task_may_not_preempt(struct task_struct *task, int cpu);
