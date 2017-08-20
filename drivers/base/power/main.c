@@ -31,7 +31,6 @@
 #include <linux/suspend.h>
 #include <trace/events/power.h>
 #include <linux/cpufreq.h>
-#include <linux/cpuidle.h>
 #include <linux/timer.h>
 #include <linux/wakeup_reason.h>
 
@@ -128,9 +127,9 @@ void device_pm_add(struct device *dev)
 		 dev->bus ? dev->bus->name : "No Bus", dev_name(dev));
 	device_pm_check_callbacks(dev);
 	mutex_lock(&dpm_list_mtx);
-	if (dev->parent && dev->parent->power.is_prepared)
-		dev_warn(dev, "parent %s should not be sleeping\n",
-			dev_name(dev->parent));
+//	if (dev->parent && dev->parent->power.is_prepared)
+//		dev_warn(dev, "parent %s should not be sleeping\n",
+//			dev_name(dev->parent));
 	list_add_tail(&dev->power.entry, &dpm_list);
 	mutex_unlock(&dpm_list_mtx);
 }
@@ -592,7 +591,6 @@ void dpm_resume_noirq(pm_message_t state)
 	dpm_show_time(starttime, state, "noirq");
 	resume_device_irqs();
 	device_wakeup_disarm_wake_irqs();
-	cpuidle_resume();
 	trace_suspend_resume(TPS("dpm_resume_noirq"), state.event, false);
 }
 
@@ -1025,6 +1023,8 @@ static int __device_suspend_noirq(struct device *dev, pm_message_t state, bool a
 	TRACE_DEVICE(dev);
 	TRACE_SUSPEND(0);
 
+	dpm_wait_for_children(dev, async);
+
 	if (async_error)
 		goto Complete;
 
@@ -1035,8 +1035,6 @@ static int __device_suspend_noirq(struct device *dev, pm_message_t state, bool a
 
 	if (dev->power.syscore || dev->power.direct_complete)
 		goto Complete;
-
-	dpm_wait_for_children(dev, async);
 
 	if (dev->pm_domain) {
 		info = "noirq power domain ";
@@ -1108,7 +1106,6 @@ int dpm_suspend_noirq(pm_message_t state)
 	int error = 0;
 
 	trace_suspend_resume(TPS("dpm_suspend_noirq"), state.event, true);
-	cpuidle_pause();
 	device_wakeup_arm_wake_irqs();
 	suspend_device_irqs();
 	mutex_lock(&dpm_list_mtx);
@@ -1172,6 +1169,8 @@ static int __device_suspend_late(struct device *dev, pm_message_t state, bool as
 
 	__pm_runtime_disable(dev, false);
 
+	dpm_wait_for_children(dev, async);
+
 	if (async_error)
 		goto Complete;
 
@@ -1182,8 +1181,6 @@ static int __device_suspend_late(struct device *dev, pm_message_t state, bool as
 
 	if (dev->power.syscore || dev->power.direct_complete)
 		goto Complete;
-
-	dpm_wait_for_children(dev, async);
 
 	if (dev->pm_domain) {
 		info = "late power domain ";

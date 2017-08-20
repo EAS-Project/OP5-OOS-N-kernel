@@ -1214,6 +1214,7 @@ static void gesture_judge(struct synaptics_ts_data *ts)
 	}
 
 // carlo@oneplus.net 2015-05-25, begin.
+/*
 	keyCode = UnkownGestrue;
 	// Get key code based on registered gesture.
 	switch (gesture) {
@@ -1251,6 +1252,7 @@ static void gesture_judge(struct synaptics_ts_data *ts)
 			break;
 	}
 // carlo@oneplus.net 2015-05-25, end.
+*/
 
 	TPD_ERR("detect %s gesture\n", gesture == DouTap ? "(double tap)" :
 			gesture == UpVee ? "(V)" :
@@ -1295,7 +1297,6 @@ static void gesture_judge(struct synaptics_ts_data *ts)
 }
 #endif
 /***************end****************/
-static char prlog_count = 0;
 #ifdef REPORT_2D_PRESSURE
 static unsigned char pres_value = 1;
 #endif
@@ -1492,8 +1493,6 @@ void int_touch(void)
 
 	if (finger_num == 0/* && last_status && (check_key <= 1)*/)
 	{
-		if (3 == (++prlog_count % 6))
-			TPD_ERR("all finger up\n");
 		input_report_key(ts->input_dev, BTN_TOOL_FINGER, 0);
 #ifndef TYPE_B_PROTOCOL
 		input_mt_sync(ts->input_dev);

@@ -763,7 +763,6 @@ const char * const vmstat_text[] = {
 	"workingset_nodereclaim",
 	"nr_anon_transparent_hugepages",
 	"nr_free_cma",
-	"nr_swapcache",
 
 	/* enum writeback_stat_item counters */
 	"nr_dirty_threshold",
@@ -773,7 +772,6 @@ const char * const vmstat_text[] = {
 	/* enum vm_event_item counters */
 	"pgpgin",
 	"pgpgout",
-	"pgpgoutclean",
 	"pswpin",
 	"pswpout",
 
@@ -827,7 +825,6 @@ const char * const vmstat_text[] = {
 	"compact_stall",
 	"compact_fail",
 	"compact_success",
-	"compact_daemon_wake",
 #endif
 
 #ifdef CONFIG_HUGETLB_PAGE
@@ -928,10 +925,10 @@ static char * const migratetype_names[MIGRATE_TYPES] = {
 	"Unmovable",
 	"Movable",
 	"Reclaimable",
+	"HighAtomic",
 #ifdef CONFIG_CMA
 	"CMA",
 #endif
-	"HighAtomic",
 #ifdef CONFIG_MEMORY_ISOLATION
 	"Isolate",
 #endif
@@ -1391,7 +1388,7 @@ static cpumask_var_t cpu_stat_off;
 
 static void vmstat_update(struct work_struct *w)
 {
-	if (refresh_cpu_vm_stats(true) && !cpu_isolated(smp_processor_id())) {
+	if (refresh_cpu_vm_stats(true)) {
 		/*
 		 * Counters were updated so we expect more updates
 		 * to occur in the future. Keep on running the
@@ -1403,13 +1400,22 @@ static void vmstat_update(struct work_struct *w)
 	} else {
 		/*
 		 * We did not update any counters so the app may be in
-		 * a mode where it does not cause counter updates or the cpu
-		 * was isolated.
+		 * a mode where it does not cause counter updates.
 		 * We may be uselessly running vmstat_update.
 		 * Defer the checking for differentials to the
 		 * shepherd thread on a different processor.
 		 */
-		cpumask_set_cpu(smp_processor_id(), cpu_stat_off);
+		int r;
+		/*
+		 * Shepherd work thread does not race since it never
+		 * changes the bit if its zero but the cpu
+		 * online / off line code may race if
+		 * worker threads are still allowed during
+		 * shutdown / startup.
+		 */
+		r = cpumask_test_and_set_cpu(smp_processor_id(),
+			cpu_stat_off);
+		VM_BUG_ON(r);
 	}
 }
 
@@ -1471,7 +1477,7 @@ static void vmstat_shepherd(struct work_struct *w)
 	get_online_cpus();
 	/* Check processors whose vmstat worker threads have been disabled */
 	for_each_cpu(cpu, cpu_stat_off)
-		if (!cpu_isolated(cpu) && need_update(cpu) &&
+		if (need_update(cpu) &&
 			cpumask_test_and_clear_cpu(cpu, cpu_stat_off))
 
 			queue_delayed_work_on(cpu, vmstat_wq,

@@ -46,21 +46,6 @@ static DEFINE_PER_CPU(struct tick_sched, tick_cpu_sched);
  */
 static ktime_t last_jiffies_update;
 
-u64 jiffy_to_ktime_ns(u64 *now, u64 *jiffy_ktime_ns)
-{
-	u64 cur_jiffies;
-	unsigned long seq;
-
-	do {
-		seq = read_seqbegin(&jiffies_lock);
-		*now = ktime_get_ns();
-		*jiffy_ktime_ns = ktime_to_ns(last_jiffies_update);
-		cur_jiffies = get_jiffies_64();
-	} while (read_seqretry(&jiffies_lock, seq));
-
-	return cur_jiffies;
-}
-
 struct tick_sched *tick_get_tick_sched(int cpu)
 {
 	return &per_cpu(tick_cpu_sched, cpu);
@@ -163,7 +148,7 @@ static void tick_sched_handle(struct tick_sched *ts, struct pt_regs *regs)
 	 * when we go busy again does not account too much ticks.
 	 */
 	if (ts->tick_stopped) {
-		touch_softlockup_watchdog_sched();
+		touch_softlockup_watchdog();
 		if (is_idle_task(current))
 			ts->idle_jiffies++;
 	}
@@ -450,7 +435,7 @@ static void tick_nohz_update_jiffies(ktime_t now)
 	tick_do_update_jiffies64(now);
 	local_irq_restore(flags);
 
-	touch_softlockup_watchdog_sched();
+	touch_softlockup_watchdog();
 }
 
 /*
@@ -721,7 +706,7 @@ static void tick_nohz_restart_sched_tick(struct tick_sched *ts, ktime_t now)
 	update_cpu_load_nohz();
 
 	calc_load_exit_idle();
-	touch_softlockup_watchdog_sched();
+	touch_softlockup_watchdog();
 	/*
 	 * Cancel the scheduled timer and restore the tick
 	 */
@@ -888,6 +873,18 @@ ktime_t tick_nohz_get_sleep_length(void)
 	struct tick_sched *ts = this_cpu_ptr(&tick_cpu_sched);
 
 	return ts->sleep_length;
+}
+
+/**
+ * tick_nohz_get_idle_calls - return the current idle calls counter value
+ *
+ * Called from the schedutil frequency scaling governor in scheduler context.
+ */
+unsigned long tick_nohz_get_idle_calls(void)
+{
+	struct tick_sched *ts = this_cpu_ptr(&tick_cpu_sched);
+
+	return ts->idle_calls;
 }
 
 static void tick_nohz_account_idle_ticks(struct tick_sched *ts)
@@ -1263,5 +1260,5 @@ int tick_check_oneshot_change(int allow_nohz)
 
 ktime_t * get_next_event_cpu(unsigned int cpu)
 {
-	return &(per_cpu(tick_cpu_device, cpu).evtdev->next_event);
+    return &(per_cpu(tick_cpu_device, cpu).evtdev->next_event);
 }
