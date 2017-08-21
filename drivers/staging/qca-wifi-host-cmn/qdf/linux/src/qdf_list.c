@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2017 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2016 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -36,7 +36,6 @@
 /* Include files */
 #include <qdf_list.h>
 #include <linux/export.h>
-#include <qdf_module.h>
 
 /* Function declarations and documenation */
 
@@ -53,7 +52,7 @@ QDF_STATUS qdf_list_insert_front(qdf_list_t *list, qdf_list_node_t *node)
 	list->count++;
 	return QDF_STATUS_SUCCESS;
 }
-qdf_export_symbol(qdf_list_insert_front);
+EXPORT_SYMBOL(qdf_list_insert_front);
 
 /**
  * qdf_list_insert_back() - insert input node at back of the list
@@ -68,7 +67,7 @@ QDF_STATUS qdf_list_insert_back(qdf_list_t *list, qdf_list_node_t *node)
 	list->count++;
 	return QDF_STATUS_SUCCESS;
 }
-qdf_export_symbol(qdf_list_insert_back);
+EXPORT_SYMBOL(qdf_list_insert_back);
 
 /**
  * qdf_list_insert_back_size() - insert input node at back of list and save
@@ -87,7 +86,7 @@ QDF_STATUS qdf_list_insert_back_size(qdf_list_t *list,
 	*p_size = list->count;
 	return QDF_STATUS_SUCCESS;
 }
-qdf_export_symbol(qdf_list_insert_back_size);
+EXPORT_SYMBOL(qdf_list_insert_back_size);
 
 /**
  * qdf_list_remove_front() - remove node from front of the list
@@ -110,7 +109,7 @@ QDF_STATUS qdf_list_remove_front(qdf_list_t *list, qdf_list_node_t **node2)
 
 	return QDF_STATUS_SUCCESS;
 }
-qdf_export_symbol(qdf_list_remove_front);
+EXPORT_SYMBOL(qdf_list_remove_front);
 
 /**
  * qdf_list_remove_back() - remove node from end of the list
@@ -133,7 +132,7 @@ QDF_STATUS qdf_list_remove_back(qdf_list_t *list, qdf_list_node_t **node2)
 
 	return QDF_STATUS_SUCCESS;
 }
-qdf_export_symbol(qdf_list_remove_back);
+EXPORT_SYMBOL(qdf_list_remove_back);
 
 /**
  * qdf_list_has_node() - check if a node is in a list
@@ -182,7 +181,7 @@ QDF_STATUS qdf_list_remove_node(qdf_list_t *list,
 
 	return QDF_STATUS_SUCCESS;
 }
-qdf_export_symbol(qdf_list_remove_node);
+EXPORT_SYMBOL(qdf_list_remove_node);
 
 /**
  * qdf_list_peek_front() - peek front node from list
@@ -194,7 +193,6 @@ qdf_export_symbol(qdf_list_remove_node);
 QDF_STATUS qdf_list_peek_front(qdf_list_t *list, qdf_list_node_t **node2)
 {
 	struct list_head *listptr;
-
 	if (list_empty(&list->anchor))
 		return QDF_STATUS_E_EMPTY;
 
@@ -202,7 +200,7 @@ QDF_STATUS qdf_list_peek_front(qdf_list_t *list, qdf_list_node_t **node2)
 	*node2 = listptr;
 	return QDF_STATUS_SUCCESS;
 }
-qdf_export_symbol(qdf_list_peek_front);
+EXPORT_SYMBOL(qdf_list_peek_front);
 
 /**
  * qdf_list_peek_next() - peek next node of input node in the list
@@ -244,7 +242,7 @@ QDF_STATUS qdf_list_peek_next(qdf_list_t *list, qdf_list_node_t *node,
 
 	return QDF_STATUS_SUCCESS;
 }
-qdf_export_symbol(qdf_list_peek_next);
+EXPORT_SYMBOL(qdf_list_peek_next);
 
 /**
  * qdf_list_empty() - check if the list is empty
@@ -256,4 +254,4 @@ bool qdf_list_empty(qdf_list_t *list)
 {
 	return list_empty(&list->anchor);
 }
-qdf_export_symbol(qdf_list_empty);
+EXPORT_SYMBOL(qdf_list_empty);

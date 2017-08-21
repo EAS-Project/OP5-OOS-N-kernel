@@ -369,7 +369,6 @@ static void hdd_ocb_set_config_callback(void *context_ptr, void *response_ptr)
 	spin_lock(&hdd_context_lock);
 	if (context->magic == HDD_OCB_MAGIC) {
 		hdd_adapter_t *adapter = context->adapter;
-
 		if (!resp) {
 			context->status = -EINVAL;
 			complete(&context->completion_evt);
@@ -423,7 +422,7 @@ static int hdd_ocb_set_config_req(hdd_adapter_t *adapter,
 	context.adapter = adapter;
 	context.magic = HDD_OCB_MAGIC;
 
-	hdd_debug("Disabling queues");
+	hdd_notice("Disabling queues");
 	wlan_hdd_netif_queue_control(adapter,
 				     WLAN_STOP_ALL_NETIF_QUEUE_N_CARRIER,
 				     WLAN_CONTROL_PATH);
@@ -1425,7 +1424,7 @@ __wlan_hdd_cfg80211_ocb_get_tsf_timer(struct wiphy *wiphy,
 		goto end;
 	}
 
-	hdd_debug("Got TSF timer response, high=%d, low=%d",
+	hdd_notice("Got TSF timer response, high=%d, low=%d",
 	       adapter->ocb_get_tsf_timer_resp.timer_high,
 	       adapter->ocb_get_tsf_timer_resp.timer_low);
 

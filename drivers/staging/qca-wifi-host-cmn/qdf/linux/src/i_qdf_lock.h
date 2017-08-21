@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2017 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2016 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -168,7 +168,6 @@ static inline int __qdf_semaphore_acquire_timeout(struct semaphore *m,
 						  unsigned long timeout)
 {
 	unsigned long jiffie_val = msecs_to_jiffies(timeout);
-
 	return down_timeout(m, jiffie_val);
 }
 
@@ -259,15 +258,16 @@ static inline int __qdf_spin_is_locked(__qdf_spinlock_t *lock)
  */
 static inline int __qdf_spin_trylock_bh(__qdf_spinlock_t *lock)
 {
-	if (likely(irqs_disabled() || in_irq() || in_softirq()))
+	if (likely(irqs_disabled() || in_irq() || in_softirq())) {
 		return spin_trylock(&lock->spinlock);
-
-	if (spin_trylock_bh(&lock->spinlock)) {
-		lock->flags |= QDF_LINUX_UNLOCK_BH;
-		return 1;
+	} else {
+		if (spin_trylock_bh(&lock->spinlock)) {
+			lock->flags |= QDF_LINUX_UNLOCK_BH;
+			return 1;
+		} else {
+			return 0;
+		}
 	}
-
-	return 0;
 }
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2017 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2016 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -24,25 +24,28 @@
  * under proprietary terms before Copyright ownership was assigned
  * to the Linux Foundation.
  */
-#include <sir_common.h>
-#include <ani_global.h>
+
 #include "sme_api.h"
+#include "sms_debug.h"
 #include "csr_inside_api.h"
 #include "sme_inside.h"
 #include "nan_api.h"
 #include "cfg_api.h"
 #include "wma_types.h"
 
-/**
- * sme_nan_register_callback() -
+/******************************************************************************
+ * Function: sme_nan_register_callback
+ *
+ * Description:
  * This function gets called when HDD wants register nan rsp callback with
  * sme layer.
  *
- * @hHal: Hal handle
- * @callback: which needs to be registered.
+ * Args:
+ * hHal and callback which needs to be registered.
  *
- * Return: void
- */
+ * Returns:
+ * void
+ *****************************************************************************/
 void sme_nan_register_callback(tHalHandle hHal, nan_callback callback)
 {
 	tpAniSirGlobal pMac = NULL;
@@ -78,15 +81,19 @@ void sme_nan_deregister_callback(tHalHandle h_hal)
 }
 
 
-/**
- * sme_nan_request() -
+/******************************************************************************
+ * Function: sme_nan_request
+ *
+ * Description:
  * This function gets called when HDD receives NAN vendor command
  * from userspace
  *
- * @input: Nan Request structure ptr
+ * Args:
+ * Nan Request structure ptr
  *
- * Return: QDF_STATUS
- */
+ * Returns:
+ * QDF_STATUS
+ *****************************************************************************/
 QDF_STATUS sme_nan_request(tpNanRequestReq input)
 {
 	cds_msg_t msg;
@@ -111,10 +118,10 @@ QDF_STATUS sme_nan_request(tpNanRequestReq input)
 	msg.reserved = 0;
 	msg.bodyptr = data;
 
-	if (QDF_STATUS_SUCCESS != cds_mq_post_message(QDF_MODULE_ID_WMA,
-							&msg)) {
+	if (QDF_STATUS_SUCCESS != cds_mq_post_message(QDF_MODULE_ID_WMA, &msg)) {
 		QDF_TRACE(QDF_MODULE_ID_SME, QDF_TRACE_LEVEL_ERROR,
-			"Not able to post WMA_NAN_REQUEST message to WMA");
+			  FL
+				  ("Not able to post WMA_NAN_REQUEST message to WMA"));
 		qdf_mem_free(data);
 		return QDF_STATUS_SUCCESS;
 	}
@@ -122,16 +129,20 @@ QDF_STATUS sme_nan_request(tpNanRequestReq input)
 	return QDF_STATUS_SUCCESS;
 }
 
-/**
- * sme_nan_event() -
- * This callback function will be called when SME received eWNI_SME_NAN_EVENT
- * event from WMA
- *
- * @hHal: HAL handle for device
- * @pMsg: Message body passed from WMA; includes NAN header
- *
- * Return: QDF_STATUS
- */
+/******************************************************************************
+* Function: sme_nan_event
+*
+* Description:
+* This callback function will be called when SME received eWNI_SME_NAN_EVENT
+* event from WMA
+*
+* Args:
+* hHal - HAL handle for device
+* pMsg - Message body passed from WMA; includes NAN header
+*
+* Returns:
+* QDF_STATUS
+******************************************************************************/
 QDF_STATUS sme_nan_event(tHalHandle hHal, void *pMsg)
 {
 	tpAniSirGlobal pMac = PMAC_STRUCT(hHal);
@@ -142,7 +153,7 @@ QDF_STATUS sme_nan_event(tHalHandle hHal, void *pMsg)
 			  FL("msg ptr is NULL"));
 		status = QDF_STATUS_E_FAILURE;
 	} else {
-		QDF_TRACE(QDF_MODULE_ID_SME, QDF_TRACE_LEVEL_DEBUG,
+		QDF_TRACE(QDF_MODULE_ID_SME, QDF_TRACE_LEVEL_INFO_MED,
 			  FL("SME: Received sme_nan_event"));
 		if (pMac->sme.nanCallback) {
 			pMac->sme.nanCallback(pMac->hHdd,

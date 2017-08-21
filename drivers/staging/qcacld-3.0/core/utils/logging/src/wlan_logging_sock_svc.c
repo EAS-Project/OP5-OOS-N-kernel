@@ -46,17 +46,7 @@
 #include "wlan_hdd_main.h"
 #include "pktlog_ac.h"
 
-#ifdef CNSS_GENL
-#include <net/cnss_nl.h>
-#endif
-
 #define MAX_NUM_PKT_LOG 32
-
-#define ALLOWED_LOG_LEVELS_TO_CONSOLE(level) \
-	((QDF_TRACE_LEVEL_FATAL == (level)) || \
-	 (QDF_TRACE_LEVEL_ERROR == (level)) || \
-	 (QDF_TRACE_LEVEL_WARN == (level)) || \
-	 (QDF_TRACE_LEVEL_INFO == (level)))
 
 /**
  * struct tx_status - tx status
@@ -88,8 +78,7 @@ static uint8_t grx_count;
 
 #define ANI_NL_MSG_LOG_TYPE 89
 #define ANI_NL_MSG_READY_IND_TYPE 90
-#define MAX_LOGMSG_LENGTH 2048
-#define MAX_SKBMSG_LENGTH 4096
+#define MAX_LOGMSG_LENGTH 4096
 #define MAX_PKTSTATS_LENGTH 2048
 #define MAX_PKTSTATS_BUFF   16
 
@@ -140,7 +129,7 @@ struct pkt_stats_msg {
 
 struct wlan_logging {
 	/* Log Fatal and ERROR to console */
-	bool log_to_console;
+	bool log_fe_to_console;
 	/* Number of buffers to be used for logging */
 	int num_buf;
 	/* Lock to synchronize access to shared logging resource */
@@ -179,6 +168,61 @@ struct wlan_logging {
 static struct wlan_logging gwlan_logging;
 static struct log_msg *gplog_msg;
 static struct pkt_stats_msg *gpkt_stats_buffers;
+
+/* PID of the APP to log the message */
+static int gapp_pid = INVALID_PID;
+
+/* Utility function to send a netlink message to an application
+ * in user space
+ */
+static int wlan_send_sock_msg_to_app(tAniHdr *wmsg, int radio,
+				     int src_mod, int pid)
+{
+	int err = -1;
+	int payload_len;
+	int tot_msg_len;
+	tAniNlHdr *wnl = NULL;
+	struct sk_buff *skb;
+	struct nlmsghdr *nlh;
+	int wmsg_length = ntohs(wmsg->length);
+	static int nlmsg_seq;
+
+	if (radio < 0 || radio > ANI_MAX_RADIOS) {
+		LOGGING_TRACE(QDF_TRACE_LEVEL_ERROR,
+			      "%s: invalid radio id [%d]", __func__, radio);
+		return -EINVAL;
+	}
+
+	payload_len = wmsg_length + sizeof(wnl->radio) + sizeof(*wmsg);
+	tot_msg_len = NLMSG_SPACE(payload_len);
+	skb = dev_alloc_skb(tot_msg_len);
+	if (skb == NULL) {
+		LOGGING_TRACE(QDF_TRACE_LEVEL_ERROR,
+			      "%s: dev_alloc_skb() failed for msg size[%d]",
+			      __func__, tot_msg_len);
+		return -ENOMEM;
+	}
+	nlh = nlmsg_put(skb, pid, nlmsg_seq++, src_mod, payload_len,
+			NLM_F_REQUEST);
+	if (NULL == nlh) {
+		LOGGING_TRACE(QDF_TRACE_LEVEL_ERROR,
+			      "%s: nlmsg_put() failed for msg size[%d]",
+			      __func__, tot_msg_len);
+		kfree_skb(skb);
+		return -ENOMEM;
+	}
+
+	wnl = (tAniNlHdr *) nlh;
+	wnl->radio = radio;
+	memcpy(&wnl->wmsg, wmsg, wmsg_length);
+
+	err = nl_srv_ucast(skb, pid, MSG_DONTWAIT);
+	if (err)
+		LOGGING_TRACE(QDF_TRACE_LEVEL_INFO,
+			"%s: Failed sending Msg Type [0x%X] to pid[%d]\n",
+			__func__, wmsg->type, pid);
+	return err;
+}
 
 /**
  * is_data_path_module() - To check for a Datapath module
@@ -439,8 +483,9 @@ int wlan_log_to_user(QDF_TRACE_LEVEL log_level, char *to_be_sent, int length)
 			wake_up_interruptible(&gwlan_logging.wait_queue);
 	}
 
-	if (gwlan_logging.log_to_console
-	    && ALLOWED_LOG_LEVELS_TO_CONSOLE(log_level)) {
+	if (gwlan_logging.log_fe_to_console
+	    && ((QDF_TRACE_LEVEL_FATAL == log_level)
+		|| (QDF_TRACE_LEVEL_ERROR == log_level))) {
 		pr_info("%s %s\n", tbuf, to_be_sent);
 	}
 
@@ -514,42 +559,6 @@ static int pkt_stats_fill_headers(struct sk_buff *skb)
 }
 
 /**
- * nl_srv_bcast_diag() - Wrapper to send bcast msgs to diag events mcast grp
- * @skb: sk buffer pointer
- *
- * Sends the bcast message to diag events multicast group with generic nl socket
- * if CNSS_GENL is enabled. Else, use the legacy netlink socket to send.
- *
- * Return: zero on success, error code otherwise
- */
-static int nl_srv_bcast_diag(struct sk_buff *skb)
-{
-#ifdef CNSS_GENL
-	return nl_srv_bcast(skb, CLD80211_MCGRP_DIAG_EVENTS, ANI_NL_MSG_PUMAC);
-#else
-	return nl_srv_bcast(skb);
-#endif
-}
-
-/**
- * nl_srv_bcast_host_logs() - Wrapper to send bcast msgs to host logs mcast grp
- * @skb: sk buffer pointer
- *
- * Sends the bcast message to host logs multicast group with generic nl socket
- * if CNSS_GENL is enabled. Else, use the legacy netlink socket to send.
- *
- * Return: zero on success, error code otherwise
- */
-static int nl_srv_bcast_host_logs(struct sk_buff *skb)
-{
-#ifdef CNSS_GENL
-	return nl_srv_bcast(skb, CLD80211_MCGRP_HOST_LOGS, ANI_NL_MSG_LOG);
-#else
-	return nl_srv_bcast(skb);
-#endif
-}
-
-/**
  * pktlog_send_per_pkt_stats_to_user() - This function is used to send the per
  * packet statistics to the user
  *
@@ -568,11 +577,11 @@ int pktlog_send_per_pkt_stats_to_user(void)
 
 	while (!list_empty(&gwlan_logging.pkt_stat_filled_list)
 		&& !gwlan_logging.exit) {
-		skb_new = dev_alloc_skb(MAX_SKBMSG_LENGTH);
+		skb_new = dev_alloc_skb(MAX_PKTSTATS_LENGTH);
 		if (skb_new == NULL) {
 			if (!rate_limit) {
 				pr_err("%s: dev_alloc_skb() failed for msg size[%d] drop count = %u\n",
-					__func__, MAX_SKBMSG_LENGTH,
+					__func__, MAX_LOGMSG_LENGTH,
 					gwlan_logging.drop_count);
 			}
 			rate_limit = 1;
@@ -593,7 +602,7 @@ int pktlog_send_per_pkt_stats_to_user(void)
 			free_old_skb = true;
 			goto err;
 		}
-		ret = nl_srv_bcast_diag(pstats_msg->skb);
+		ret = nl_srv_bcast(pstats_msg->skb);
 		if (ret < 0) {
 			pr_info("%s: Send Failed %d drop_count = %u\n",
 				__func__, ret,
@@ -688,7 +697,7 @@ static int send_filled_buffers_to_user(void)
 		list_add_tail(&plog_msg->node, &gwlan_logging.free_list);
 		spin_unlock_irqrestore(&gwlan_logging.spin_lock, flags);
 
-		ret = nl_srv_bcast_host_logs(skb);
+		ret = nl_srv_bcast(skb);
 		/* print every 64th drop count */
 		if (ret < 0 && (!(gwlan_logging.drop_count % 0x40))) {
 			pr_err("%s: Send Failed %d drop_count = %u\n",
@@ -854,10 +863,78 @@ static int wlan_logging_thread(void *Arg)
 	return 0;
 }
 
-int wlan_logging_sock_activate_svc(int log_to_console, int num_buf)
+/*
+ * Process all the Netlink messages from Logger Socket app in user space
+ */
+static int wlan_logging_proc_sock_rx_msg(struct sk_buff *skb)
+{
+	tAniNlHdr *wnl;
+	int radio;
+	int type;
+	int ret, len;
+
+	wnl = (tAniNlHdr *) skb->data;
+	radio = wnl->radio;
+	type = wnl->nlh.nlmsg_type;
+
+	if (radio < 0 || radio > ANI_MAX_RADIOS) {
+		LOGGING_TRACE(QDF_TRACE_LEVEL_ERROR,
+			      "%s: invalid radio id [%d]\n", __func__, radio);
+		return -EINVAL;
+	}
+
+	len = ntohs(wnl->wmsg.length) + sizeof(tAniNlHdr);
+	if (len > skb_headlen(skb)) {
+		LOGGING_TRACE(QDF_TRACE_LEVEL_ERROR,
+			"%s: invalid length, msgLen:%x skb len:%x headLen: %d data_len: %d",
+			__func__, len, skb->len, skb_headlen(skb),
+			skb->data_len);
+		return -EINVAL;
+	}
+
+	if (wnl->wmsg.length > skb->data_len) {
+		LOGGING_TRACE(QDF_TRACE_LEVEL_ERROR,
+			"%s: invalid length msgLen:%x skb data_len:%x\n",
+			__func__, wnl->wmsg.length, skb->data_len);
+		return -EINVAL;
+	}
+
+	if (gapp_pid != INVALID_PID) {
+		if (wnl->nlh.nlmsg_pid > gapp_pid) {
+			gapp_pid = wnl->nlh.nlmsg_pid;
+		}
+
+		spin_lock_bh(&gwlan_logging.spin_lock);
+		if (gwlan_logging.pcur_node->filled_length) {
+			wlan_queue_logmsg_for_app();
+		}
+		spin_unlock_bh(&gwlan_logging.spin_lock);
+		set_bit(HOST_LOG_DRIVER_MSG, &gwlan_logging.eventFlag);
+		wake_up_interruptible(&gwlan_logging.wait_queue);
+	} else {
+		/* This is to set the default levels (WLAN logging
+		 * default values not the QDF trace default) when
+		 * logger app is registered for the first time.
+		 */
+		gapp_pid = wnl->nlh.nlmsg_pid;
+	}
+
+	ret = wlan_send_sock_msg_to_app(&wnl->wmsg, 0,
+					ANI_NL_MSG_LOG, wnl->nlh.nlmsg_pid);
+	if (ret < 0) {
+		LOGGING_TRACE(QDF_TRACE_LEVEL_ERROR,
+			      "wlan_send_sock_msg_to_app: failed");
+	}
+
+	return ret;
+}
+
+int wlan_logging_sock_activate_svc(int log_fe_to_console, int num_buf)
 {
 	int i = 0, j, pkt_stats_size;
 	unsigned long irq_flag;
+
+	gapp_pid = INVALID_PID;
 
 	gplog_msg = (struct log_msg *)vmalloc(num_buf * sizeof(struct log_msg));
 	if (!gplog_msg) {
@@ -867,7 +944,7 @@ int wlan_logging_sock_activate_svc(int log_to_console, int num_buf)
 
 	qdf_mem_zero(gplog_msg, (num_buf * sizeof(struct log_msg)));
 
-	gwlan_logging.log_to_console = !!log_to_console;
+	gwlan_logging.log_fe_to_console = !!log_fe_to_console;
 	gwlan_logging.num_buf = num_buf;
 
 	spin_lock_irqsave(&gwlan_logging.spin_lock, irq_flag);
@@ -939,6 +1016,8 @@ int wlan_logging_sock_activate_svc(int log_to_console, int num_buf)
 	gwlan_logging.is_active = true;
 	gwlan_logging.is_flush_complete = false;
 
+	nl_srv_register(ANI_NL_MSG_LOG, wlan_logging_proc_sock_rx_msg);
+
 	return 0;
 
 err3:
@@ -969,7 +1048,9 @@ int wlan_logging_sock_deactivate_svc(void)
 	if (!gplog_msg)
 		return 0;
 
+	nl_srv_unregister(ANI_NL_MSG_LOG, wlan_logging_proc_sock_rx_msg);
 	clear_default_logtoapp_log_level();
+	gapp_pid = INVALID_PID;
 
 	INIT_COMPLETION(gwlan_logging.shutdown_comp);
 	gwlan_logging.exit = true;
@@ -1008,6 +1089,7 @@ int wlan_logging_sock_init_svc(void)
 {
 	spin_lock_init(&gwlan_logging.spin_lock);
 	spin_lock_init(&gwlan_logging.pkt_stats_lock);
+	gapp_pid = INVALID_PID;
 	gwlan_logging.pcur_node = NULL;
 	gwlan_logging.pkt_stats_pcur_node = NULL;
 
@@ -1018,6 +1100,7 @@ int wlan_logging_sock_deinit_svc(void)
 {
 	gwlan_logging.pcur_node = NULL;
 	gwlan_logging.pkt_stats_pcur_node = NULL;
+	gapp_pid = INVALID_PID;
 
 	return 0;
 }
@@ -1333,7 +1416,7 @@ static void send_packetdump_monitor(uint8_t type)
 
 	pd_hdr.type = type;
 
-	LOGGING_TRACE(QDF_TRACE_LEVEL_DEBUG,
+	LOGGING_TRACE(QDF_TRACE_LEVEL_INFO,
 			"fate Tx-Rx %s: type: %d", __func__, type);
 
 	wlan_pkt_stats_to_logger_thread(&pktlog_hdr, &pd_hdr, NULL);
@@ -1360,7 +1443,7 @@ void wlan_deregister_txrx_packetdump(void)
 		gtx_count = 0;
 		grx_count = 0;
 	} else
-		LOGGING_TRACE(QDF_TRACE_LEVEL_DEBUG,
+		LOGGING_TRACE(QDF_TRACE_LEVEL_INFO,
 			"%s: deregistered packetdump already", __func__);
 }
 
@@ -1379,7 +1462,7 @@ static bool check_txrx_packetdump_count(void)
 {
 	if (gtx_count == MAX_NUM_PKT_LOG ||
 		grx_count == MAX_NUM_PKT_LOG) {
-		LOGGING_TRACE(QDF_TRACE_LEVEL_DEBUG,
+		LOGGING_TRACE(QDF_TRACE_LEVEL_INFO,
 			"%s gtx_count: %d grx_count: %d deregister packetdump",
 			__func__, gtx_count, grx_count);
 		wlan_deregister_txrx_packetdump();

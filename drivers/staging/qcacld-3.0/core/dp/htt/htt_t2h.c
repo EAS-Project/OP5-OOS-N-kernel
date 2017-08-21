@@ -73,13 +73,14 @@
 static inline
 void htt_rx_frag_set_last_msdu(struct htt_pdev_t *pdev, qdf_nbuf_t msg)
 {
+	return;
 }
 #else
 
 static void htt_rx_frag_set_last_msdu(struct htt_pdev_t *pdev, qdf_nbuf_t msg)
 {
 	uint32_t *msg_word;
-	unsigned int num_msdu_bytes;
+	unsigned num_msdu_bytes;
 	qdf_nbuf_t msdu;
 	struct htt_host_rx_desc_base *rx_desc;
 	int start_idx;
@@ -167,22 +168,20 @@ static void htt_t2h_lp_msg_handler(void *context, qdf_nbuf_t htt_t2h_msg,
 		htc_pm_runtime_put(pdev->htc_pdev);
 		pdev->tgt_ver.major = HTT_VER_CONF_MAJOR_GET(*msg_word);
 		pdev->tgt_ver.minor = HTT_VER_CONF_MINOR_GET(*msg_word);
-		QDF_TRACE(QDF_MODULE_ID_HTT, QDF_TRACE_LEVEL_INFO,
-			"target uses HTT version %d.%d; host uses %d.%d",
+		qdf_print
+			("target uses HTT version %d.%d; host uses %d.%d",
 			pdev->tgt_ver.major, pdev->tgt_ver.minor,
 			HTT_CURRENT_VERSION_MAJOR,
 			HTT_CURRENT_VERSION_MINOR);
 		if (pdev->tgt_ver.major != HTT_CURRENT_VERSION_MAJOR)
-			QDF_TRACE(QDF_MODULE_ID_HTT, QDF_TRACE_LEVEL_WARN,
-			      "*** Incompatible host/target HTT versions!");
+			qdf_print
+			      ("*** Incompatible host/target HTT versions!");
 		/* abort if the target is incompatible with the host */
 		qdf_assert(pdev->tgt_ver.major ==
 			   HTT_CURRENT_VERSION_MAJOR);
 		if (pdev->tgt_ver.minor != HTT_CURRENT_VERSION_MINOR) {
-			QDF_TRACE(QDF_MODULE_ID_HTT, QDF_TRACE_LEVEL_WARN,
-				"*** Warning: host/target HTT versions are ");
-			QDF_TRACE(QDF_MODULE_ID_HTT, QDF_TRACE_LEVEL_WARN,
-				" different, though compatible!");
+			qdf_print("*** Warning: host/target HTT versions are ");
+			qdf_print(" different, though compatible!");
 		}
 		break;
 	}
@@ -209,7 +208,6 @@ static void htt_t2h_lp_msg_handler(void *context, qdf_nbuf_t htt_t2h_msg,
 	case HTT_T2H_MSG_TYPE_RX_OFFLOAD_DELIVER_IND:
 	{
 		int msdu_cnt;
-
 		msdu_cnt =
 			HTT_RX_OFFLOAD_DELIVER_IND_MSDU_CNT_GET(*msg_word);
 		ol_rx_offload_deliver_ind_handler(pdev->txrx_pdev,
@@ -221,8 +219,9 @@ static void htt_t2h_lp_msg_handler(void *context, qdf_nbuf_t htt_t2h_msg,
 			 * htt_t2h_msg
 			 */
 			return;
+		} else {
+			break;
 		}
-		break;
 	}
 	case HTT_T2H_MSG_TYPE_RX_FRAG_IND:
 	{
@@ -247,9 +246,9 @@ static void htt_t2h_lp_msg_handler(void *context, qdf_nbuf_t htt_t2h_msg,
 						__func__,
 						rx_pkt_len);
 				/*
-				 * This buf will be freed before
-				 * exiting this function.
-				 */
+				* This buf will be freed before
+				* exiting this function.
+				*/
 				break;
 			}
 		}
@@ -324,8 +323,8 @@ static void htt_t2h_lp_msg_handler(void *context, qdf_nbuf_t htt_t2h_msg,
 	case HTT_T2H_MSG_TYPE_PEER_UNMAP:
 	{
 		uint16_t peer_id;
-
 		peer_id = HTT_RX_PEER_UNMAP_PEER_ID_GET(*msg_word);
+
 		ol_rx_peer_unmap_handler(pdev->txrx_pdev, peer_id);
 		break;
 	}
@@ -374,8 +373,7 @@ static void htt_t2h_lp_msg_handler(void *context, qdf_nbuf_t htt_t2h_msg,
 			htc_pm_runtime_put(pdev->htc_pdev);
 			HTT_TX_SCHED(pdev);
 		} else {
-			QDF_TRACE(QDF_MODULE_ID_HTT, QDF_TRACE_LEVEL_INFO,
-				  "Ignoring HTT_T2H_MSG_TYPE_MGMT_TX_COMPL_IND indication");
+			qdf_print("Ignoring HTT_T2H_MSG_TYPE_MGMT_TX_COMPL_IND indication");
 		}
 		break;
 	}
@@ -567,10 +565,9 @@ static void htt_t2h_rx_in_order_indication_handler(
 	frag_ind = HTT_RX_IN_ORD_PADDR_IND_FRAG_GET(msg_word);
 
 #if defined(HELIUMPLUS_DEBUG)
-	QDF_TRACE(QDF_MODULE_ID_HTT, QDF_TRACE_LEVEL_INFO,
-		  "%s %d: peerid %d tid %d offloadind %d fragind %d",
-		  __func__, __LINE__, peer_id, tid, offload_ind, frag_ind);
-
+	qdf_print("%s %d: peerid %d tid %d offloadind %d fragind %d\n",
+			__func__, __LINE__, peer_id, tid, offload_ind,
+			frag_ind);
 #endif
 	if (qdf_unlikely(frag_ind)) {
 		ol_rx_frag_indication_handler(pdev,
@@ -585,11 +582,10 @@ static void htt_t2h_rx_in_order_indication_handler(
 }
 #endif
 
-/**
- * Generic Target to host Msg/event  handler  for low priority messages
- * Low priority message are handler in a different handler called from
- * this function . So that the most likely succes path like Rx and
- * Tx comp   has little code   foot print
+/* Generic Target to host Msg/event  handler  for low priority messages
+   Low priority message are handler in a different handler called from
+   this function . So that the most likely succes path like Rx and
+   Tx comp   has little code   foot print
  */
 void htt_t2h_msg_handler(void *context, HTC_PACKET *pkt)
 {
@@ -620,16 +616,15 @@ void htt_t2h_msg_handler(void *context, HTC_PACKET *pkt)
 	msg_type = HTT_T2H_MSG_TYPE_GET(*msg_word);
 
 #if defined(HELIUMPLUS_DEBUG)
-	QDF_TRACE(QDF_MODULE_ID_HTT, QDF_TRACE_LEVEL_INFO,
-		  "%s %d: msg_word 0x%x msg_type %d", __func__, __LINE__,
-		  *msg_word, msg_type);
+	qdf_print("%s %d: msg_word 0x%x msg_type %d",
+		  __func__, __LINE__, *msg_word, msg_type);
 #endif
 
 	switch (msg_type) {
 	case HTT_T2H_MSG_TYPE_RX_IND:
 	{
-		unsigned int num_mpdu_ranges;
-		unsigned int num_msdu_bytes;
+		unsigned num_mpdu_ranges;
+		unsigned num_msdu_bytes;
 		uint16_t peer_id;
 		uint8_t tid;
 
@@ -819,7 +814,7 @@ void htt_t2h_msg_handler(void *context, HTC_PACKET *pkt)
 		qdf_mem_dma_sync_single_for_device(dev,			\
 					(QDF_NBUF_CB_PADDR(_buf)),	\
 					(skb_end_pointer(_buf) -	\
-					(_buf)->data),			\
+					(_buf)->data) ,			\
 					PCI_DMA_FROMDEVICE);		\
 	} while (0)
 
@@ -1054,8 +1049,7 @@ int htt_rx_ind_flush(htt_pdev_handle pdev, qdf_nbuf_t rx_ind_msg)
 void
 htt_rx_ind_flush_seq_num_range(htt_pdev_handle pdev,
 			       qdf_nbuf_t rx_ind_msg,
-			       unsigned int *seq_num_start,
-			       unsigned int *seq_num_end)
+			       unsigned *seq_num_start, unsigned *seq_num_end)
 {
 	uint32_t *msg_word;
 
@@ -1076,8 +1070,7 @@ int htt_rx_ind_release(htt_pdev_handle pdev, qdf_nbuf_t rx_ind_msg)
 void
 htt_rx_ind_release_seq_num_range(htt_pdev_handle pdev,
 				 qdf_nbuf_t rx_ind_msg,
-				 unsigned int *seq_num_start,
-				 unsigned int *seq_num_end)
+				 unsigned *seq_num_start, unsigned *seq_num_end)
 {
 	uint32_t *msg_word;
 
@@ -1278,8 +1271,7 @@ htt_rx_ind_tsf32(htt_pdev_handle pdev, qdf_nbuf_t rx_ind_msg)
 }
 
 /**
- * htt_rx_ind_ext_tid() - Return the extended traffic ID provided in a rx
- *			  indication message.
+ * htt_rx_ind_ext_tid() - Return the extended traffic ID provided in a rx indication message.
  * @pdev:       the HTT instance the rx data was received on
  * @rx_ind_msg: the netbuf containing the rx indication message
  *

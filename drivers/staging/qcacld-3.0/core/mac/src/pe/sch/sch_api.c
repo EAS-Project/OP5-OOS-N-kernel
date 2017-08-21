@@ -50,6 +50,7 @@
 #include "lim_api.h"
 
 #include "sch_api.h"
+#include "sch_debug.h"
 
 #include "sch_sys_params.h"
 #include "lim_trace.h"
@@ -155,10 +156,12 @@ void sch_send_start_scan_rsp(tpAniSirGlobal pMac)
 	tSirMsgQ msgQ;
 	uint32_t retCode;
 
+	PELOG1(sch_log(pMac, LOG1, FL("Sending LIM message to go into scan"));)
 	msgQ.type = SIR_SCH_START_SCAN_RSP;
 	retCode = lim_post_msg_api(pMac, &msgQ);
 	if (retCode != eSIR_SUCCESS)
-		pe_err("Posting START_SCAN_RSP to LIM failed, reason=%X",
+		sch_log(pMac, LOGE,
+			FL("Posting START_SCAN_RSP to LIM failed, reason=%X"),
 			retCode);
 }
 
@@ -194,18 +197,11 @@ tSirRetStatus sch_send_beacon_req(tpAniSirGlobal pMac, uint8_t *beaconPayload,
 	tpSendbeaconParams beaconParams = NULL;
 	tSirRetStatus retCode;
 
-	if (LIM_IS_AP_ROLE(psessionEntry) &&
-			(pMac->sch.schObject.fBeaconChanged)) {
-		retCode = lim_send_probe_rsp_template_to_hal(pMac,
-				psessionEntry,
-				&psessionEntry->
-				DefProbeRspIeBitmap
-				[0]);
-		if (eSIR_SUCCESS != retCode) {
-			pe_err("FAILED to send probe response template with retCode %d",
-					retCode);
-		}
-	}
+	sch_log(pMac, LOG2,
+		FL
+			("Indicating HAL to copy the beacon template [%d bytes] to memory"),
+		size);
+
 	beaconParams = qdf_mem_malloc(sizeof(tSendbeaconParams));
 	if (NULL == beaconParams)
 		return eSIR_MEM_ALLOC_FAILED;
@@ -229,7 +225,7 @@ tSirRetStatus sch_send_beacon_req(tpAniSirGlobal pMac, uint8_t *beaconPayload,
 	if ((pMac->sch.schObject.p2pIeOffset != 0) &&
 	    (pMac->sch.schObject.p2pIeOffset <
 	     psessionEntry->schBeaconOffsetBegin)) {
-		pe_err("Invalid p2pIeOffset:[%d]",
+		sch_log(pMac, LOGE, FL("Invalid p2pIeOffset:[%d]"),
 			pMac->sch.schObject.p2pIeOffset);
 		QDF_ASSERT(0);
 		qdf_mem_free(beaconParams);
@@ -237,7 +233,7 @@ tSirRetStatus sch_send_beacon_req(tpAniSirGlobal pMac, uint8_t *beaconPayload,
 	}
 	beaconParams->p2pIeOffset = pMac->sch.schObject.p2pIeOffset;
 #ifdef WLAN_SOFTAP_FW_BEACON_TX_PRNT_LOG
-	pe_err("TimIeOffset:[%d]", beaconParams->TimIeOffset);
+	sch_log(pMac, LOGE, FL("TimIeOffset:[%d]"), beaconParams->TimIeOffset);
 #endif
 
 	beaconParams->beacon = beaconPayload;
@@ -263,9 +259,30 @@ tSirRetStatus sch_send_beacon_req(tpAniSirGlobal pMac, uint8_t *beaconPayload,
 
 	MTRACE(mac_trace_msg_tx(pMac, psessionEntry->peSessionId, msgQ.type));
 	retCode = wma_post_ctrl_msg(pMac, &msgQ);
-	if (eSIR_SUCCESS != retCode)
-		pe_err("Posting SEND_BEACON_REQ to HAL failed, reason=%X",
+	if (eSIR_SUCCESS != retCode) {
+		sch_log(pMac, LOGE,
+			FL("Posting SEND_BEACON_REQ to HAL failed, reason=%X"),
 			retCode);
+	} else {
+		sch_log(pMac, LOG2,
+			FL("Successfully posted WMA_SEND_BEACON_REQ to HAL"));
+
+		if (LIM_IS_AP_ROLE(psessionEntry) &&
+		   (pMac->sch.schObject.fBeaconChanged)) {
+			retCode = lim_send_probe_rsp_template_to_hal(pMac,
+								     psessionEntry,
+								     &psessionEntry->
+								     DefProbeRspIeBitmap
+								     [0]);
+			if (eSIR_SUCCESS != retCode) {
+				/* check whether we have to free any memory */
+				sch_log(pMac, LOGE,
+					FL
+						("FAILED to send probe response template with retCode %d"),
+					retCode);
+			}
+		}
+	}
 
 	return retCode;
 }
@@ -290,7 +307,7 @@ static uint32_t lim_remove_p2p_ie_from_add_ie(tpAniSirGlobal pMac,
 			elem_len = ptr[1];
 			left -= 2;
 			if (elem_len > left) {
-				pe_err("Invalid IEs");
+				sch_log(pMac, LOGE, FL("Invalid IEs"));
 				return eSIR_FAILURE;
 			}
 			if ((elem_id == eid) &&
@@ -347,7 +364,8 @@ uint32_t lim_send_probe_rsp_template_to_hal(tpAniSirGlobal pMac,
 		addIeWoP2pIe = qdf_mem_malloc(psessionEntry->addIeParams.
 						probeRespDataLen);
 		if (NULL == addIeWoP2pIe) {
-			pe_err("FAILED to alloc memory when removing P2P IE");
+			sch_log(pMac, LOGE,
+				FL("FAILED to alloc memory when removing P2P IE"));
 			return eSIR_MEM_ALLOC_FAILED;
 		}
 
@@ -362,7 +380,8 @@ uint32_t lim_send_probe_rsp_template_to_hal(tpAniSirGlobal pMac,
 		/*need to check the data length */
 		addIE = qdf_mem_malloc(addnIELenWoP2pIe);
 		if (NULL == addIE) {
-			pe_err("Unable to get WNI_CFG_PROBE_RSP_ADDNIE_DATA1 length");
+			sch_log(pMac, LOGE,
+				FL("Unable to get WNI_CFG_PROBE_RSP_ADDNIE_DATA1 length"));
 			qdf_mem_free(addIeWoP2pIe);
 			return eSIR_MEM_ALLOC_FAILED;
 		}
@@ -379,7 +398,7 @@ uint32_t lim_send_probe_rsp_template_to_hal(tpAniSirGlobal pMac,
 		status = lim_strip_extcap_update_struct(pMac, addIE,
 				&addn_ielen, &extracted_extcap);
 		if (eSIR_SUCCESS != status) {
-			pe_debug("extcap not extracted");
+			sch_log(pMac, LOG1, FL("extcap not extracted"));
 		} else {
 			extcap_present = true;
 		}
@@ -406,12 +425,14 @@ uint32_t lim_send_probe_rsp_template_to_hal(tpAniSirGlobal pMac,
 	nStatus = dot11f_get_packed_probe_response_size(pMac,
 			&psessionEntry->probeRespFrame, &nPayload);
 	if (DOT11F_FAILED(nStatus)) {
-		pe_err("Failed to calculate the packed size for a Probe Response (0x%08x)",
+		sch_log(pMac, LOGE,
+			FL("Failed to calculate the packed size for a Probe Response (0x%08x)."),
 			nStatus);
 		/* We'll fall back on the worst case scenario: */
 		nPayload = sizeof(tDot11fProbeResponse);
 	} else if (DOT11F_WARNED(nStatus)) {
-		pe_err("There were warnings while calculating the packed size for a Probe Response (0x%08x)",
+		sch_log(pMac, LOGE,
+			FL("There were warnings while calculating the packed size for a Probe Response (0x%08x)."),
 			nStatus);
 	}
 
@@ -437,14 +458,15 @@ uint32_t lim_send_probe_rsp_template_to_hal(tpAniSirGlobal pMac,
 					   nPayload, &nPayload);
 
 	if (DOT11F_FAILED(nStatus)) {
-		pe_err("Failed to pack a Probe Response (0x%08x)",
+		sch_log(pMac, LOGE,
+			FL("Failed to pack a Probe Response (0x%08x)."),
 			nStatus);
 
 		qdf_mem_free(addIE);
 		return retCode; /* allocated! */
 	} else if (DOT11F_WARNED(nStatus)) {
-		pe_warn("There were warnings while packing a P"
-			"robe Response (0x%08x)", nStatus);
+		sch_log(pMac, LOGE, FL("There were warnings while packing a P"
+				       "robe Response (0x%08x)."), nStatus);
 	}
 
 	if (addnIEPresent) {
@@ -452,11 +474,15 @@ uint32_t lim_send_probe_rsp_template_to_hal(tpAniSirGlobal pMac,
 			     &addIE[0], addn_ielen);
 	}
 
+	/* free the allocated Memory */
 	qdf_mem_free(addIE);
 
 	pprobeRespParams = qdf_mem_malloc(sizeof(tSendProbeRespParams));
 	if (NULL == pprobeRespParams) {
-		pe_err("malloc failed for bytes %d", nBytes);
+		sch_log(pMac, LOGE,
+			FL
+				("lim_send_probe_rsp_template_to_hal: HAL probe response params malloc failed for bytes %d"),
+			nBytes);
 	} else {
 		sir_copy_mac_addr(pprobeRespParams->bssId, psessionEntry->bssId);
 		pprobeRespParams->pProbeRespTemplate = pFrame2Hal;
@@ -470,11 +496,14 @@ uint32_t lim_send_probe_rsp_template_to_hal(tpAniSirGlobal pMac,
 
 		retCode = wma_post_ctrl_msg(pMac, &msgQ);
 		if (eSIR_SUCCESS != retCode) {
-			pe_err("lim_send_probe_rsp_template_to_hal: FAIL bytes %d retcode[%X]",
+			/* free the allocated Memory */
+			sch_log(pMac, LOGE,
+				FL
+					("lim_send_probe_rsp_template_to_hal: FAIL bytes %d retcode[%X]"),
 				nBytes, retCode);
 			qdf_mem_free(pprobeRespParams);
 		} else {
-			pe_debug(
+			sch_log(pMac, LOG1,
 				FL
 					("lim_send_probe_rsp_template_to_hal: Probe response template msg posted to HAL of bytes %d"),
 				nBytes);
@@ -509,23 +538,25 @@ int sch_gen_timing_advert_frame(tpAniSirGlobal mac_ctx, tSirMacAddr self_addr,
 	/* Populate the TA fields */
 	status = populate_dot11f_timing_advert_frame(mac_ctx, &frame);
 	if (status) {
-		pe_err("Error populating TA frame %x", status);
+		sch_log(mac_ctx, LOGE, FL("Error populating TA frame %x"),
+			status);
 		return status;
 	}
 
 	status = dot11f_get_packed_timing_advertisement_frame_size(mac_ctx,
 		&frame, &payload_size);
 	if (DOT11F_FAILED(status)) {
-		pe_err("Error getting packed frame size %x", status);
+		sch_log(mac_ctx, LOGE, FL("Error getting packed frame size %x"),
+			status);
 		return status;
 	} else if (DOT11F_WARNED(status)) {
-		pe_warn("Warning getting packed frame size");
+		sch_log(mac_ctx, LOGW, FL("Warning getting packed frame size"));
 	}
 
 	buf_size = sizeof(tSirMacMgmtHdr) + payload_size;
 	*buf = qdf_mem_malloc(buf_size);
 	if (*buf == NULL) {
-		pe_err("Cannot allocate memory");
+		sch_log(mac_ctx, LOGE, FL("Cannot allocate memory"));
 		return eSIR_FAILURE;
 	}
 
@@ -533,12 +564,12 @@ int sch_gen_timing_advert_frame(tpAniSirGlobal mac_ctx, tSirMacAddr self_addr,
 	status = dot11f_pack_timing_advertisement_frame(mac_ctx, &frame,
 		*buf + sizeof(tSirMacMgmtHdr), buf_size -
 		sizeof(tSirMacMgmtHdr), &payload_size);
-	pe_err("TA payload size2 = %d", payload_size);
+	sch_log(mac_ctx, LOGE, FL("TA payload size2 = %d"), payload_size);
 	if (DOT11F_FAILED(status)) {
-		pe_err("Error packing frame %x", status);
+		sch_log(mac_ctx, LOGE, FL("Error packing frame %x"), status);
 		goto fail;
 	} else if (DOT11F_WARNED(status)) {
-		pe_warn("Warning packing frame");
+		sch_log(mac_ctx, LOGE, FL("Warning packing frame"));
 	}
 
 	lim_populate_mac_header(mac_ctx, *buf, SIR_MAC_MGMT_FRAME,

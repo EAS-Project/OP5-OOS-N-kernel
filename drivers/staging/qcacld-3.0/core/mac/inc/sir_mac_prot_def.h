@@ -39,7 +39,6 @@
 #include "cds_api.h"
 #include "sir_types.h"
 #include "wni_cfg.h"
-#include <lim_fils_defs.h>
 
 /* /Capability information related */
 #define CAPABILITY_INFO_DELAYED_BA_BIT 14
@@ -421,7 +420,7 @@
 #define SIR_MAC_ANI_WORKAROUND_EID_MIN     0
 #define SIR_MAC_ANI_WORKAROUND_EID_MAX     255
 
-#define SIR_MAC_MAX_ADD_IE_LENGTH       2048
+#define SIR_MAC_MAX_ADD_IE_LENGTH       500
 
 /* / Maximum length of each IE */
 #define SIR_MAC_MAX_IE_LENGTH       255
@@ -542,6 +541,7 @@
 #define SIR_MAC_AUTH_ALGO_OFFSET             0
 #define SIR_MAC_AUTH_XACT_SEQNUM_OFFSET      2
 #define SIR_MAC_AUTH_STATUS_CODE_OFFSET      4
+#define SIR_MAC_AUTH_CHALLENGE_OFFSET        6
 
 /* / Transaction sequence number definitions (used in Authentication frames) */
 #define    SIR_MAC_AUTH_FRAME_1        1
@@ -557,11 +557,6 @@
 #define SIR_MAC_AUTH_CHALLENGE_LENGTH        253
 #define SIR_MAC_WEP_IV_LENGTH                4
 #define SIR_MAC_WEP_ICV_LENGTH               4
-
-/* 2 bytes each for auth algo number, transaction number and status code */
-#define SIR_MAC_AUTH_FRAME_INFO_LEN          6
-/* 2 bytes for ID and length + SIR_MAC_AUTH_CHALLENGE_LENGTH */
-#define SIR_MAC_AUTH_CHALLENGE_BODY_LEN    (2 + SIR_MAC_AUTH_CHALLENGE_LENGTH)
 
 /* / MAX key length when ULA is used */
 #define SIR_MAC_MAX_KEY_LENGTH               32
@@ -974,15 +969,6 @@ typedef struct sSirMacRateSet {
 	uint8_t numRates;
 	uint8_t rate[SIR_MAC_RATESET_EID_MAX];
 } qdf_packed tSirMacRateSet;
-
-/** struct merged_mac_rate_set - merged mac rate set
- * @num_rates: num of rates
- * @rate: rate list
- */
-struct merged_mac_rate_set {
-	uint8_t num_rates;
-	uint8_t rate[2 * SIR_MAC_RATESET_EID_MAX];
-};
 
 typedef struct sSirMacSSid {
 	uint8_t length;
@@ -1943,14 +1929,6 @@ typedef struct sSirMacAuthFrameBody {
 	uint8_t type;           /* = SIR_MAC_CHALLENGE_TEXT_EID */
 	uint8_t length;         /* = SIR_MAC_AUTH_CHALLENGE_LENGTH */
 	uint8_t challengeText[SIR_MAC_AUTH_CHALLENGE_LENGTH];
-#ifdef WLAN_FEATURE_FILS_SK
-	tSirMacRsnInfo rsn_ie;
-	uint8_t assoc_delay_info;
-	uint8_t session[SIR_FILS_SESSION_LENGTH];
-	uint8_t wrapped_data_len;
-	uint8_t wrapped_data[SIR_FILS_WRAPPED_DATA_MAX_SIZE];
-	uint8_t nonce[SIR_FILS_NONCE_LENGTH];
-#endif
 } qdf_packed tSirMacAuthFrameBody, *tpSirMacAuthFrameBody;
 
 typedef struct sSirMacAuthenticationFrame {

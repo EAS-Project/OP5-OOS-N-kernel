@@ -36,7 +36,6 @@
 #include <wlan_logging_sock_svc.h>
 #include "qdf_time.h"
 #include "qdf_mc_timer.h"
-#include <qdf_module.h>
 /* Preprocessor definitions and constants */
 
 #define QDF_TRACE_BUFFER_SIZE (512)
@@ -154,12 +153,11 @@ void qdf_trace_set_level(QDF_MODULE_ID module, QDF_TRACE_LEVEL level)
 			QDF_TRACE_LEVEL_NONE;
 	else
 		/* set the desired bit in the bit mask for the module trace
-		 * level
-		 */
+		 * level */
 		g_qdf_trace_info[module].module_trace_level |=
 			QDF_TRACE_LEVEL_TO_MODULE_BITMASK(level);
 }
-qdf_export_symbol(qdf_trace_set_level);
+EXPORT_SYMBOL(qdf_trace_set_level);
 
 /**
  * qdf_trace_set_module_trace_level() - Set module trace level
@@ -178,7 +176,7 @@ void qdf_trace_set_module_trace_level(QDF_MODULE_ID module, uint32_t level)
 	}
 	g_qdf_trace_info[module].module_trace_level = level;
 }
-qdf_export_symbol(qdf_trace_set_module_trace_level);
+EXPORT_SYMBOL(qdf_trace_set_module_trace_level);
 
 /**
  * qdf_trace_set_value() - Set module trace value
@@ -206,33 +204,29 @@ void qdf_trace_set_value(QDF_MODULE_ID module, QDF_TRACE_LEVEL level,
 	}
 
 	/* Treat 'none' differently.  NONE means we have to turn off all
-	 * the bits in the bit mask so none of the traces appear
-	 */
+	   the bits in the bit mask so none of the traces appear */
 	if (QDF_TRACE_LEVEL_NONE == level) {
 		g_qdf_trace_info[module].module_trace_level =
 			QDF_TRACE_LEVEL_NONE;
 	}
 	/* Treat 'All' differently.  All means we have to turn on all
-	 * the bits in the bit mask so all of the traces appear
-	 */
+	   the bits in the bit mask so all of the traces appear */
 	else if (QDF_TRACE_LEVEL_ALL == level) {
 		g_qdf_trace_info[module].module_trace_level = 0xFFFF;
 	} else {
 		if (on)
 			/* set the desired bit in the bit mask for the module
-			 * trace level
-			 */
+			   trace level */
 			g_qdf_trace_info[module].module_trace_level |=
 				QDF_TRACE_LEVEL_TO_MODULE_BITMASK(level);
 		else
 			/* clear the desired bit in the bit mask for the module
-			 * trace level
-			 */
+			   trace level */
 			g_qdf_trace_info[module].module_trace_level &=
 				~(QDF_TRACE_LEVEL_TO_MODULE_BITMASK(level));
 	}
 }
-qdf_export_symbol(qdf_trace_set_value);
+EXPORT_SYMBOL(qdf_trace_set_value);
 
 /**
  * qdf_trace_get_level() - get the trace level
@@ -266,7 +260,7 @@ bool qdf_trace_get_level(QDF_MODULE_ID module, QDF_TRACE_LEVEL level)
 
 	return trace_on;
 }
-qdf_export_symbol(qdf_trace_get_level);
+EXPORT_SYMBOL(qdf_trace_get_level);
 
 /**
  * qdf_snprintf() - wrapper function to snprintf
@@ -286,7 +280,7 @@ void qdf_snprintf(char *str_buffer, unsigned int size, char *str_format, ...)
 	snprintf(str_buffer, size, str_format, val);
 	va_end(val);
 }
-qdf_export_symbol(qdf_snprintf);
+EXPORT_SYMBOL(qdf_snprintf);
 
 #ifdef QDF_ENABLE_TRACING
 
@@ -312,8 +306,7 @@ void qdf_trace_msg(QDF_MODULE_ID module, QDF_TRACE_LEVEL level,
 	int n;
 
 	/* Print the trace message when the desired level bit is set in
-	 * the module tracel level mask
-	 */
+	   the module tracel level mask */
 	if (g_qdf_trace_info[module].module_trace_level &
 	    QDF_TRACE_LEVEL_TO_MODULE_BITMASK(level)) {
 		/* the trace level strings in an array.  these are ordered in
@@ -323,11 +316,11 @@ void qdf_trace_msg(QDF_MODULE_ID module, QDF_TRACE_LEVEL level,
 		 * are... none, Fatal, Error, Warning, Info, info_high, info_med,
 		 * info_low, Debug
 		 */
-		static const char * const TRACE_LEVEL_STR[] = { "  ", "F ",
-				"E ", "W ", "I ", "IH", "IM", "IL", "D" };
+		static const char *TRACE_LEVEL_STR[] = { "  ", "F ", "E ", "W ",
+						"I ", "IH", "IM", "IL", "D" };
 		va_list val;
-
 		va_start(val, str_format);
+
 		/* print the prefix string into the string buffer... */
 		n = snprintf(str_buffer, QDF_TRACE_BUFFER_SIZE,
 			     "wlan: [%d:%2s:%3s] ",
@@ -349,7 +342,7 @@ void qdf_trace_msg(QDF_MODULE_ID module, QDF_TRACE_LEVEL level,
 		va_end(val);
 	}
 }
-qdf_export_symbol(qdf_trace_msg);
+EXPORT_SYMBOL(qdf_trace_msg);
 
 /**
  * qdf_trace_display() - Display trace
@@ -392,7 +385,7 @@ void qdf_trace_display(void)
 			" ");
 	}
 }
-qdf_export_symbol(qdf_trace_display);
+EXPORT_SYMBOL(qdf_trace_display);
 
 #define ROW_SIZE 16
 /* Buffer size = data bytes(2 hex chars plus space) + NULL */
@@ -433,7 +426,7 @@ void qdf_trace_hex_dump(QDF_MODULE_ID module, QDF_TRACE_LEVEL level,
 		qdf_trace_msg(module, level, "%.8x: %s", i, linebuf);
 	}
 }
-qdf_export_symbol(qdf_trace_hex_dump);
+EXPORT_SYMBOL(qdf_trace_hex_dump);
 
 #endif
 
@@ -459,7 +452,6 @@ qdf_export_symbol(qdf_trace_hex_dump);
 void qdf_trace_enable(uint32_t bitmask_of_module_id, uint8_t enable)
 {
 	int i;
-
 	if (bitmask_of_module_id) {
 		for (i = 0; i < QDF_MODULE_ID_MAX; i++) {
 			if (((bitmask_of_module_id >> i) & 1)) {
@@ -493,7 +485,7 @@ void qdf_trace_enable(uint32_t bitmask_of_module_id, uint8_t enable)
 		}
 	}
 }
-qdf_export_symbol(qdf_trace_enable);
+EXPORT_SYMBOL(qdf_trace_enable);
 
 /**
  * qdf_trace_init() - initializes qdf trace structures and variables
@@ -506,7 +498,6 @@ qdf_export_symbol(qdf_trace_enable);
 void qdf_trace_init(void)
 {
 	uint8_t i;
-
 	g_qdf_trace_data.head = INVALID_QDF_TRACE_ADDR;
 	g_qdf_trace_data.tail = INVALID_QDF_TRACE_ADDR;
 	g_qdf_trace_data.num = 0;
@@ -519,7 +510,7 @@ void qdf_trace_init(void)
 		qdf_trace_restore_cb_table[i] = NULL;
 	}
 }
-qdf_export_symbol(qdf_trace_init);
+EXPORT_SYMBOL(qdf_trace_init);
 
 /**
  * qdf_trace() - puts the messages in to ring-buffer
@@ -588,7 +579,7 @@ void qdf_trace(uint8_t module, uint8_t code, uint16_t session, uint32_t data)
 	g_qdf_trace_data.num_since_last_dump++;
 	spin_unlock_irqrestore(&ltrace_lock, flags);
 }
-qdf_export_symbol(qdf_trace);
+EXPORT_SYMBOL(qdf_trace);
 
 /**
  * qdf_trace_spin_lock_init() - initializes the lock variable before use
@@ -604,7 +595,7 @@ QDF_STATUS qdf_trace_spin_lock_init(void)
 
 	return QDF_STATUS_SUCCESS;
 }
-qdf_export_symbol(qdf_trace_spin_lock_init);
+EXPORT_SYMBOL(qdf_trace_spin_lock_init);
 
 /**
  * qdf_trace_register() - registers the call back functions
@@ -624,7 +615,7 @@ void qdf_trace_register(QDF_MODULE_ID module_iD,
 {
 	qdf_trace_cb_table[module_iD] = qdf_trace_callback;
 }
-qdf_export_symbol(qdf_trace_register);
+EXPORT_SYMBOL(qdf_trace_register);
 
 /**
  * qdf_trace_dump_all() - Dump data from ring buffer via call back functions
@@ -727,7 +718,7 @@ void qdf_trace_dump_all(void *p_mac, uint8_t code, uint8_t session,
 		spin_unlock(&ltrace_lock);
 	}
 }
-qdf_export_symbol(qdf_trace_dump_all);
+EXPORT_SYMBOL(qdf_trace_dump_all);
 
 /**
  * qdf_register_debugcb_init() - initializes debug callbacks
@@ -742,7 +733,7 @@ void qdf_register_debugcb_init(void)
 	for (i = 0; i < QDF_MODULE_ID_MAX; i++)
 		qdf_state_info_table[i] = NULL;
 }
-qdf_export_symbol(qdf_register_debugcb_init);
+EXPORT_SYMBOL(qdf_register_debugcb_init);
 
 /**
  * qdf_register_debug_callback() - stores callback handlers to print
@@ -760,7 +751,7 @@ void qdf_register_debug_callback(QDF_MODULE_ID module_id,
 {
 	qdf_state_info_table[module_id] = qdf_state_infocb;
 }
-qdf_export_symbol(qdf_register_debug_callback);
+EXPORT_SYMBOL(qdf_register_debug_callback);
 
 /**
  * qdf_state_info_dump_all() - it invokes callback of layer which registered
@@ -791,7 +782,7 @@ QDF_STATUS qdf_state_info_dump_all(char *buf, uint16_t size,
 	*driver_dump_size = size - buf_len;
 	return ret;
 }
-qdf_export_symbol(qdf_state_info_dump_all);
+EXPORT_SYMBOL(qdf_state_info_dump_all);
 
 #ifdef FEATURE_DP_TRACE
 static void qdf_dp_unused(struct qdf_dp_trace_record_s *record,
@@ -844,7 +835,7 @@ void qdf_dp_trace_init(void)
 
 	qdf_dp_trace_cb_table[QDF_DP_TRACE_MAX] = qdf_dp_unused;
 }
-qdf_export_symbol(qdf_dp_trace_init);
+EXPORT_SYMBOL(qdf_dp_trace_init);
 
 /**
  * qdf_dp_trace_set_value() - Configure the value to control DP trace
@@ -860,8 +851,9 @@ void qdf_dp_trace_set_value(uint8_t proto_bitmap, uint8_t no_of_record,
 	g_qdf_dp_trace_data.proto_bitmap = proto_bitmap;
 	g_qdf_dp_trace_data.no_of_record = no_of_record;
 	g_qdf_dp_trace_data.verbosity    = verbosity;
+	return;
 }
-qdf_export_symbol(qdf_dp_trace_set_value);
+EXPORT_SYMBOL(qdf_dp_trace_set_value);
 
 /**
  * qdf_dp_trace_enable_track() - enable the tracing for netbuf
@@ -895,7 +887,7 @@ static bool qdf_dp_trace_enable_track(enum QDF_DP_TRACE_ID code)
 		return false;
 	}
 }
-qdf_export_symbol(qdf_dp_trace_enable_track);
+EXPORT_SYMBOL(qdf_dp_trace_enable_track);
 
 /**
  * qdf_dp_get_proto_bitmap() - get dp trace proto bitmap
@@ -935,11 +927,12 @@ void qdf_dp_trace_set_track(qdf_nbuf_t nbuf, enum qdf_proto_dir dir)
 			QDF_NBUF_CB_RX_DP_TRACE(nbuf) = 1;
 	}
 	spin_unlock_bh(&l_dp_trace_lock);
+	return;
 }
-qdf_export_symbol(qdf_dp_trace_set_track);
+EXPORT_SYMBOL(qdf_dp_trace_set_track);
 
 #define DPTRACE_PRINT(args...) \
-	QDF_TRACE(QDF_MODULE_ID_QDF, QDF_TRACE_LEVEL_DEBUG, ## args)
+	QDF_TRACE(QDF_MODULE_ID_QDF, QDF_TRACE_LEVEL_INFO, ## args)
 
 /**
  * dump_hex_trace() - Display the data in buffer
@@ -1168,7 +1161,6 @@ static void qdf_dp_add_record(enum QDF_DP_TRACE_ID code,
 {
 	struct qdf_dp_trace_record_s *rec = NULL;
 	int index;
-
 	spin_lock_bh(&l_dp_trace_lock);
 
 	g_qdf_dp_trace_data.num++;
@@ -1343,7 +1335,7 @@ void qdf_dp_trace_log_pkt(uint8_t session_id, struct sk_buff *skb,
 		}
 	}
 }
-qdf_export_symbol(qdf_dp_trace_log_pkt);
+EXPORT_SYMBOL(qdf_dp_trace_log_pkt);
 
 /**
  * qdf_dp_display_mgmt_pkt() - display proto packet
@@ -1364,7 +1356,7 @@ void qdf_dp_display_mgmt_pkt(struct qdf_dp_trace_record_s *record,
 	DPTRACE_PRINT("DPT: Type %s Subtype %s", qdf_dp_type_to_str(buf->type),
 		qdf_dp_subtype_to_str(buf->subtype));
 }
-qdf_export_symbol(qdf_dp_display_mgmt_pkt);
+EXPORT_SYMBOL(qdf_dp_display_mgmt_pkt);
 
 /**
  * qdf_dp_trace_mgmt_pkt() - record mgmt packet
@@ -1392,7 +1384,7 @@ void qdf_dp_trace_mgmt_pkt(enum QDF_DP_TRACE_ID code, uint8_t vdev_id,
 	buf.vdev_id = vdev_id;
 	qdf_dp_add_record(code, (uint8_t *)&buf, buf_size, true);
 }
-qdf_export_symbol(qdf_dp_trace_mgmt_pkt);
+EXPORT_SYMBOL(qdf_dp_trace_mgmt_pkt);
 
 /**
  * qdf_dp_display_event_record() - display event records
@@ -1413,7 +1405,7 @@ void qdf_dp_display_event_record(struct qdf_dp_trace_record_s *record,
 	DPTRACE_PRINT("DPT: Type %s Subtype %s", qdf_dp_type_to_str(buf->type),
 		qdf_dp_subtype_to_str(buf->subtype));
 }
-qdf_export_symbol(qdf_dp_display_event_record);
+EXPORT_SYMBOL(qdf_dp_display_event_record);
 
 /**
  * qdf_dp_trace_record_event() - record events
@@ -1441,7 +1433,7 @@ void qdf_dp_trace_record_event(enum QDF_DP_TRACE_ID code, uint8_t vdev_id,
 	buf.vdev_id = vdev_id;
 	qdf_dp_add_record(code, (uint8_t *)&buf, buf_size, true);
 }
-qdf_export_symbol(qdf_dp_trace_record_event);
+EXPORT_SYMBOL(qdf_dp_trace_record_event);
 
 /**
  * qdf_dp_display_proto_pkt() - display proto packet
@@ -1466,7 +1458,7 @@ void qdf_dp_display_proto_pkt(struct qdf_dp_trace_record_s *record,
 		qdf_dp_type_to_str(buf->type),
 		qdf_dp_subtype_to_str(buf->subtype));
 }
-qdf_export_symbol(qdf_dp_display_proto_pkt);
+EXPORT_SYMBOL(qdf_dp_display_proto_pkt);
 
 /**
  * qdf_dp_trace_proto_pkt() - record proto packet
@@ -1501,7 +1493,7 @@ void qdf_dp_trace_proto_pkt(enum QDF_DP_TRACE_ID code, uint8_t vdev_id,
 	buf.vdev_id = vdev_id;
 	qdf_dp_add_record(code, (uint8_t *)&buf, buf_size, true);
 }
-qdf_export_symbol(qdf_dp_trace_proto_pkt);
+EXPORT_SYMBOL(qdf_dp_trace_proto_pkt);
 
 /**
  * qdf_dp_display_ptr_record() - display record
@@ -1528,7 +1520,7 @@ void qdf_dp_display_ptr_record(struct qdf_dp_trace_record_s *record,
 			 buf->msdu_id, buf->status);
 	dump_hex_trace("cookie", (uint8_t *)&buf->cookie, sizeof(buf->cookie));
 }
-qdf_export_symbol(qdf_dp_display_ptr_record);
+EXPORT_SYMBOL(qdf_dp_display_ptr_record);
 
 /**
  * qdf_dp_trace_ptr() - record dptrace
@@ -1558,7 +1550,7 @@ void qdf_dp_trace_ptr(qdf_nbuf_t nbuf, enum QDF_DP_TRACE_ID code,
 	qdf_dp_add_record(code, (uint8_t *)&buf, buf_size,
 				QDF_NBUF_CB_DP_TRACE_PRINT(nbuf));
 }
-qdf_export_symbol(qdf_dp_trace_ptr);
+EXPORT_SYMBOL(qdf_dp_trace_ptr);
 
 /**
  * qdf_dp_display_trace() - Displays a record in DP trace
@@ -1587,7 +1579,7 @@ void qdf_dp_display_record(struct qdf_dp_trace_record_s *pRecord,
 		dump_hex_trace("cookie", pRecord->data, pRecord->size);
 	}
 }
-qdf_export_symbol(qdf_dp_display_record);
+EXPORT_SYMBOL(qdf_dp_display_record);
 
 
 /**
@@ -1609,7 +1601,7 @@ void qdf_dp_trace(qdf_nbuf_t nbuf, enum QDF_DP_TRACE_ID code,
 	qdf_dp_add_record(code, data, size,
 		(nbuf != NULL) ? QDF_NBUF_CB_DP_TRACE_PRINT(nbuf) : false);
 }
-qdf_export_symbol(qdf_dp_trace);
+EXPORT_SYMBOL(qdf_dp_trace);
 
 /**
  * qdf_dp_trace_spin_lock_init() - initializes the lock variable before use
@@ -1622,7 +1614,7 @@ void qdf_dp_trace_spin_lock_init(void)
 {
 	spin_lock_init(&l_dp_trace_lock);
 }
-qdf_export_symbol(qdf_dp_trace_spin_lock_init);
+EXPORT_SYMBOL(qdf_dp_trace_spin_lock_init);
 
 /**
  * qdf_dp_trace_enable_live_mode() - enable live mode for dptrace
@@ -1634,7 +1626,7 @@ void qdf_dp_trace_enable_live_mode(void)
 	g_qdf_dp_trace_data.live_mode = 1;
 
 }
-qdf_export_symbol(qdf_dp_trace_enable_live_mode);
+EXPORT_SYMBOL(qdf_dp_trace_enable_live_mode);
 
 
 /**
@@ -1661,7 +1653,7 @@ void qdf_dp_trace_clear_buffer(void)
 	memset(g_qdf_dp_trace_tbl, 0,
 	   MAX_QDF_DP_TRACE_RECORDS * sizeof(struct qdf_dp_trace_record_s));
 }
-qdf_export_symbol(qdf_dp_trace_clear_buffer);
+EXPORT_SYMBOL(qdf_dp_trace_clear_buffer);
 
 /**
  * qdf_dp_trace_dump_all() - Dump data from ring buffer via call back functions
@@ -1677,13 +1669,15 @@ void qdf_dp_trace_dump_all(uint32_t count)
 	int32_t i, tail;
 
 	if (!g_qdf_dp_trace_data.enable) {
-		DPTRACE_PRINT("Tracing Disabled");
+		QDF_TRACE(QDF_MODULE_ID_SYS,
+			  QDF_TRACE_LEVEL_ERROR, "Tracing Disabled");
 		return;
 	}
 
-	DPTRACE_PRINT("Total Records: %d, Head: %d, Tail: %d",
-		      g_qdf_dp_trace_data.num, g_qdf_dp_trace_data.head,
-		      g_qdf_dp_trace_data.tail);
+	QDF_TRACE(QDF_MODULE_ID_SYS, QDF_TRACE_LEVEL_ERROR,
+		  "Total Records: %d, Head: %d, Tail: %d",
+		  g_qdf_dp_trace_data.num, g_qdf_dp_trace_data.head,
+		  g_qdf_dp_trace_data.tail);
 
 	/* aquire the lock so that only one thread at a time can read
 	 * the ring buffer
@@ -1725,5 +1719,5 @@ void qdf_dp_trace_dump_all(uint32_t count)
 		spin_unlock_bh(&l_dp_trace_lock);
 	}
 }
-qdf_export_symbol(qdf_dp_trace_dump_all);
+EXPORT_SYMBOL(qdf_dp_trace_dump_all);
 #endif

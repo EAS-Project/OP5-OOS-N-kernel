@@ -2063,8 +2063,7 @@ uint32_t dot11f_unpack_ie_gtk(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEGTK*,
-	bool);
+	tDot11fIEGTK*);
 
 uint32_t dot11f_pack_ie_gtk(
 	tpAniSirGlobal,
@@ -2105,8 +2104,7 @@ uint32_t dot11f_unpack_ie_igtk(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEIGTK*,
-	bool);
+	tDot11fIEIGTK*);
 
 uint32_t dot11f_pack_ie_igtk(
 	tpAniSirGlobal,
@@ -2145,8 +2143,7 @@ uint32_t dot11f_unpack_ie_r0_kh_id(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIER0KH_ID*,
-	bool);
+	tDot11fIER0KH_ID*);
 
 uint32_t dot11f_pack_ie_r0_kh_id(
 	tpAniSirGlobal,
@@ -2184,8 +2181,7 @@ uint32_t dot11f_unpack_ie_r1_kh_id(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIER1KH_ID*,
-	bool);
+	tDot11fIER1KH_ID*);
 
 uint32_t dot11f_pack_ie_r1_kh_id(
 	tpAniSirGlobal,
@@ -2225,8 +2221,7 @@ uint32_t dot11f_unpack_ie_ap_channel_report(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEAPChannelReport*,
-	bool);
+	tDot11fIEAPChannelReport*);
 
 uint32_t dot11f_pack_ie_ap_channel_report(
 	tpAniSirGlobal,
@@ -2264,8 +2259,7 @@ uint32_t dot11f_unpack_ie_bcn_reporting_detail(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEBcnReportingDetail*,
-	bool);
+	tDot11fIEBcnReportingDetail*);
 
 uint32_t dot11f_pack_ie_bcn_reporting_detail(
 	tpAniSirGlobal,
@@ -2304,8 +2298,7 @@ uint32_t dot11f_unpack_ie_beacon_report_frm_body(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEBeaconReportFrmBody*,
-	bool);
+	tDot11fIEBeaconReportFrmBody*);
 
 uint32_t dot11f_pack_ie_beacon_report_frm_body(
 	tpAniSirGlobal,
@@ -2344,8 +2337,7 @@ uint32_t dot11f_unpack_ie_beacon_reporting(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEBeaconReporting*,
-	bool);
+	tDot11fIEBeaconReporting*);
 
 uint32_t dot11f_pack_ie_beacon_reporting(
 	tpAniSirGlobal,
@@ -2383,8 +2375,7 @@ uint32_t dot11f_unpack_ie_condensed_country_str(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIECondensedCountryStr*,
-	bool);
+	tDot11fIECondensedCountryStr*);
 
 uint32_t dot11f_pack_ie_condensed_country_str(
 	tpAniSirGlobal,
@@ -2424,8 +2415,7 @@ uint32_t dot11f_unpack_ie_measurement_pilot(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEMeasurementPilot*,
-	bool);
+	tDot11fIEMeasurementPilot*);
 
 uint32_t dot11f_pack_ie_measurement_pilot(
 	tpAniSirGlobal,
@@ -2465,8 +2455,7 @@ uint32_t dot11f_unpack_ie_multi_bssid(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEMultiBssid*,
-	bool);
+	tDot11fIEMultiBssid*);
 
 uint32_t dot11f_pack_ie_multi_bssid(
 	tpAniSirGlobal,
@@ -2506,8 +2495,7 @@ uint32_t dot11f_unpack_ie_ric_data(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIERICData*,
-	bool);
+	tDot11fIERICData*);
 
 uint32_t dot11f_pack_ie_ric_data(
 	tpAniSirGlobal,
@@ -2547,8 +2535,7 @@ uint32_t dot11f_unpack_ie_ric_descriptor(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIERICDescriptor*,
-	bool);
+	tDot11fIERICDescriptor*);
 
 uint32_t dot11f_pack_ie_ric_descriptor(
 	tpAniSirGlobal,
@@ -2616,8 +2603,7 @@ uint32_t dot11f_unpack_ie_rrm_enabled_cap(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIERRMEnabledCap*,
-	bool);
+	tDot11fIERRMEnabledCap*);
 
 uint32_t dot11f_pack_ie_rrm_enabled_cap(
 	tpAniSirGlobal,
@@ -2656,8 +2642,7 @@ uint32_t dot11f_unpack_ie_requested_info(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIERequestedInfo*,
-	bool);
+	tDot11fIERequestedInfo*);
 
 uint32_t dot11f_pack_ie_requested_info(
 	tpAniSirGlobal,
@@ -2696,8 +2681,7 @@ uint32_t dot11f_unpack_ie_ssid(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIESSID*,
-	bool);
+	tDot11fIESSID*);
 
 uint32_t dot11f_pack_ie_ssid(
 	tpAniSirGlobal,
@@ -2742,8 +2726,7 @@ uint32_t dot11f_unpack_ie_schedule(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIESchedule*,
-	bool);
+	tDot11fIESchedule*);
 
 uint32_t dot11f_pack_ie_schedule(
 	tpAniSirGlobal,
@@ -2814,8 +2797,7 @@ uint32_t dot11f_unpack_ie_tclas(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIETCLAS*,
-	bool);
+	tDot11fIETCLAS*);
 
 uint32_t dot11f_pack_ie_tclas(
 	tpAniSirGlobal,
@@ -2853,8 +2835,7 @@ uint32_t dot11f_unpack_ie_tclasSPROC(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIETCLASSPROC*,
-	bool);
+	tDot11fIETCLASSPROC*);
 
 uint32_t dot11f_pack_ie_tclassproc(
 	tpAniSirGlobal,
@@ -2892,8 +2873,7 @@ uint32_t dot11f_unpack_ie_ts_delay(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIETSDelay*,
-	bool);
+	tDot11fIETSDelay*);
 
 uint32_t dot11f_pack_ie_ts_delay(
 	tpAniSirGlobal,
@@ -2932,8 +2912,7 @@ uint32_t dot11f_unpack_ie_tsf_info(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIETSFInfo*,
-	bool);
+	tDot11fIETSFInfo*);
 
 uint32_t dot11f_pack_ie_tsf_info(
 	tpAniSirGlobal,
@@ -2996,8 +2975,7 @@ uint32_t dot11f_unpack_ie_tspec(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIETSPEC*,
-	bool);
+	tDot11fIETSPEC*);
 
 uint32_t dot11f_pack_ie_tspec(
 	tpAniSirGlobal,
@@ -3060,8 +3038,7 @@ uint32_t dot11f_unpack_ie_vht_caps(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEVHTCaps*,
-	bool);
+	tDot11fIEVHTCaps*);
 
 uint32_t dot11f_pack_ie_vht_caps(
 	tpAniSirGlobal,
@@ -3102,8 +3079,7 @@ uint32_t dot11f_unpack_ie_vht_operation(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEVHTOperation*,
-	bool);
+	tDot11fIEVHTOperation*);
 
 uint32_t dot11f_pack_ie_vht_operation(
 	tpAniSirGlobal,
@@ -3149,8 +3125,7 @@ uint32_t dot11f_unpack_ie_wmm_schedule(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWMMSchedule*,
-	bool);
+	tDot11fIEWMMSchedule*);
 
 uint32_t dot11f_pack_ie_wmm_schedule(
 	tpAniSirGlobal,
@@ -3222,8 +3197,7 @@ uint32_t dot11f_unpack_ie_wmmtclas(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWMMTCLAS*,
-	bool);
+	tDot11fIEWMMTCLAS*);
 
 uint32_t dot11f_pack_ie_wmmtclas(
 	tpAniSirGlobal,
@@ -3262,8 +3236,7 @@ uint32_t dot11f_unpack_ie_wmmtclasproc(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWMMTCLASPROC*,
-	bool);
+	tDot11fIEWMMTCLASPROC*);
 
 uint32_t dot11f_pack_ie_wmmtclasproc(
 	tpAniSirGlobal,
@@ -3302,8 +3275,7 @@ uint32_t dot11f_unpack_ie_wmmts_delay(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWMMTSDelay*,
-	bool);
+	tDot11fIEWMMTSDelay*);
 
 uint32_t dot11f_pack_ie_wmmts_delay(
 	tpAniSirGlobal,
@@ -3367,8 +3339,7 @@ uint32_t dot11f_unpack_ie_wmmtspec(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWMMTSPEC*,
-	bool);
+	tDot11fIEWMMTSPEC*);
 
 uint32_t dot11f_pack_ie_wmmtspec(
 	tpAniSirGlobal,
@@ -3408,8 +3379,7 @@ uint32_t dot11f_unpack_ie_wider_bw_chan_switch_ann(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWiderBWChanSwitchAnn*,
-	bool);
+	tDot11fIEWiderBWChanSwitchAnn*);
 
 uint32_t dot11f_pack_ie_wider_bw_chan_switch_ann(
 	tpAniSirGlobal,
@@ -3447,8 +3417,7 @@ uint32_t dot11f_unpack_ie_azimuth_req(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEazimuth_req*,
-	bool);
+	tDot11fIEazimuth_req*);
 
 uint32_t dot11f_pack_ie_azimuth_req(
 	tpAniSirGlobal,
@@ -3486,8 +3455,7 @@ uint32_t dot11f_unpack_ie_max_age(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEmax_age*,
-	bool);
+	tDot11fIEmax_age*);
 
 uint32_t dot11f_pack_ie_max_age(
 	tpAniSirGlobal,
@@ -3545,8 +3513,7 @@ uint32_t dot11f_unpack_ie_neighbor_rpt(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEneighbor_rpt*,
-	bool);
+	tDot11fIEneighbor_rpt*);
 
 uint32_t dot11f_pack_ie_neighbor_rpt(
 	tpAniSirGlobal,
@@ -3584,8 +3551,7 @@ uint32_t dot11f_unpack_ie_req_mac_addr(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEreq_mac_addr*,
-	bool);
+	tDot11fIEreq_mac_addr*);
 
 uint32_t dot11f_pack_ie_req_mac_addr(
 	tpAniSirGlobal,
@@ -3623,8 +3589,7 @@ uint32_t dot11f_unpack_ie_tgt_mac_addr(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEtgt_mac_addr*,
-	bool);
+	tDot11fIEtgt_mac_addr*);
 
 uint32_t dot11f_pack_ie_tgt_mac_addr(
 	tpAniSirGlobal,
@@ -3663,8 +3628,7 @@ uint32_t dot11f_unpack_ie_vht_transmit_power_env(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEvht_transmit_power_env*,
-	bool);
+	tDot11fIEvht_transmit_power_env*);
 
 uint32_t dot11f_pack_ie_vht_transmit_power_env(
 	tpAniSirGlobal,
@@ -3702,8 +3666,7 @@ uint32_t dot11f_unpack_ie_aid(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEAID*,
-	bool);
+	tDot11fIEAID*);
 
 uint32_t dot11f_pack_ie_aid(
 	tpAniSirGlobal,
@@ -3744,8 +3707,7 @@ uint32_t dot11f_unpack_ie_cf_params(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIECFParams*,
-	bool);
+	tDot11fIECFParams*);
 
 uint32_t dot11f_pack_ie_cf_params(
 	tpAniSirGlobal,
@@ -3784,8 +3746,7 @@ uint32_t dot11f_unpack_ie_challenge_text(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEChallengeText*,
-	bool);
+	tDot11fIEChallengeText*);
 
 uint32_t dot11f_pack_ie_challenge_text(
 	tpAniSirGlobal,
@@ -3825,8 +3786,7 @@ uint32_t dot11f_unpack_ie_chan_switch_ann(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEChanSwitchAnn*,
-	bool);
+	tDot11fIEChanSwitchAnn*);
 
 uint32_t dot11f_pack_ie_chan_switch_ann(
 	tpAniSirGlobal,
@@ -3865,8 +3825,7 @@ uint32_t dot11f_unpack_ie_channel_switch_wrapper(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEChannelSwitchWrapper*,
-	bool);
+	tDot11fIEChannelSwitchWrapper*);
 
 uint32_t dot11f_pack_ie_channel_switch_wrapper(
 	tpAniSirGlobal,
@@ -3906,8 +3865,7 @@ uint32_t dot11f_unpack_ie_country(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIECountry*,
-	bool);
+	tDot11fIECountry*);
 
 uint32_t dot11f_pack_ie_country(
 	tpAniSirGlobal,
@@ -3945,8 +3903,7 @@ uint32_t dot11f_unpack_ie_DSParams(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEDSParams*,
-	bool);
+	tDot11fIEDSParams*);
 
 uint32_t dot11f_pack_ie_ds_params(
 	tpAniSirGlobal,
@@ -4013,8 +3970,7 @@ uint32_t dot11f_unpack_ie_edca_param_set(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEEDCAParamSet*,
-	bool);
+	tDot11fIEEDCAParamSet*);
 
 uint32_t dot11f_pack_ie_edca_param_set(
 	tpAniSirGlobal,
@@ -4055,8 +4011,7 @@ uint32_t dot11f_unpack_ie_erp_info(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEERPInfo*,
-	bool);
+	tDot11fIEERPInfo*);
 
 uint32_t dot11f_pack_ie_erp_info(
 	tpAniSirGlobal,
@@ -4095,8 +4050,7 @@ uint32_t dot11f_unpack_ie_ese_cckm_opaque(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEESECckmOpaque*,
-	bool);
+	tDot11fIEESECckmOpaque*);
 
 uint32_t dot11f_pack_ie_ese_cckm_opaque(
 	tpAniSirGlobal,
@@ -4136,8 +4090,7 @@ uint32_t dot11f_unpack_ie_ese_rad_mgmt_cap(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEESERadMgmtCap*,
-	bool);
+	tDot11fIEESERadMgmtCap*);
 
 uint32_t dot11f_pack_ie_ese_rad_mgmt_cap(
 	tpAniSirGlobal,
@@ -4177,8 +4130,7 @@ uint32_t dot11f_unpack_ie_ese_traf_strm_met(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEESETrafStrmMet*,
-	bool);
+	tDot11fIEESETrafStrmMet*);
 
 uint32_t dot11f_pack_ie_ese_traf_strm_met(
 	tpAniSirGlobal,
@@ -4218,8 +4170,7 @@ uint32_t dot11f_unpack_ie_ese_traf_strm_rate_set(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEESETrafStrmRateSet*,
-	bool);
+	tDot11fIEESETrafStrmRateSet*);
 
 uint32_t dot11f_pack_ie_ese_traf_strm_rate_set(
 	tpAniSirGlobal,
@@ -4258,8 +4209,7 @@ uint32_t dot11f_unpack_ie_ese_txmit_power(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEESETxmitPower*,
-	bool);
+	tDot11fIEESETxmitPower*);
 
 uint32_t dot11f_pack_ie_ese_txmit_power(
 	tpAniSirGlobal,
@@ -4297,8 +4247,7 @@ uint32_t dot11f_unpack_ie_ese_version(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEESEVersion*,
-	bool);
+	tDot11fIEESEVersion*);
 
 uint32_t dot11f_pack_ie_ese_version(
 	tpAniSirGlobal,
@@ -4337,8 +4286,7 @@ uint32_t dot11f_unpack_ie_ext_cap(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEExtCap*,
-	bool);
+	tDot11fIEExtCap*);
 
 uint32_t dot11f_pack_ie_ext_cap(
 	tpAniSirGlobal,
@@ -4377,8 +4325,7 @@ uint32_t dot11f_unpack_ie_ext_supp_rates(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEExtSuppRates*,
-	bool);
+	tDot11fIEExtSuppRates*);
 
 uint32_t dot11f_pack_ie_ext_supp_rates(
 	tpAniSirGlobal,
@@ -4419,8 +4366,7 @@ uint32_t dot11f_unpack_ie_fh_param_set(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEFHParamSet*,
-	bool);
+	tDot11fIEFHParamSet*);
 
 uint32_t dot11f_pack_ie_fh_param_set(
 	tpAniSirGlobal,
@@ -4459,8 +4405,7 @@ uint32_t dot11f_unpack_ie_fh_params(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEFHParams*,
-	bool);
+	tDot11fIEFHParams*);
 
 uint32_t dot11f_pack_ie_fh_params(
 	tpAniSirGlobal,
@@ -4503,8 +4448,7 @@ uint32_t dot11f_unpack_ie_fh_patt_table(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEFHPattTable*,
-	bool);
+	tDot11fIEFHPattTable*);
 
 uint32_t dot11f_pack_ie_fh_patt_table(
 	tpAniSirGlobal,
@@ -4550,8 +4494,7 @@ uint32_t dot11f_unpack_ie_ft_info(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEFTInfo*,
-	bool);
+	tDot11fIEFTInfo*);
 
 uint32_t dot11f_pack_ie_ft_info(
 	tpAniSirGlobal,
@@ -4637,8 +4580,7 @@ uint32_t dot11f_unpack_ie_ht_caps(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEHTCaps*,
-	bool);
+	tDot11fIEHTCaps*);
 
 uint32_t dot11f_pack_ie_ht_caps(
 	tpAniSirGlobal,
@@ -4696,8 +4638,7 @@ uint32_t dot11f_unpack_ie_ht_info(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEHTInfo*,
-	bool);
+	tDot11fIEHTInfo*);
 
 uint32_t dot11f_pack_ie_ht_info(
 	tpAniSirGlobal,
@@ -4735,8 +4676,7 @@ uint32_t dot11f_unpack_ie_ibss_params(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEIBSSParams*,
-	bool);
+	tDot11fIEIBSSParams*);
 
 uint32_t dot11f_pack_ie_ibss_params(
 	tpAniSirGlobal,
@@ -4776,8 +4716,7 @@ uint32_t dot11f_unpack_ie_link_identifier(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIELinkIdentifier*,
-	bool);
+	tDot11fIELinkIdentifier*);
 
 uint32_t dot11f_pack_ie_link_identifier(
 	tpAniSirGlobal,
@@ -4817,8 +4756,7 @@ uint32_t dot11f_unpack_ie_MBO_IE(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEMBO_IE*,
-	bool);
+	tDot11fIEMBO_IE*);
 
 uint32_t dot11f_pack_ie_MBO_IE(
 	tpAniSirGlobal,
@@ -4907,8 +4845,7 @@ uint32_t dot11f_unpack_ie_measurement_report(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEMeasurementReport*,
-	bool);
+	tDot11fIEMeasurementReport*);
 
 uint32_t dot11f_pack_ie_measurement_report(
 	tpAniSirGlobal,
@@ -4997,8 +4934,7 @@ uint32_t dot11f_unpack_ie_measurement_request(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEMeasurementRequest*,
-	bool);
+	tDot11fIEMeasurementRequest*);
 
 uint32_t dot11f_pack_ie_measurement_request(
 	tpAniSirGlobal,
@@ -5039,8 +4975,7 @@ uint32_t dot11f_unpack_ie_mobility_domain(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEMobilityDomain*,
-	bool);
+	tDot11fIEMobilityDomain*);
 
 uint32_t dot11f_pack_ie_mobility_domain(
 	tpAniSirGlobal,
@@ -5098,8 +5033,7 @@ uint32_t dot11f_unpack_ie_neighbor_report(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIENeighborReport*,
-	bool);
+	tDot11fIENeighborReport*);
 
 uint32_t dot11f_pack_ie_neighbor_report(
 	tpAniSirGlobal,
@@ -5143,8 +5077,7 @@ uint32_t dot11f_unpack_ie_obss_scan_parameters(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEOBSSScanParameters*,
-	bool);
+	tDot11fIEOBSSScanParameters*);
 
 uint32_t dot11f_pack_ie_obss_scan_parameters(
 	tpAniSirGlobal,
@@ -5185,8 +5118,7 @@ uint32_t dot11f_unpack_ie_operating_mode(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEOperatingMode*,
-	bool);
+	tDot11fIEOperatingMode*);
 
 uint32_t dot11f_pack_ie_operating_mode(
 	tpAniSirGlobal,
@@ -5226,8 +5158,7 @@ uint32_t dot11f_unpack_ie_p2_p_assoc_req(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEP2PAssocReq*,
-	bool);
+	tDot11fIEP2PAssocReq*);
 
 uint32_t dot11f_pack_ie_p2_p_assoc_req(
 	tpAniSirGlobal,
@@ -5266,8 +5197,7 @@ uint32_t dot11f_unpack_ie_p2_p_assoc_res(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEP2PAssocRes*,
-	bool);
+	tDot11fIEP2PAssocRes*);
 
 uint32_t dot11f_pack_ie_p2_p_assoc_res(
 	tpAniSirGlobal,
@@ -5307,8 +5237,7 @@ uint32_t dot11f_unpack_ie_p2_p_beacon(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEP2PBeacon*,
-	bool);
+	tDot11fIEP2PBeacon*);
 
 uint32_t dot11f_pack_ie_p2_p_beacon(
 	tpAniSirGlobal,
@@ -5351,8 +5280,7 @@ uint32_t dot11f_unpack_ie_p2_p_beacon_probe_res(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEP2PBeaconProbeRes*,
-	bool);
+	tDot11fIEP2PBeaconProbeRes*);
 
 uint32_t dot11f_pack_ie_p2_p_beacon_probe_res(
 	tpAniSirGlobal,
@@ -5390,8 +5318,7 @@ uint32_t dot11f_unpack_ie_p2_p_de_auth(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEP2PDeAuth*,
-	bool);
+	tDot11fIEP2PDeAuth*);
 
 uint32_t dot11f_pack_ie_p2_p_de_auth(
 	tpAniSirGlobal,
@@ -5429,8 +5356,7 @@ uint32_t dot11f_unpack_ie_p2_p_dis_assoc(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEP2PDisAssoc*,
-	bool);
+	tDot11fIEP2PDisAssoc*);
 
 uint32_t dot11f_pack_ie_p2_p_dis_assoc(
 	tpAniSirGlobal,
@@ -5469,8 +5395,7 @@ uint32_t dot11f_unpack_ie_p2_pie_opaque(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEP2PIEOpaque*,
-	bool);
+	tDot11fIEP2PIEOpaque*);
 
 uint32_t dot11f_pack_ie_p2_pie_opaque(
 	tpAniSirGlobal,
@@ -5512,8 +5437,7 @@ uint32_t dot11f_unpack_ie_p2_p_probe_req(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEP2PProbeReq*,
-	bool);
+	tDot11fIEP2PProbeReq*);
 
 uint32_t dot11f_pack_ie_p2_p_probe_req(
 	tpAniSirGlobal,
@@ -5555,8 +5479,7 @@ uint32_t dot11f_unpack_ie_p2_p_probe_res(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEP2PProbeRes*,
-	bool);
+	tDot11fIEP2PProbeRes*);
 
 uint32_t dot11f_pack_ie_p2_p_probe_res(
 	tpAniSirGlobal,
@@ -5595,8 +5518,7 @@ uint32_t dot11f_unpack_ie_pti_control(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEPTIControl*,
-	bool);
+	tDot11fIEPTIControl*);
 
 uint32_t dot11f_pack_ie_pti_control(
 	tpAniSirGlobal,
@@ -5638,8 +5560,7 @@ uint32_t dot11f_unpack_ie_pu_buffer_status(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEPUBufferStatus*,
-	bool);
+	tDot11fIEPUBufferStatus*);
 
 uint32_t dot11f_pack_ie_pu_buffer_status(
 	tpAniSirGlobal,
@@ -5678,8 +5599,7 @@ uint32_t dot11f_unpack_ie_power_caps(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEPowerCaps*,
-	bool);
+	tDot11fIEPowerCaps*);
 
 uint32_t dot11f_pack_ie_power_caps(
 	tpAniSirGlobal,
@@ -5717,8 +5637,7 @@ uint32_t dot11f_unpack_ie_power_constraints(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEPowerConstraints*,
-	bool);
+	tDot11fIEPowerConstraints*);
 
 uint32_t dot11f_pack_ie_power_constraints(
 	tpAniSirGlobal,
@@ -5758,8 +5677,7 @@ uint32_t dot11f_unpack_ie_qbss_load(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEQBSSLoad*,
-	bool);
+	tDot11fIEQBSSLoad*);
 
 uint32_t dot11f_pack_ie_qbss_load(
 	tpAniSirGlobal,
@@ -5797,8 +5715,7 @@ uint32_t dot11f_unpack_ie_QCN_IE(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEQCN_IE*,
-	bool);
+	tDot11fIEQCN_IE*);
 
 uint32_t dot11f_pack_ie_QCN_IE(
 	tpAniSirGlobal,
@@ -5837,8 +5754,7 @@ uint32_t dot11f_unpack_ie_QComVendorIE(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEQComVendorIE*,
-	bool);
+	tDot11fIEQComVendorIE*);
 
 uint32_t dot11f_pack_ie_QComVendorIE(
 	tpAniSirGlobal,
@@ -5880,8 +5796,7 @@ uint32_t dot11f_unpack_ie_qos_caps_ap(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEQOSCapsAp*,
-	bool);
+	tDot11fIEQOSCapsAp*);
 
 uint32_t dot11f_pack_ie_qos_caps_ap(
 	tpAniSirGlobal,
@@ -5925,8 +5840,7 @@ uint32_t dot11f_unpack_ie_qos_caps_station(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEQOSCapsStation*,
-	bool);
+	tDot11fIEQOSCapsStation*);
 
 uint32_t dot11f_pack_ie_qos_caps_station(
 	tpAniSirGlobal,
@@ -5965,8 +5879,7 @@ uint32_t dot11f_unpack_ie_qos_map_set(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEQosMapSet*,
-	bool);
+	tDot11fIEQosMapSet*);
 
 uint32_t dot11f_pack_ie_qos_map_set(
 	tpAniSirGlobal,
@@ -6007,8 +5920,7 @@ uint32_t dot11f_unpack_ie_quiet(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEQuiet*,
-	bool);
+	tDot11fIEQuiet*);
 
 uint32_t dot11f_pack_ie_quiet(
 	tpAniSirGlobal,
@@ -6046,8 +5958,7 @@ uint32_t dot11f_unpack_ie_rcpiie(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIERCPIIE*,
-	bool);
+	tDot11fIERCPIIE*);
 
 uint32_t dot11f_pack_ie_rcpiie(
 	tpAniSirGlobal,
@@ -6098,8 +6009,7 @@ uint32_t dot11f_unpack_ie_ric_data_desc(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIERICDataDesc*,
-	bool);
+	tDot11fIERICDataDesc*);
 
 uint32_t dot11f_pack_ie_ric_data_desc(
 	tpAniSirGlobal,
@@ -6146,8 +6056,7 @@ uint32_t dot11f_unpack_ie_rsn(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIERSN*,
-	bool);
+	tDot11fIERSN*);
 
 uint32_t dot11f_pack_ie_rsn(
 	tpAniSirGlobal,
@@ -6185,8 +6094,7 @@ uint32_t dot11f_unpack_ie_rsniie(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIERSNIIE*,
-	bool);
+	tDot11fIERSNIIE*);
 
 uint32_t dot11f_pack_ie_rsniie(
 	tpAniSirGlobal,
@@ -6225,8 +6133,7 @@ uint32_t dot11f_unpack_ie_rsn_opaque(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIERSNOpaque*,
-	bool);
+	tDot11fIERSNOpaque*);
 
 uint32_t dot11f_pack_ie_rsn_opaque(
 	tpAniSirGlobal,
@@ -6265,8 +6172,7 @@ uint32_t dot11f_unpack_ie_supp_channels(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIESuppChannels*,
-	bool);
+	tDot11fIESuppChannels*);
 
 uint32_t dot11f_pack_ie_supp_channels(
 	tpAniSirGlobal,
@@ -6305,8 +6211,7 @@ uint32_t dot11f_unpack_ie_supp_operating_classes(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIESuppOperatingClasses*,
-	bool);
+	tDot11fIESuppOperatingClasses*);
 
 uint32_t dot11f_pack_ie_supp_operating_classes(
 	tpAniSirGlobal,
@@ -6358,8 +6263,7 @@ uint32_t dot11f_unpack_ie_supp_rates(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIESuppRates*,
-	bool);
+	tDot11fIESuppRates*);
 
 uint32_t dot11f_pack_ie_supp_rates(
 	tpAniSirGlobal,
@@ -6401,8 +6305,7 @@ uint32_t dot11f_unpack_ie_tim(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIETIM*,
-	bool);
+	tDot11fIETIM*);
 
 uint32_t dot11f_pack_ie_tim(
 	tpAniSirGlobal,
@@ -6441,8 +6344,7 @@ uint32_t dot11f_unpack_ie_tpc_report(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIETPCReport*,
-	bool);
+	tDot11fIETPCReport*);
 
 uint32_t dot11f_pack_ie_tpc_report(
 	tpAniSirGlobal,
@@ -6479,8 +6381,7 @@ uint32_t dot11f_unpack_ie_tpc_request(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIETPCRequest*,
-	bool);
+	tDot11fIETPCRequest*);
 
 uint32_t dot11f_pack_ie_tpc_request(
 	tpAniSirGlobal,
@@ -6520,8 +6421,7 @@ uint32_t dot11f_unpack_ie_time_advertisement(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIETimeAdvertisement*,
-	bool);
+	tDot11fIETimeAdvertisement*);
 
 uint32_t dot11f_pack_ie_time_advertisement(
 	tpAniSirGlobal,
@@ -6560,8 +6460,7 @@ uint32_t dot11f_unpack_ie_timeout_interval(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIETimeoutInterval*,
-	bool);
+	tDot11fIETimeoutInterval*);
 
 uint32_t dot11f_pack_ie_timeout_interval(
 	tpAniSirGlobal,
@@ -6603,8 +6502,7 @@ uint32_t dot11f_unpack_ie_vht_ext_bss_load(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEVHTExtBssLoad*,
-	bool);
+	tDot11fIEVHTExtBssLoad*);
 
 uint32_t dot11f_pack_ie_vht_ext_bss_load(
 	tpAniSirGlobal,
@@ -6641,8 +6539,7 @@ uint32_t dot11f_unpack_ie_vendor1_ie(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEVendor1IE*,
-	bool);
+	tDot11fIEVendor1IE*);
 
 uint32_t dot11f_pack_ie_vendor1_ie(
 	tpAniSirGlobal,
@@ -6679,8 +6576,7 @@ uint32_t dot11f_unpack_ie_vendor3_ie(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEVendor3IE*,
-	bool);
+	tDot11fIEVendor3IE*);
 
 uint32_t dot11f_pack_ie_vendor3_ie(
 	tpAniSirGlobal,
@@ -6727,8 +6623,7 @@ uint32_t dot11f_unpack_ie_wapi(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWAPI*,
-	bool);
+	tDot11fIEWAPI*);
 
 uint32_t dot11f_pack_ie_wapi(
 	tpAniSirGlobal,
@@ -6767,8 +6662,7 @@ uint32_t dot11f_unpack_ie_wapi_opaque(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWAPIOpaque*,
-	bool);
+	tDot11fIEWAPIOpaque*);
 
 uint32_t dot11f_pack_ie_wapi_opaque(
 	tpAniSirGlobal,
@@ -6807,8 +6701,7 @@ uint32_t dot11f_unpack_ie_wfatpc(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWFATPC*,
-	bool);
+	tDot11fIEWFATPC*);
 
 uint32_t dot11f_pack_ie_wfatpc(
 	tpAniSirGlobal,
@@ -6847,8 +6740,7 @@ uint32_t dot11f_unpack_ie_wfdie_opaque(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWFDIEOpaque*,
-	bool);
+	tDot11fIEWFDIEOpaque*);
 
 uint32_t dot11f_pack_ie_wfdie_opaque(
 	tpAniSirGlobal,
@@ -6891,8 +6783,7 @@ uint32_t dot11f_unpack_ie_wmm_caps(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWMMCaps*,
-	bool);
+	tDot11fIEWMMCaps*);
 
 uint32_t dot11f_pack_ie_wmm_caps(
 	tpAniSirGlobal,
@@ -6933,8 +6824,7 @@ uint32_t dot11f_unpack_ie_wmm_info_ap(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWMMInfoAp*,
-	bool);
+	tDot11fIEWMMInfoAp*);
 
 uint32_t dot11f_pack_ie_wmm_info_ap(
 	tpAniSirGlobal,
@@ -6979,8 +6869,7 @@ uint32_t dot11f_unpack_ie_wmm_info_station(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWMMInfoStation*,
-	bool);
+	tDot11fIEWMMInfoStation*);
 
 uint32_t dot11f_pack_ie_wmm_info_station(
 	tpAniSirGlobal,
@@ -7048,8 +6937,7 @@ uint32_t dot11f_unpack_ie_wmm_params(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWMMParams*,
-	bool);
+	tDot11fIEWMMParams*);
 
 uint32_t dot11f_pack_ie_wmm_params(
 	tpAniSirGlobal,
@@ -7095,8 +6983,7 @@ uint32_t dot11f_unpack_ie_wpa(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWPA*,
-	bool);
+	tDot11fIEWPA*);
 
 uint32_t dot11f_pack_ie_wpa(
 	tpAniSirGlobal,
@@ -7135,8 +7022,7 @@ uint32_t dot11f_unpack_ie_wpa_opaque(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWPAOpaque*,
-	bool);
+	tDot11fIEWPAOpaque*);
 
 uint32_t dot11f_pack_ie_wpa_opaque(
 	tpAniSirGlobal,
@@ -7195,8 +7081,7 @@ uint32_t dot11f_unpack_ie_wsc(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWSC*,
-	bool);
+	tDot11fIEWSC*);
 
 uint32_t dot11f_pack_ie_wsc(
 	tpAniSirGlobal,
@@ -7236,8 +7121,7 @@ uint32_t dot11f_unpack_ie_wsc_assoc_req(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWscAssocReq*,
-	bool);
+	tDot11fIEWscAssocReq*);
 
 uint32_t dot11f_pack_ie_wsc_assoc_req(
 	tpAniSirGlobal,
@@ -7277,8 +7161,7 @@ uint32_t dot11f_unpack_ie_wsc_assoc_res(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWscAssocRes*,
-	bool);
+	tDot11fIEWscAssocRes*);
 
 uint32_t dot11f_pack_ie_wsc_assoc_res(
 	tpAniSirGlobal,
@@ -7324,8 +7207,7 @@ uint32_t dot11f_unpack_ie_wsc_beacon(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWscBeacon*,
-	bool);
+	tDot11fIEWscBeacon*);
 
 uint32_t dot11f_pack_ie_wsc_beacon(
 	tpAniSirGlobal,
@@ -7379,8 +7261,7 @@ uint32_t dot11f_unpack_ie_wsc_beacon_probe_res(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWscBeaconProbeRes*,
-	bool);
+	tDot11fIEWscBeaconProbeRes*);
 
 uint32_t dot11f_pack_ie_wsc_beacon_probe_res(
 	tpAniSirGlobal,
@@ -7419,8 +7300,7 @@ uint32_t dot11f_unpack_ie_wsc_ie_opaque(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWscIEOpaque*,
-	bool);
+	tDot11fIEWscIEOpaque*);
 
 uint32_t dot11f_pack_ie_wsc_ie_opaque(
 	tpAniSirGlobal,
@@ -7472,8 +7352,7 @@ uint32_t dot11f_unpack_ie_wsc_probe_req(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWscProbeReq*,
-	bool);
+	tDot11fIEWscProbeReq*);
 
 uint32_t dot11f_pack_ie_wsc_probe_req(
 	tpAniSirGlobal,
@@ -7527,8 +7406,7 @@ uint32_t dot11f_unpack_ie_wsc_probe_res(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWscProbeRes*,
-	bool);
+	tDot11fIEWscProbeRes*);
 
 uint32_t dot11f_pack_ie_wsc_probe_res(
 	tpAniSirGlobal,
@@ -7568,8 +7446,7 @@ uint32_t dot11f_unpack_ie_wsc_reassoc_res(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEWscReassocRes*,
-	bool);
+	tDot11fIEWscReassocRes*);
 
 uint32_t dot11f_pack_ie_wsc_reassoc_res(
 	tpAniSirGlobal,
@@ -7610,8 +7487,7 @@ uint32_t dot11f_unpack_ie_ext_chan_switch_ann(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEext_chan_switch_ann*,
-	bool);
+	tDot11fIEext_chan_switch_ann*);
 
 uint32_t dot11f_pack_ie_ext_chan_switch_ann(
 	tpAniSirGlobal,
@@ -7623,416 +7499,6 @@ uint32_t dot11f_pack_ie_ext_chan_switch_ann(
 uint32_t dot11f_get_packed_ie_ext_chan_switch_ann(
 	tpAniSirGlobal,
 	tDot11fIEext_chan_switch_ann *,
-	uint32_t*);
-
-#ifdef __cplusplus
-}; /* End extern "C". */
-#endif /* C++ */
-
-/* EID 255 (0xff) Extended EID 1 (0x01) */
-typedef struct sDot11fIEfils_assoc_delay_info {
-	uint8_t             present;
-	uint8_t             assoc_delay_info;
-} tDot11fIEfils_assoc_delay_info;
-
-#define DOT11F_EID_FILS_ASSOC_DELAY_INFO (255)
-
-/* N.B. These #defines do *not* include the EID & length */
-#define DOT11F_IE_FILS_ASSOC_DELAY_INFO_MIN_LEN (1)
-
-#define DOT11F_IE_FILS_ASSOC_DELAY_INFO_MAX_LEN (1)
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* C++ */
-uint32_t dot11f_unpack_ie_fils_assoc_delay_info(
-	tpAniSirGlobal,
-	uint8_t *,
-	uint8_t,
-	tDot11fIEfils_assoc_delay_info*,
-	bool);
-
-uint32_t dot11f_pack_ie_fils_assoc_delay_info(
-	tpAniSirGlobal,
-	tDot11fIEfils_assoc_delay_info *,
-	uint8_t *,
-	uint32_t,
-	uint32_t*);
-
-uint32_t dot11f_get_packed_ie_fils_assoc_delay_info(
-	tpAniSirGlobal,
-	tDot11fIEfils_assoc_delay_info *,
-	uint32_t*);
-
-#ifdef __cplusplus
-}; /* End extern "C". */
-#endif /* C++ */
-
-/* EID 255 (0xff) Extended EID 5 (0x05) */
-typedef struct sDot11fIEfils_hlp_container {
-	uint8_t             present;
-	uint8_t             dest_mac[6];
-	uint8_t             src_mac[6];
-	uint8_t             num_hlp_packet;
-	uint8_t             hlp_packet[255];
-} tDot11fIEfils_hlp_container;
-
-#define DOT11F_EID_FILS_HLP_CONTAINER (255)
-
-/* N.B. These #defines do *not* include the EID & length */
-#define DOT11F_IE_FILS_HLP_CONTAINER_MIN_LEN (12)
-
-#define DOT11F_IE_FILS_HLP_CONTAINER_MAX_LEN (267)
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* C++ */
-uint32_t dot11f_unpack_ie_fils_hlp_container(
-	tpAniSirGlobal,
-	uint8_t *,
-	uint8_t,
-	tDot11fIEfils_hlp_container*,
-	bool);
-
-uint32_t dot11f_pack_ie_fils_hlp_container(
-	tpAniSirGlobal,
-	tDot11fIEfils_hlp_container *,
-	uint8_t *,
-	uint32_t,
-	uint32_t*);
-
-uint32_t dot11f_get_packed_ie_fils_hlp_container(
-	tpAniSirGlobal,
-	tDot11fIEfils_hlp_container *,
-	uint32_t*);
-
-#ifdef __cplusplus
-}; /* End extern "C". */
-#endif /* C++ */
-
-/* EID 240 (0xf0) */
-typedef struct sDot11fIEfils_indication {
-	uint8_t             present;
-	uint16_t public_key_identifiers_cnt:3;
-	uint16_t realm_identifiers_cnt:3;
-	uint16_t is_ip_config_supported:1;
-	uint16_t  is_cache_id_present:1;
-	uint16_t    is_hessid_present:1;
-	uint16_t is_fils_sk_auth_supported:1;
-	uint16_t is_fils_sk_auth_pfs_supported:1;
-	uint16_t is_pk_auth_supported:1;
-	uint16_t             reserved:4;
-	uint8_t             num_variable_data;
-	uint8_t             variable_data[255];
-} tDot11fIEfils_indication;
-
-#define DOT11F_EID_FILS_INDICATION (240)
-
-/* N.B. These #defines do *not* include the EID & length */
-#define DOT11F_IE_FILS_INDICATION_MIN_LEN (5)
-
-#define DOT11F_IE_FILS_INDICATION_MAX_LEN (257)
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* C++ */
-uint32_t dot11f_unpack_ie_fils_indication(
-	tpAniSirGlobal,
-	uint8_t *,
-	uint8_t,
-	tDot11fIEfils_indication*,
-	bool);
-
-uint32_t dot11f_pack_ie_fils_indication(
-	tpAniSirGlobal,
-	tDot11fIEfils_indication *,
-	uint8_t *,
-	uint32_t,
-	uint32_t*);
-
-uint32_t dot11f_get_packed_ie_fils_indication(
-	tpAniSirGlobal,
-	tDot11fIEfils_indication *,
-	uint32_t*);
-
-#ifdef __cplusplus
-}; /* End extern "C". */
-#endif /* C++ */
-
-/* EID 255 (0xff) Extended EID 7 (0x07) */
-typedef struct sDot11fIEfils_kde {
-	uint8_t             present;
-	uint8_t             key_rsc[8];
-	uint8_t             num_kde_list;
-	uint8_t             kde_list[255];
-} tDot11fIEfils_kde;
-
-#define DOT11F_EID_FILS_KDE (255)
-
-/* N.B. These #defines do *not* include the EID & length */
-#define DOT11F_IE_FILS_KDE_MIN_LEN (8)
-
-#define DOT11F_IE_FILS_KDE_MAX_LEN (263)
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* C++ */
-uint32_t dot11f_unpack_ie_fils_kde(
-	tpAniSirGlobal,
-	uint8_t *,
-	uint8_t,
-	tDot11fIEfils_kde*,
-	bool);
-
-uint32_t dot11f_pack_ie_fils_kde(
-	tpAniSirGlobal,
-	tDot11fIEfils_kde *,
-	uint8_t *,
-	uint32_t,
-	uint32_t*);
-
-uint32_t dot11f_get_packed_ie_fils_kde(
-	tpAniSirGlobal,
-	tDot11fIEfils_kde *,
-	uint32_t*);
-
-#ifdef __cplusplus
-}; /* End extern "C". */
-#endif /* C++ */
-
-/* EID 255 (0xff) Extended EID 3 (0x03) */
-typedef struct sDot11fIEfils_key_confirmation {
-	uint8_t             present;
-	uint8_t             num_key_auth;
-	uint8_t             key_auth[255];
-} tDot11fIEfils_key_confirmation;
-
-#define DOT11F_EID_FILS_KEY_CONFIRMATION (255)
-
-/* N.B. These #defines do *not* include the EID & length */
-#define DOT11F_IE_FILS_KEY_CONFIRMATION_MIN_LEN (0)
-
-#define DOT11F_IE_FILS_KEY_CONFIRMATION_MAX_LEN (255)
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* C++ */
-uint32_t dot11f_unpack_ie_fils_key_confirmation(
-	tpAniSirGlobal,
-	uint8_t *,
-	uint8_t,
-	tDot11fIEfils_key_confirmation*,
-	bool);
-
-uint32_t dot11f_pack_ie_fils_key_confirmation(
-	tpAniSirGlobal,
-	tDot11fIEfils_key_confirmation *,
-	uint8_t *,
-	uint32_t,
-	uint32_t*);
-
-uint32_t dot11f_get_packed_ie_fils_key_confirmation(
-	tpAniSirGlobal,
-	tDot11fIEfils_key_confirmation *,
-	uint32_t*);
-
-#ifdef __cplusplus
-}; /* End extern "C". */
-#endif /* C++ */
-
-/* EID 255 (0xff) Extended EID 13 (0x0d) */
-typedef struct sDot11fIEfils_nonce {
-	uint8_t             present;
-	uint8_t             nonce[16];
-} tDot11fIEfils_nonce;
-
-#define DOT11F_EID_FILS_NONCE (255)
-
-/* N.B. These #defines do *not* include the EID & length */
-#define DOT11F_IE_FILS_NONCE_MIN_LEN (16)
-
-#define DOT11F_IE_FILS_NONCE_MAX_LEN (16)
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* C++ */
-uint32_t dot11f_unpack_ie_fils_nonce(
-	tpAniSirGlobal,
-	uint8_t *,
-	uint8_t,
-	tDot11fIEfils_nonce*,
-	bool);
-
-uint32_t dot11f_pack_ie_fils_nonce(
-	tpAniSirGlobal,
-	tDot11fIEfils_nonce *,
-	uint8_t *,
-	uint32_t,
-	uint32_t*);
-
-uint32_t dot11f_get_packed_ie_fils_nonce(
-	tpAniSirGlobal,
-	tDot11fIEfils_nonce *,
-	uint32_t*);
-
-#ifdef __cplusplus
-}; /* End extern "C". */
-#endif /* C++ */
-
-/* EID 255 (0xff) Extended EID 12 (0x0c) */
-typedef struct sDot11fIEfils_public_key {
-	uint8_t             present;
-	uint8_t             key_type;
-	uint8_t             num_public_key;
-	uint8_t             public_key[255];
-} tDot11fIEfils_public_key;
-
-#define DOT11F_EID_FILS_PUBLIC_KEY (255)
-
-/* N.B. These #defines do *not* include the EID & length */
-#define DOT11F_IE_FILS_PUBLIC_KEY_MIN_LEN (1)
-
-#define DOT11F_IE_FILS_PUBLIC_KEY_MAX_LEN (256)
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* C++ */
-uint32_t dot11f_unpack_ie_fils_public_key(
-	tpAniSirGlobal,
-	uint8_t *,
-	uint8_t,
-	tDot11fIEfils_public_key*,
-	bool);
-
-uint32_t dot11f_pack_ie_fils_public_key(
-	tpAniSirGlobal,
-	tDot11fIEfils_public_key *,
-	uint8_t *,
-	uint32_t,
-	uint32_t*);
-
-uint32_t dot11f_get_packed_ie_fils_public_key(
-	tpAniSirGlobal,
-	tDot11fIEfils_public_key *,
-	uint32_t*);
-
-#ifdef __cplusplus
-}; /* End extern "C". */
-#endif /* C++ */
-
-/* EID 255 (0xff) Extended EID 4 (0x04) */
-typedef struct sDot11fIEfils_session {
-	uint8_t             present;
-	uint8_t             session[8];
-} tDot11fIEfils_session;
-
-#define DOT11F_EID_FILS_SESSION (255)
-
-/* N.B. These #defines do *not* include the EID & length */
-#define DOT11F_IE_FILS_SESSION_MIN_LEN (8)
-
-#define DOT11F_IE_FILS_SESSION_MAX_LEN (8)
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* C++ */
-uint32_t dot11f_unpack_ie_fils_session(
-	tpAniSirGlobal,
-	uint8_t *,
-	uint8_t,
-	tDot11fIEfils_session*,
-	bool);
-
-uint32_t dot11f_pack_ie_fils_session(
-	tpAniSirGlobal,
-	tDot11fIEfils_session *,
-	uint8_t *,
-	uint32_t,
-	uint32_t*);
-
-uint32_t dot11f_get_packed_ie_fils_session(
-	tpAniSirGlobal,
-	tDot11fIEfils_session *,
-	uint32_t*);
-
-#ifdef __cplusplus
-}; /* End extern "C". */
-#endif /* C++ */
-
-/* EID 255 (0xff) Extended EID 8 (0x08) */
-typedef struct sDot11fIEfils_wrapped_data {
-	uint8_t             present;
-	uint8_t             num_wrapped_data;
-	uint8_t             wrapped_data[255];
-} tDot11fIEfils_wrapped_data;
-
-#define DOT11F_EID_FILS_WRAPPED_DATA (255)
-
-/* N.B. These #defines do *not* include the EID & length */
-#define DOT11F_IE_FILS_WRAPPED_DATA_MIN_LEN (0)
-
-#define DOT11F_IE_FILS_WRAPPED_DATA_MAX_LEN (255)
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* C++ */
-uint32_t dot11f_unpack_ie_fils_wrapped_data(
-	tpAniSirGlobal,
-	uint8_t *,
-	uint8_t,
-	tDot11fIEfils_wrapped_data*,
-	bool);
-
-uint32_t dot11f_pack_ie_fils_wrapped_data(
-	tpAniSirGlobal,
-	tDot11fIEfils_wrapped_data *,
-	uint8_t *,
-	uint32_t,
-	uint32_t*);
-
-uint32_t dot11f_get_packed_ie_fils_wrapped_data(
-	tpAniSirGlobal,
-	tDot11fIEfils_wrapped_data *,
-	uint32_t*);
-
-#ifdef __cplusplus
-}; /* End extern "C". */
-#endif /* C++ */
-
-/* EID 242 (0xf2) */
-typedef struct sDot11fIEfragment_ie {
-	uint8_t             present;
-	uint8_t             num_data;
-	uint8_t             data[255];
-} tDot11fIEfragment_ie;
-
-#define DOT11F_EID_FRAGMENT_IE (242)
-
-/* N.B. These #defines do *not* include the EID & length */
-#define DOT11F_IE_FRAGMENT_IE_MIN_LEN (0)
-
-#define DOT11F_IE_FRAGMENT_IE_MAX_LEN (255)
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* C++ */
-uint32_t dot11f_unpack_ie_fragment_ie(
-	tpAniSirGlobal,
-	uint8_t *,
-	uint8_t,
-	tDot11fIEfragment_ie*,
-	bool);
-
-uint32_t dot11f_pack_ie_fragment_ie(
-	tpAniSirGlobal,
-	tDot11fIEfragment_ie *,
-	uint8_t *,
-	uint32_t,
-	uint32_t*);
-
-uint32_t dot11f_get_packed_ie_fragment_ie(
-	tpAniSirGlobal,
-	tDot11fIEfragment_ie *,
 	uint32_t*);
 
 #ifdef __cplusplus
@@ -8070,8 +7536,7 @@ uint32_t dot11f_unpack_ie_hs20vendor_ie(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEhs20vendor_ie*,
-	bool);
+	tDot11fIEhs20vendor_ie*);
 
 uint32_t dot11f_pack_ie_hs20vendor_ie(
 	tpAniSirGlobal,
@@ -8114,8 +7579,7 @@ uint32_t dot11f_unpack_ie_ht2040_bss_coexistence(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEht2040_bss_coexistence*,
-	bool);
+	tDot11fIEht2040_bss_coexistence*);
 
 uint32_t dot11f_pack_ie_ht2040_bss_coexistence(
 	tpAniSirGlobal,
@@ -8155,8 +7619,7 @@ uint32_t dot11f_unpack_ie_ht2040_bss_intolerant_report(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEht2040_bss_intolerant_report*,
-	bool);
+	tDot11fIEht2040_bss_intolerant_report*);
 
 uint32_t dot11f_pack_ie_ht2040_bss_intolerant_report(
 	tpAniSirGlobal,
@@ -8168,46 +7631,6 @@ uint32_t dot11f_pack_ie_ht2040_bss_intolerant_report(
 uint32_t dot11f_get_packed_ie_ht2040_bss_intolerant_report(
 	tpAniSirGlobal,
 	tDot11fIEht2040_bss_intolerant_report *,
-	uint32_t*);
-
-#ifdef __cplusplus
-}; /* End extern "C". */
-#endif /* C++ */
-
-/* EID 221 (0xdd) {OUI 0x50, 0x6f, 0x9a, 0x12} */
-typedef struct sDot11fIEosen_ie {
-	uint8_t             present;
-	uint8_t             num_data;
-	uint8_t             data[255];
-} tDot11fIEosen_ie;
-
-#define DOT11F_EID_OSEN_IE (221)
-
-/* N.B. These #defines do *not* include the EID & length */
-#define DOT11F_IE_OSEN_IE_MIN_LEN (4)
-
-#define DOT11F_IE_OSEN_IE_MAX_LEN (259)
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* C++ */
-uint32_t dot11f_unpack_ie_osen_ie(
-	tpAniSirGlobal,
-	uint8_t *,
-	uint8_t,
-	tDot11fIEosen_ie*,
-	bool);
-
-uint32_t dot11f_pack_ie_osen_ie(
-	tpAniSirGlobal,
-	tDot11fIEosen_ie *,
-	uint8_t *,
-	uint32_t,
-	uint32_t*);
-
-uint32_t dot11f_get_packed_ie_osen_ie(
-	tpAniSirGlobal,
-	tDot11fIEosen_ie *,
 	uint32_t*);
 
 #ifdef __cplusplus
@@ -8234,8 +7657,7 @@ uint32_t dot11f_unpack_ie_sec_chan_offset_ele(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEsec_chan_offset_ele*,
-	bool);
+	tDot11fIEsec_chan_offset_ele*);
 
 uint32_t dot11f_pack_ie_sec_chan_offset_ele(
 	tpAniSirGlobal,
@@ -8276,8 +7698,7 @@ uint32_t dot11f_unpack_ie_vendor_vht_ie(
 	tpAniSirGlobal,
 	uint8_t *,
 	uint8_t,
-	tDot11fIEvendor_vht_ie*,
-	bool);
+	tDot11fIEvendor_vht_ie*);
 
 uint32_t dot11f_pack_ie_vendor_vht_ie(
 	tpAniSirGlobal,
@@ -8321,7 +7742,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_add_ts_request(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fAddTSRequest * pFrm, bool append_ie);
+	tDot11fAddTSRequest * pFrm);
 uint32_t dot11f_pack_add_ts_request(tpAniSirGlobal pCtx,
 	tDot11fAddTSRequest *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -8361,7 +7782,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_add_ts_response(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fAddTSResponse * pFrm, bool append_ie);
+	tDot11fAddTSResponse * pFrm);
 uint32_t dot11f_pack_add_ts_response(tpAniSirGlobal pCtx,
 	tDot11fAddTSResponse *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -8374,43 +7795,36 @@ uint32_t dot11f_get_packed_add_ts_response_size(tpAniSirGlobal pCtx,
 #endif /* C++ */
 
 typedef struct sDot11fAssocRequest{
-	tDot11fFfCapabilities                 Capabilities;
-	tDot11fFfListenInterval               ListenInterval;
-	tDot11fIESSID                         SSID;
-	tDot11fIESuppRates                    SuppRates;
-	tDot11fIEOperatingMode                OperatingMode;
-	tDot11fIEPowerCaps                    PowerCaps;
-	tDot11fIESuppChannels                 SuppChannels;
-	tDot11fIEHTCaps                       HTCaps;
-	tDot11fIEQOSCapsStation               QOSCapsStation;
-	tDot11fIERSNOpaque                    RSNOpaque;
-	tDot11fIEExtSuppRates                 ExtSuppRates;
-	tDot11fIEMobilityDomain               MobilityDomain;
-	tDot11fIESuppOperatingClasses         SuppOperatingClasses;
-	tDot11fIEWAPIOpaque                   WAPIOpaque;
-	tDot11fIEWAPI                         WAPI;
-	tDot11fIERRMEnabledCap                RRMEnabledCap;
-	tDot11fIEQosMapSet                    QosMapSet;
-	tDot11fIEExtCap                       ExtCap;
-	tDot11fIEVHTCaps                      VHTCaps;
-	tDot11fIEfils_session                 fils_session;
-	tDot11fIEfils_public_key              fils_public_key;
-	tDot11fIEfils_key_confirmation        fils_key_confirmation;
-	tDot11fIEfils_hlp_container           fils_hlp_container;
-	tDot11fIEfragment_ie                  fragment_ie;
-	tDot11fIEWPAOpaque                    WPAOpaque;
-	tDot11fIEWMMCaps                      WMMCaps;
-	tDot11fIEWMMInfoStation               WMMInfoStation;
-	tDot11fIEWscIEOpaque                  WscIEOpaque;
-	tDot11fIEESERadMgmtCap                ESERadMgmtCap;
-	tDot11fIEESEVersion                   ESEVersion;
-	tDot11fIEP2PIEOpaque                  P2PIEOpaque;
-	tDot11fIEWFDIEOpaque                  WFDIEOpaque;
-	tDot11fIEvendor_vht_ie                vendor_vht_ie;
-	tDot11fIEhs20vendor_ie                hs20vendor_ie;
-	tDot11fIEMBO_IE                       MBO_IE;
-	tDot11fIEQCN_IE                       QCN_IE;
-	tDot11fIEosen_ie                      osen_ie;
+	tDot11fFfCapabilities                Capabilities;
+	tDot11fFfListenInterval              ListenInterval;
+	tDot11fIESSID                        SSID;
+	tDot11fIESuppRates                   SuppRates;
+	tDot11fIEOperatingMode               OperatingMode;
+	tDot11fIEPowerCaps                   PowerCaps;
+	tDot11fIESuppChannels                SuppChannels;
+	tDot11fIEHTCaps                      HTCaps;
+	tDot11fIEQOSCapsStation              QOSCapsStation;
+	tDot11fIERSNOpaque                   RSNOpaque;
+	tDot11fIEExtSuppRates                ExtSuppRates;
+	tDot11fIEMobilityDomain              MobilityDomain;
+	tDot11fIESuppOperatingClasses        SuppOperatingClasses;
+	tDot11fIEWAPIOpaque                  WAPIOpaque;
+	tDot11fIEWAPI                        WAPI;
+	tDot11fIERRMEnabledCap               RRMEnabledCap;
+	tDot11fIEQosMapSet                   QosMapSet;
+	tDot11fIEExtCap                      ExtCap;
+	tDot11fIEVHTCaps                     VHTCaps;
+	tDot11fIEWPAOpaque                   WPAOpaque;
+	tDot11fIEWMMCaps                     WMMCaps;
+	tDot11fIEWMMInfoStation              WMMInfoStation;
+	tDot11fIEWscIEOpaque                 WscIEOpaque;
+	tDot11fIEESERadMgmtCap               ESERadMgmtCap;
+	tDot11fIEESEVersion                  ESEVersion;
+	tDot11fIEP2PIEOpaque                 P2PIEOpaque;
+	tDot11fIEWFDIEOpaque                 WFDIEOpaque;
+	tDot11fIEvendor_vht_ie               vendor_vht_ie;
+	tDot11fIEhs20vendor_ie               hs20vendor_ie;
+	tDot11fIEQCN_IE                      QCN_IE;
 } tDot11fAssocRequest;
 
 #define DOT11F_ASSOCREQUEST (3)
@@ -8421,7 +7835,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_assoc_request(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fAssocRequest * pFrm, bool append_ie);
+	tDot11fAssocRequest * pFrm);
 uint32_t dot11f_pack_assoc_request(tpAniSirGlobal pCtx,
 	tDot11fAssocRequest *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -8434,45 +7848,39 @@ uint32_t dot11f_get_packed_assoc_request_size(tpAniSirGlobal pCtx,
 #endif /* C++ */
 
 typedef struct sDot11fAssocResponse{
-	tDot11fFfCapabilities                 Capabilities;
-	tDot11fFfStatus                       Status;
-	tDot11fFfAID                          AID;
-	tDot11fIESuppRates                    SuppRates;
-	tDot11fIEExtSuppRates                 ExtSuppRates;
-	tDot11fIEEDCAParamSet                 EDCAParamSet;
-	tDot11fIERCPIIE                       RCPIIE;
-	tDot11fIERSNIIE                       RSNIIE;
-	tDot11fIERRMEnabledCap                RRMEnabledCap;
-	tDot11fIEMobilityDomain               MobilityDomain;
-	tDot11fIEFTInfo                       FTInfo;
-	uint16_t                              num_RICDataDesc;
-	tDot11fIERICDataDesc                  RICDataDesc[2];
-	tDot11fIEWPA                          WPA;
-	tDot11fIETimeoutInterval              TimeoutInterval;
-	tDot11fIEHTCaps                       HTCaps;
-	tDot11fIEHTInfo                       HTInfo;
-	tDot11fIEWMMParams                    WMMParams;
-	tDot11fIEWMMCaps                      WMMCaps;
-	tDot11fIEESERadMgmtCap                ESERadMgmtCap;
-	tDot11fIEESETrafStrmMet               ESETrafStrmMet;
-	tDot11fIEESETxmitPower                ESETxmitPower;
-	uint16_t                              num_WMMTSPEC;
-	tDot11fIEWMMTSPEC                     WMMTSPEC[4];
-	tDot11fIEWscAssocRes                  WscAssocRes;
-	tDot11fIEP2PAssocRes                  P2PAssocRes;
-	tDot11fIEVHTCaps                      VHTCaps;
-	tDot11fIEVHTOperation                 VHTOperation;
-	tDot11fIEExtCap                       ExtCap;
-	tDot11fIEOBSSScanParameters           OBSSScanParameters;
-	tDot11fIEQosMapSet                    QosMapSet;
-	tDot11fIEfils_session                 fils_session;
-	tDot11fIEfils_public_key              fils_public_key;
-	tDot11fIEfils_key_confirmation        fils_key_confirmation;
-	tDot11fIEfils_hlp_container           fils_hlp_container;
-	tDot11fIEfragment_ie                  fragment_ie;
-	tDot11fIEfils_kde                     fils_kde;
-	tDot11fIEvendor_vht_ie                vendor_vht_ie;
-	tDot11fIEQCN_IE                       QCN_IE;
+	tDot11fFfCapabilities              Capabilities;
+	tDot11fFfStatus                    Status;
+	tDot11fFfAID                       AID;
+	tDot11fIESuppRates                 SuppRates;
+	tDot11fIEExtSuppRates              ExtSuppRates;
+	tDot11fIEEDCAParamSet              EDCAParamSet;
+	tDot11fIERCPIIE                    RCPIIE;
+	tDot11fIERSNIIE                    RSNIIE;
+	tDot11fIERRMEnabledCap             RRMEnabledCap;
+	tDot11fIEMobilityDomain            MobilityDomain;
+	tDot11fIEFTInfo                    FTInfo;
+	uint16_t                           num_RICDataDesc;
+	tDot11fIERICDataDesc               RICDataDesc[2];
+	tDot11fIEWPA                       WPA;
+	tDot11fIETimeoutInterval           TimeoutInterval;
+	tDot11fIEHTCaps                    HTCaps;
+	tDot11fIEHTInfo                    HTInfo;
+	tDot11fIEWMMParams                 WMMParams;
+	tDot11fIEWMMCaps                   WMMCaps;
+	tDot11fIEESERadMgmtCap             ESERadMgmtCap;
+	tDot11fIEESETrafStrmMet            ESETrafStrmMet;
+	tDot11fIEESETxmitPower             ESETxmitPower;
+	uint16_t                           num_WMMTSPEC;
+	tDot11fIEWMMTSPEC                  WMMTSPEC[4];
+	tDot11fIEWscAssocRes               WscAssocRes;
+	tDot11fIEP2PAssocRes               P2PAssocRes;
+	tDot11fIEVHTCaps                   VHTCaps;
+	tDot11fIEVHTOperation              VHTOperation;
+	tDot11fIEExtCap                    ExtCap;
+	tDot11fIEOBSSScanParameters        OBSSScanParameters;
+	tDot11fIEQosMapSet                 QosMapSet;
+	tDot11fIEvendor_vht_ie             vendor_vht_ie;
+	tDot11fIEQCN_IE                    QCN_IE;
 } tDot11fAssocResponse;
 
 #define DOT11F_ASSOCRESPONSE (4)
@@ -8483,7 +7891,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_assoc_response(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fAssocResponse * pFrm, bool append_ie);
+	tDot11fAssocResponse * pFrm);
 uint32_t dot11f_pack_assoc_response(tpAniSirGlobal pCtx,
 	tDot11fAssocResponse *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -8496,20 +7904,16 @@ uint32_t dot11f_get_packed_assoc_response_size(tpAniSirGlobal pCtx,
 #endif /* C++ */
 
 typedef struct sDot11fAuthentication{
-	tDot11fFfAuthAlgo                     AuthAlgo;
-	tDot11fFfAuthSeqNo                    AuthSeqNo;
-	tDot11fFfStatus                       Status;
-	tDot11fIEChallengeText                ChallengeText;
-	tDot11fIERSNOpaque                    RSNOpaque;
-	tDot11fIEMobilityDomain               MobilityDomain;
-	tDot11fIEFTInfo                       FTInfo;
-	tDot11fIETimeoutInterval              TimeoutInterval;
-	uint16_t                              num_RICDataDesc;
-	tDot11fIERICDataDesc                  RICDataDesc[2];
-	tDot11fIEfils_nonce                   fils_nonce;
-	tDot11fIEfils_session                 fils_session;
-	tDot11fIEfils_wrapped_data            fils_wrapped_data;
-	tDot11fIEfils_assoc_delay_info        fils_assoc_delay_info;
+	tDot11fFfAuthAlgo               AuthAlgo;
+	tDot11fFfAuthSeqNo              AuthSeqNo;
+	tDot11fFfStatus                 Status;
+	tDot11fIEChallengeText          ChallengeText;
+	tDot11fIERSNOpaque              RSNOpaque;
+	tDot11fIEMobilityDomain         MobilityDomain;
+	tDot11fIEFTInfo                 FTInfo;
+	tDot11fIETimeoutInterval        TimeoutInterval;
+	uint16_t                        num_RICDataDesc;
+	tDot11fIERICDataDesc            RICDataDesc[2];
 } tDot11fAuthentication;
 
 #define DOT11F_AUTHENTICATION (5)
@@ -8520,7 +7924,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_authentication(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fAuthentication * pFrm, bool append_ie);
+	tDot11fAuthentication * pFrm);
 uint32_t dot11f_pack_authentication(tpAniSirGlobal pCtx,
 	tDot11fAuthentication *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -8581,7 +7985,6 @@ typedef struct sDot11fBeacon{
 	tDot11fIEOperatingMode               OperatingMode;
 	tDot11fIEWiderBWChanSwitchAnn        WiderBWChanSwitchAnn;
 	tDot11fIEOBSSScanParameters          OBSSScanParameters;
-	tDot11fIEfils_indication             fils_indication;
 	tDot11fIEVendor1IE                   Vendor1IE;
 	tDot11fIEvendor_vht_ie               vendor_vht_ie;
 	tDot11fIEVendor3IE                   Vendor3IE;
@@ -8601,7 +8004,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_beacon(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fBeacon * pFrm, bool append_ie);
+	tDot11fBeacon * pFrm);
 uint32_t dot11f_pack_beacon(tpAniSirGlobal pCtx,
 	tDot11fBeacon *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -8631,7 +8034,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_beacon1(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fBeacon1 * pFrm, bool append_ie);
+	tDot11fBeacon1 * pFrm);
 uint32_t dot11f_pack_beacon1(tpAniSirGlobal pCtx,
 	tDot11fBeacon1 *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -8678,7 +8081,6 @@ typedef struct sDot11fBeacon2{
 	tDot11fIEOperatingMode               OperatingMode;
 	tDot11fIEWiderBWChanSwitchAnn        WiderBWChanSwitchAnn;
 	tDot11fIEOBSSScanParameters          OBSSScanParameters;
-	tDot11fIEfils_indication             fils_indication;
 	tDot11fIEVendor1IE                   Vendor1IE;
 	tDot11fIEvendor_vht_ie               vendor_vht_ie;
 	tDot11fIEVendor3IE                   Vendor3IE;
@@ -8697,7 +8099,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_beacon2(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fBeacon2 * pFrm, bool append_ie);
+	tDot11fBeacon2 * pFrm);
 uint32_t dot11f_pack_beacon2(tpAniSirGlobal pCtx,
 	tDot11fBeacon2 *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -8756,7 +8158,6 @@ typedef struct sDot11fBeaconIEs{
 	tDot11fIEOperatingMode               OperatingMode;
 	tDot11fIEWiderBWChanSwitchAnn        WiderBWChanSwitchAnn;
 	tDot11fIEOBSSScanParameters          OBSSScanParameters;
-	tDot11fIEfils_indication             fils_indication;
 	tDot11fIEVendor1IE                   Vendor1IE;
 	tDot11fIEvendor_vht_ie               vendor_vht_ie;
 	tDot11fIEVendor3IE                   Vendor3IE;
@@ -8775,7 +8176,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_beacon_i_es(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fBeaconIEs * pFrm, bool append_ie);
+	tDot11fBeaconIEs * pFrm);
 uint32_t dot11f_pack_beacon_i_es(tpAniSirGlobal pCtx,
 	tDot11fBeaconIEs *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -8803,7 +8204,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_channel_switch(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fChannelSwitch * pFrm, bool append_ie);
+	tDot11fChannelSwitch * pFrm);
 uint32_t dot11f_pack_channel_switch(tpAniSirGlobal pCtx,
 	tDot11fChannelSwitch *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -8828,7 +8229,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_de_auth(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fDeAuth * pFrm, bool append_ie);
+	tDot11fDeAuth * pFrm);
 uint32_t dot11f_pack_de_auth(tpAniSirGlobal pCtx,
 	tDot11fDeAuth *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -8855,7 +8256,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_del_ts(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fDelTS * pFrm, bool append_ie);
+	tDot11fDelTS * pFrm);
 uint32_t dot11f_pack_del_ts(tpAniSirGlobal pCtx,
 	tDot11fDelTS *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -8880,7 +8281,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_disassociation(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fDisassociation * pFrm, bool append_ie);
+	tDot11fDisassociation * pFrm);
 uint32_t dot11f_pack_disassociation(tpAniSirGlobal pCtx,
 	tDot11fDisassociation *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -8914,7 +8315,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_link_measurement_report(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fLinkMeasurementReport * pFrm, bool append_ie);
+	tDot11fLinkMeasurementReport * pFrm);
 uint32_t dot11f_pack_link_measurement_report(tpAniSirGlobal pCtx,
 	tDot11fLinkMeasurementReport *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -8942,7 +8343,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_link_measurement_request(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fLinkMeasurementRequest * pFrm, bool append_ie);
+	tDot11fLinkMeasurementRequest * pFrm);
 uint32_t dot11f_pack_link_measurement_request(tpAniSirGlobal pCtx,
 	tDot11fLinkMeasurementRequest *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -8969,7 +8370,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_measurement_report(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fMeasurementReport * pFrm, bool append_ie);
+	tDot11fMeasurementReport * pFrm);
 uint32_t dot11f_pack_measurement_report(tpAniSirGlobal pCtx,
 	tDot11fMeasurementReport *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -8997,7 +8398,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_measurement_request(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fMeasurementRequest * pFrm, bool append_ie);
+	tDot11fMeasurementRequest * pFrm);
 uint32_t dot11f_pack_measurement_request(tpAniSirGlobal pCtx,
 	tDot11fMeasurementRequest *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9024,7 +8425,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_neighbor_report_request(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fNeighborReportRequest * pFrm, bool append_ie);
+	tDot11fNeighborReportRequest * pFrm);
 uint32_t dot11f_pack_neighbor_report_request(tpAniSirGlobal pCtx,
 	tDot11fNeighborReportRequest *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9052,7 +8453,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_neighbor_report_response(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fNeighborReportResponse * pFrm, bool append_ie);
+	tDot11fNeighborReportResponse * pFrm);
 uint32_t dot11f_pack_neighbor_report_response(tpAniSirGlobal pCtx,
 	tDot11fNeighborReportResponse *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9078,7 +8479,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_operating_mode(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fOperatingMode * pFrm, bool append_ie);
+	tDot11fOperatingMode * pFrm);
 uint32_t dot11f_pack_operating_mode(tpAniSirGlobal pCtx,
 	tDot11fOperatingMode *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9113,7 +8514,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_probe_request(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fProbeRequest * pFrm, bool append_ie);
+	tDot11fProbeRequest * pFrm);
 uint32_t dot11f_pack_probe_request(tpAniSirGlobal pCtx,
 	tDot11fProbeRequest *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9170,7 +8571,6 @@ typedef struct sDot11fProbeResponse{
 	tDot11fIEVHTExtBssLoad               VHTExtBssLoad;
 	tDot11fIEExtCap                      ExtCap;
 	tDot11fIEOBSSScanParameters          OBSSScanParameters;
-	tDot11fIEfils_indication             fils_indication;
 	tDot11fIEVendor1IE                   Vendor1IE;
 	tDot11fIEvendor_vht_ie               vendor_vht_ie;
 	tDot11fIEVendor3IE                   Vendor3IE;
@@ -9190,7 +8590,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_probe_response(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fProbeResponse * pFrm, bool append_ie);
+	tDot11fProbeResponse * pFrm);
 uint32_t dot11f_pack_probe_response(tpAniSirGlobal pCtx,
 	tDot11fProbeResponse *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9216,7 +8616,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_qos_map_configure(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fQosMapConfigure * pFrm, bool append_ie);
+	tDot11fQosMapConfigure * pFrm);
 uint32_t dot11f_pack_qos_map_configure(tpAniSirGlobal pCtx,
 	tDot11fQosMapConfigure *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9244,7 +8644,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_radio_measurement_report(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fRadioMeasurementReport * pFrm, bool append_ie);
+	tDot11fRadioMeasurementReport * pFrm);
 uint32_t dot11f_pack_radio_measurement_report(tpAniSirGlobal pCtx,
 	tDot11fRadioMeasurementReport *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9273,7 +8673,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_radio_measurement_request(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fRadioMeasurementRequest * pFrm, bool append_ie);
+	tDot11fRadioMeasurementRequest * pFrm);
 uint32_t dot11f_pack_radio_measurement_request(tpAniSirGlobal pCtx,
 	tDot11fRadioMeasurementRequest *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9332,7 +8732,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_re_assoc_request(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fReAssocRequest * pFrm, bool append_ie);
+	tDot11fReAssocRequest * pFrm);
 uint32_t dot11f_pack_re_assoc_request(tpAniSirGlobal pCtx,
 	tDot11fReAssocRequest *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9388,7 +8788,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_re_assoc_response(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fReAssocResponse * pFrm, bool append_ie);
+	tDot11fReAssocResponse * pFrm);
 uint32_t dot11f_pack_re_assoc_response(tpAniSirGlobal pCtx,
 	tDot11fReAssocResponse *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9414,7 +8814,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_sm_power_save(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fSMPowerSave * pFrm, bool append_ie);
+	tDot11fSMPowerSave * pFrm);
 uint32_t dot11f_pack_sm_power_save(tpAniSirGlobal pCtx,
 	tDot11fSMPowerSave *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9440,7 +8840,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_sa_query_req(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fSaQueryReq * pFrm, bool append_ie);
+	tDot11fSaQueryReq * pFrm);
 uint32_t dot11f_pack_sa_query_req(tpAniSirGlobal pCtx,
 	tDot11fSaQueryReq *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9466,7 +8866,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_sa_query_rsp(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fSaQueryRsp * pFrm, bool append_ie);
+	tDot11fSaQueryRsp * pFrm);
 uint32_t dot11f_pack_sa_query_rsp(tpAniSirGlobal pCtx,
 	tDot11fSaQueryRsp *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9493,7 +8893,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_tdls_dis_req(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fTDLSDisReq * pFrm, bool append_ie);
+	tDot11fTDLSDisReq * pFrm);
 uint32_t dot11f_pack_tdls_dis_req(tpAniSirGlobal pCtx,
 	tDot11fTDLSDisReq *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9533,7 +8933,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_tdls_dis_rsp(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fTDLSDisRsp * pFrm, bool append_ie);
+	tDot11fTDLSDisRsp * pFrm);
 uint32_t dot11f_pack_tdls_dis_rsp(tpAniSirGlobal pCtx,
 	tDot11fTDLSDisRsp *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9562,7 +8962,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_tdls_peer_traffic_ind(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fTDLSPeerTrafficInd * pFrm, bool append_ie);
+	tDot11fTDLSPeerTrafficInd * pFrm);
 uint32_t dot11f_pack_tdls_peer_traffic_ind(tpAniSirGlobal pCtx,
 	tDot11fTDLSPeerTrafficInd *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9589,7 +8989,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_tdls_peer_traffic_rsp(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fTDLSPeerTrafficRsp * pFrm, bool append_ie);
+	tDot11fTDLSPeerTrafficRsp * pFrm);
 uint32_t dot11f_pack_tdls_peer_traffic_rsp(tpAniSirGlobal pCtx,
 	tDot11fTDLSPeerTrafficRsp *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9625,7 +9025,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_tdls_setup_cnf(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fTDLSSetupCnf * pFrm, bool append_ie);
+	tDot11fTDLSSetupCnf * pFrm);
 uint32_t dot11f_pack_tdls_setup_cnf(tpAniSirGlobal pCtx,
 	tDot11fTDLSSetupCnf *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9669,7 +9069,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_tdls_setup_req(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fTDLSSetupReq * pFrm, bool append_ie);
+	tDot11fTDLSSetupReq * pFrm);
 uint32_t dot11f_pack_tdls_setup_req(tpAniSirGlobal pCtx,
 	tDot11fTDLSSetupReq *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9715,7 +9115,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_tdls_setup_rsp(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fTDLSSetupRsp * pFrm, bool append_ie);
+	tDot11fTDLSSetupRsp * pFrm);
 uint32_t dot11f_pack_tdls_setup_rsp(tpAniSirGlobal pCtx,
 	tDot11fTDLSSetupRsp *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9743,7 +9143,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_tdls_teardown(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fTDLSTeardown * pFrm, bool append_ie);
+	tDot11fTDLSTeardown * pFrm);
 uint32_t dot11f_pack_tdls_teardown(tpAniSirGlobal pCtx,
 	tDot11fTDLSTeardown *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9770,7 +9170,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_tpc_report(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fTPCReport * pFrm, bool append_ie);
+	tDot11fTPCReport * pFrm);
 uint32_t dot11f_pack_tpc_report(tpAniSirGlobal pCtx,
 	tDot11fTPCReport *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9797,7 +9197,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_tpc_request(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fTPCRequest * pFrm, bool append_ie);
+	tDot11fTPCRequest * pFrm);
 uint32_t dot11f_pack_tpc_request(tpAniSirGlobal pCtx,
 	tDot11fTPCRequest *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9828,7 +9228,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_timing_advertisement_frame(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fTimingAdvertisementFrame * pFrm, bool append_ie);
+	tDot11fTimingAdvertisementFrame * pFrm);
 uint32_t dot11f_pack_timing_advertisement_frame(tpAniSirGlobal pCtx,
 	tDot11fTimingAdvertisementFrame *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9855,7 +9255,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_vht_gid_management_action_frame(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fVHTGidManagementActionFrame * pFrm, bool append_ie);
+	tDot11fVHTGidManagementActionFrame * pFrm);
 uint32_t dot11f_pack_vht_gid_management_action_frame(tpAniSirGlobal pCtx,
 	tDot11fVHTGidManagementActionFrame *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9884,7 +9284,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_wmm_add_ts_request(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fWMMAddTSRequest * pFrm, bool append_ie);
+	tDot11fWMMAddTSRequest * pFrm);
 uint32_t dot11f_pack_wmm_add_ts_request(tpAniSirGlobal pCtx,
 	tDot11fWMMAddTSRequest *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9913,7 +9313,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_wmm_add_ts_response(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fWMMAddTSResponse * pFrm, bool append_ie);
+	tDot11fWMMAddTSResponse * pFrm);
 uint32_t dot11f_pack_wmm_add_ts_response(tpAniSirGlobal pCtx,
 	tDot11fWMMAddTSResponse *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9941,7 +9341,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_wmm_del_ts(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fWMMDelTS * pFrm, bool append_ie);
+	tDot11fWMMDelTS * pFrm);
 uint32_t dot11f_pack_wmm_del_ts(tpAniSirGlobal pCtx,
 	tDot11fWMMDelTS *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9967,7 +9367,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_ext_channel_switch_action_frame(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fext_channel_switch_action_frame * pFrm, bool append_ie);
+	tDot11fext_channel_switch_action_frame * pFrm);
 uint32_t dot11f_pack_ext_channel_switch_action_frame(tpAniSirGlobal pCtx,
 	tDot11fext_channel_switch_action_frame *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -9994,7 +9394,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_ht2040_bss_coexistence_mgmt_action_frame(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fht2040_bss_coexistence_mgmt_action_frame * pFrm, bool append_ie);
+	tDot11fht2040_bss_coexistence_mgmt_action_frame * pFrm);
 uint32_t dot11f_pack_ht2040_bss_coexistence_mgmt_action_frame(tpAniSirGlobal pCtx,
 	tDot11fht2040_bss_coexistence_mgmt_action_frame *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);
@@ -10024,7 +9424,7 @@ extern "C" {
 
 uint32_t dot11f_unpack_p2p_oper_chan_change_confirm(tpAniSirGlobal pCtx,
 	uint8_t *pBuf, uint32_t nBuf,
-	tDot11fp2p_oper_chan_change_confirm * pFrm, bool append_ie);
+	tDot11fp2p_oper_chan_change_confirm * pFrm);
 uint32_t dot11f_pack_p2p_oper_chan_change_confirm(tpAniSirGlobal pCtx,
 	tDot11fp2p_oper_chan_change_confirm *pFrm, uint8_t *pBuf,
 	uint32_t nBuf, uint32_t *pnConsumed);

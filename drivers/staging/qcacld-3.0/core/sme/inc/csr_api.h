@@ -63,12 +63,10 @@ typedef enum {
 #endif /* FEATURE_WLAN_WAPI */
 	eCSR_AUTH_TYPE_CCKM_WPA,
 	eCSR_AUTH_TYPE_CCKM_RSN,
+#ifdef WLAN_FEATURE_11W
 	eCSR_AUTH_TYPE_RSN_PSK_SHA256,
 	eCSR_AUTH_TYPE_RSN_8021X_SHA256,
-	eCSR_AUTH_TYPE_FILS_SHA256,
-	eCSR_AUTH_TYPE_FILS_SHA384,
-	eCSR_AUTH_TYPE_FT_FILS_SHA256,
-	eCSR_AUTH_TYPE_FT_FILS_SHA384,
+#endif
 	eCSR_NUM_OF_SUPPORT_AUTH_TYPE,
 	eCSR_AUTH_TYPE_FAILED = 0xff,
 	eCSR_AUTH_TYPE_UNKNOWN = eCSR_AUTH_TYPE_FAILED,
@@ -215,7 +213,6 @@ typedef enum {
 } eIniChanBondState;
 
 #define CSR_RSN_PMKID_SIZE          16
-#define CSR_RSN_MAX_PMK_LEN         48
 #define CSR_MAX_PMKID_ALLOWED       32
 #define CSR_WEP40_KEY_LEN           5
 #define CSR_WEP104_KEY_LEN          13
@@ -291,7 +288,6 @@ typedef struct tagCsrScanRequest {
 	uint8_t *pIEField;
 	enum wmi_dwelltime_adaptive_mode scan_adaptive_dwell_mode;
 	eCsrRequestType requestType; /* 11d scan or full scan */
-	uint32_t scan_ctrl_flags_ext; /* Scan control flags extended */
 	bool p2pSearch;
 	bool skipDfsChnlInP2pSearch;
 	bool bcnRptReqScan;     /* is Scan issued by Beacon Report Request */
@@ -301,12 +297,6 @@ typedef struct tagCsrScanRequest {
 	bool enable_scan_randomization;
 	uint8_t mac_addr[QDF_MAC_ADDR_SIZE];
 	uint8_t mac_addr_mask[QDF_MAC_ADDR_SIZE];
-
-	/* probe req ie whitelisting attrs */
-	bool ie_whitelist;
-	uint32_t probe_req_ie_bitmap[PROBE_REQ_BITMAP_LEN];
-	uint32_t num_vendor_oui;
-	struct vendor_oui *voui;
 } tCsrScanRequest;
 
 typedef struct tagCsrScanResultInfo {
@@ -408,10 +398,6 @@ typedef struct tagCsrScanResultFilter {
 	struct sCsrChannel_ pcl_channels;
 	struct qdf_mac_addr bssid_hint;
 	enum tQDF_ADAPTER_MODE csrPersona;
-#ifdef WLAN_FEATURE_FILS_SK
-	bool realm_check;
-	uint8_t fils_realm[2];
-#endif
 } tCsrScanResultFilter;
 
 typedef struct sCsrChnPower_ {
@@ -500,7 +486,6 @@ typedef enum {
 	 */
 	eCSR_ROAM_TDLS_STATUS_UPDATE,
 	eCSR_ROAM_RESULT_MGMT_TX_COMPLETE_IND,
-	eCSR_ROAM_TDLS_SET_STATE_DISABLE,
 
 	/* Disaconnect all the clients */
 	eCSR_ROAM_DISCONNECT_ALL_P2P_CLIENTS,
@@ -869,11 +854,6 @@ typedef struct tagPmkidCandidateInfo {
 typedef struct tagPmkidCacheInfo {
 	struct qdf_mac_addr BSSID;
 	uint8_t PMKID[CSR_RSN_PMKID_SIZE];
-	uint8_t pmk[CSR_RSN_MAX_PMK_LEN];
-	uint8_t pmk_len;
-	uint8_t ssid_len;
-	uint8_t ssid[SIR_MAC_MAX_SSID_LENGTH];
-	uint8_t cache_id[CACHE_ID_LEN];
 } tPmkidCacheInfo;
 
 #ifdef FEATURE_WLAN_WAPI
@@ -998,10 +978,7 @@ typedef struct tagCsrRoamProfile {
 	tSirMacRateSet  extended_rates;
 	struct qdf_mac_addr bssid_hint;
 	bool do_not_roam;
-#ifdef WLAN_FEATURE_FILS_SK
-	bool fils_connection;
-	struct cds_fils_connection_info *fils_con_info;
-#endif
+
 } tCsrRoamProfile;
 
 #ifdef FEATURE_WLAN_MCC_TO_SCC_SWITCH
@@ -1178,6 +1155,10 @@ typedef struct tagCsrConfigParam {
 	uint32_t nActiveMinChnTimeConc;     /* in units of milliseconds */
 	uint32_t nActiveMaxChnTimeConc;     /* in units of milliseconds */
 	uint32_t nRestTimeConc;             /* in units of milliseconds */
+	/* num of channels combined for STA in each split scan operation */
+	uint8_t nNumStaChanCombinedConc;
+	/* number of channels combined for P2P in each split scan operation */
+	uint8_t nNumP2PChanCombinedConc;
 #endif
 	/*In units of milliseconds*/
 	uint32_t       min_rest_time_conc;
@@ -1260,9 +1241,9 @@ typedef struct tagCsrConfigParam {
 	bool isRoamOffloadScanEnabled;
 	bool bFastRoamInConIniFeatureEnabled;
 	uint8_t scanCfgAgingTime;
-	uint8_t enable_tx_ldpc;
-	uint8_t enable_rx_ldpc;
-	uint8_t rx_ldpc_support_for_2g;
+	uint8_t enableTxLdpc;
+	uint8_t enableRxLDPC;
+	uint8_t disable_high_ht_mcs_2x2;
 	uint8_t max_amsdu_num;
 	uint8_t nSelect5GHzMargin;
 	uint8_t isCoalesingInIBSSAllowed;
@@ -1340,6 +1321,8 @@ typedef struct tagCsrConfigParam {
 	uint16_t pkt_err_disconn_th;
 	bool is_bssid_hint_priority;
 	bool is_force_1x1;
+	uint16_t num_11b_tx_chains;
+	uint16_t num_11ag_tx_chains;
 	uint32_t scan_probe_repeat_time;
 	uint32_t scan_num_probes;
 } tCsrConfigParam;
@@ -1470,13 +1453,6 @@ typedef struct tagCsrRoamInfo {
 	tDot11fIEVHTOperation vht_operation;
 	tDot11fIEHTInfo ht_operation;
 	bool reassoc;
-	/* Extended capabilities of STA */
-	uint8_t ecsa_capable;
-	bool is_fils_connection;
-	uint16_t fils_seq_num;
-#ifdef WLAN_FEATURE_FILS_SK
-	struct fils_join_rsp_params *fils_join_rsp;
-#endif
 } tCsrRoamInfo;
 
 typedef struct tagCsrFreqScanInfo {
@@ -1504,8 +1480,6 @@ typedef struct sSirSmeAssocIndToUpperLayerCnf {
 	uint8_t timingMeasCap;
 	tSirSmeChanInfo chan_info;
 	uint8_t target_channel;
-	/* Extended capabilities of STA */
-	uint8_t              ecsa_capable;
 } tSirSmeAssocIndToUpperLayerCnf, *tpSirSmeAssocIndToUpperLayerCnf;
 
 typedef struct tagCsrSummaryStatsInfo {
@@ -1529,16 +1503,54 @@ typedef struct tagCsrSummaryStatsInfo {
 } tCsrSummaryStatsInfo;
 
 typedef struct tagCsrGlobalClassAStatsInfo {
-	uint32_t nss;
+	uint32_t rx_frag_cnt;
+	uint32_t promiscuous_rx_frag_cnt;
+	/* uint32_t rx_fcs_err; */
+	uint32_t rx_input_sensitivity;
 	uint32_t max_pwr;
+	/* uint32_t default_pwr; */
+	uint32_t sync_fail_cnt;
 	uint32_t tx_rate;
 	/* mcs index for HT20 and HT40 rates */
 	uint32_t mcs_index;
-	uint32_t mcs_rate_flags;
 	/* to diff between HT20 & HT40 rates;short & long guard interval */
 	uint32_t tx_rate_flags;
 
 } tCsrGlobalClassAStatsInfo;
+
+typedef struct tagCsrGlobalClassBStatsInfo {
+	uint32_t uc_rx_wep_unencrypted_frm_cnt;
+	uint32_t uc_rx_mic_fail_cnt;
+	uint32_t uc_tkip_icv_err;
+	uint32_t uc_aes_ccmp_format_err;
+	uint32_t uc_aes_ccmp_replay_cnt;
+	uint32_t uc_aes_ccmp_decrpt_err;
+	uint32_t uc_wep_undecryptable_cnt;
+	uint32_t uc_wep_icv_err;
+	uint32_t uc_rx_decrypt_succ_cnt;
+	uint32_t uc_rx_decrypt_fail_cnt;
+	uint32_t mcbc_rx_wep_unencrypted_frm_cnt;
+	uint32_t mcbc_rx_mic_fail_cnt;
+	uint32_t mcbc_tkip_icv_err;
+	uint32_t mcbc_aes_ccmp_format_err;
+	uint32_t mcbc_aes_ccmp_replay_cnt;
+	uint32_t mcbc_aes_ccmp_decrpt_err;
+	uint32_t mcbc_wep_undecryptable_cnt;
+	uint32_t mcbc_wep_icv_err;
+	uint32_t mcbc_rx_decrypt_succ_cnt;
+	uint32_t mcbc_rx_decrypt_fail_cnt;
+
+} tCsrGlobalClassBStatsInfo;
+
+typedef struct tagCsrGlobalClassCStatsInfo {
+	uint32_t rx_amsdu_cnt;
+	uint32_t rx_ampdu_cnt;
+	uint32_t tx_20_frm_cnt;
+	uint32_t rx_20_frm_cnt;
+	uint32_t rx_mpdu_in_ampdu_cnt;
+	uint32_t ampdu_delimiter_crc_err;
+
+} tCsrGlobalClassCStatsInfo;
 
 typedef struct tagCsrGlobalClassDStatsInfo {
 	uint32_t tx_uc_frm_cnt;
@@ -1558,6 +1570,12 @@ typedef struct tagCsrGlobalClassDStatsInfo {
 	uint32_t rx_rate;
 
 } tCsrGlobalClassDStatsInfo;
+
+typedef struct tagCsrPerStaStatsInfo {
+	uint32_t tx_frag_cnt[4];
+	uint32_t tx_ampdu_cnt;
+	uint32_t tx_mpdu_in_ampdu_cnt;
+} tCsrPerStaStatsInfo;
 
 /**
  * struct csr_per_chain_rssi_stats_info - stores chain rssi
@@ -1611,7 +1629,7 @@ typedef struct tagCsrTdlsSendMgmt {
 	uint32_t peerCapability;
 	uint8_t *buf;
 	uint8_t len;
-
+	enum sir_wifi_traffic_ac ac;
 } tCsrTdlsSendMgmt;
 #endif
 
@@ -1704,12 +1722,6 @@ typedef QDF_STATUS (*csr_roamSessionCloseCallback)(void *pContext);
 
 #define CSR_IS_CLOSE_SESSION_COMMAND(pCommand) \
 	((pCommand)->command == eSmeCommandDelStaSession)
-
-#define CSR_IS_AUTH_TYPE_FILS(auth_type) \
-		((eCSR_AUTH_TYPE_FILS_SHA256 == auth_type) || \
-		(eCSR_AUTH_TYPE_FILS_SHA384 == auth_type) || \
-		(eCSR_AUTH_TYPE_FT_FILS_SHA256 == auth_type) || \
-		(eCSR_AUTH_TYPE_FT_FILS_SHA384 == auth_type))
 
 QDF_STATUS csr_set_channels(tHalHandle hHal, tCsrConfigParam *pParam);
 

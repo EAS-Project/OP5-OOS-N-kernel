@@ -92,7 +92,9 @@ static int cds_mc_thread(void *Arg);
 static int cds_ol_rx_thread(void *arg);
 static unsigned long affine_cpu;
 static QDF_STATUS cds_alloc_ol_rx_pkt_freeq(p_cds_sched_context pSchedContext);
+#endif
 
+#ifdef QCA_CONFIG_SMP
 #define CDS_CORE_PER_CLUSTER (4)
 /*Maximum 2 clusters supported*/
 #define CDS_MAX_CPU_CLUSTERS 2
@@ -856,7 +858,7 @@ static int cds_mc_thread(void *Arg)
 
 				if (!QDF_IS_STATUS_SUCCESS(vStatus)) {
 					QDF_TRACE(QDF_MODULE_ID_QDF,
-						  QDF_TRACE_LEVEL_INFO,
+						  QDF_TRACE_LEVEL_ERROR,
 						  "%s: Issue Processing SME message",
 						  __func__);
 				}
@@ -1187,7 +1189,7 @@ static int cds_ol_rx_thread(void *arg)
 		}
 	}
 
-	QDF_TRACE(QDF_MODULE_ID_QDF, QDF_TRACE_LEVEL_DEBUG,
+	QDF_TRACE(QDF_MODULE_ID_QDF, QDF_TRACE_LEVEL_INFO,
 		  "%s: Exiting CDS OL rx thread", __func__);
 	complete_and_exit(&pSchedContext->ol_rx_shutdown, 0);
 }
@@ -1346,7 +1348,7 @@ void cds_sched_flush_mc_mqs(p_cds_sched_context pSchedContext)
 	 * be freed first
 	 */
 	QDF_TRACE(QDF_MODULE_ID_QDF,
-		  QDF_TRACE_LEVEL_DEBUG,
+		  QDF_TRACE_LEVEL_INFO,
 		  ("Flushing the MC Thread message queue"));
 
 	if (NULL == pSchedContext) {
@@ -1365,7 +1367,7 @@ void cds_sched_flush_mc_mqs(p_cds_sched_context pSchedContext)
 	/* Flush the SYS Mq */
 	while (NULL != (pMsgWrapper = cds_mq_get(&pSchedContext->sysMcMq))) {
 		QDF_TRACE(QDF_MODULE_ID_QDF,
-			  QDF_TRACE_LEVEL_DEBUG,
+			  QDF_TRACE_LEVEL_INFO,
 			  "%s: Freeing MC SYS message type %d ", __func__,
 			  pMsgWrapper->pVosMsg->type);
 		cds_core_return_msg(pSchedContext->pVContext, pMsgWrapper);
@@ -1373,7 +1375,7 @@ void cds_sched_flush_mc_mqs(p_cds_sched_context pSchedContext)
 	/* Flush the WMA Mq */
 	while (NULL != (pMsgWrapper = cds_mq_get(&pSchedContext->wmaMcMq))) {
 		if (pMsgWrapper->pVosMsg != NULL) {
-			QDF_TRACE(QDF_MODULE_ID_QDF, QDF_TRACE_LEVEL_DEBUG,
+			QDF_TRACE(QDF_MODULE_ID_QDF, QDF_TRACE_LEVEL_INFO,
 				  "%s: Freeing MC WMA MSG message type %d",
 				  __func__, pMsgWrapper->pVosMsg->type);
 
@@ -1385,7 +1387,7 @@ void cds_sched_flush_mc_mqs(p_cds_sched_context pSchedContext)
 	/* Flush the PE Mq */
 	while (NULL != (pMsgWrapper = cds_mq_get(&pSchedContext->peMcMq))) {
 		QDF_TRACE(QDF_MODULE_ID_QDF,
-			  QDF_TRACE_LEVEL_DEBUG,
+			  QDF_TRACE_LEVEL_INFO,
 			  "%s: Freeing MC PE MSG message type %d", __func__,
 			  pMsgWrapper->pVosMsg->type);
 		pe_free_msg(cds_ctx->pMACContext,
@@ -1395,7 +1397,7 @@ void cds_sched_flush_mc_mqs(p_cds_sched_context pSchedContext)
 	/* Flush the SME Mq */
 	while (NULL != (pMsgWrapper = cds_mq_get(&pSchedContext->smeMcMq))) {
 		QDF_TRACE(QDF_MODULE_ID_QDF,
-			  QDF_TRACE_LEVEL_DEBUG,
+			  QDF_TRACE_LEVEL_INFO,
 			  "%s: Freeing MC SME MSG message type %d", __func__,
 			  pMsgWrapper->pVosMsg->type);
 		sme_free_msg(cds_ctx->pMACContext, pMsgWrapper->pVosMsg);

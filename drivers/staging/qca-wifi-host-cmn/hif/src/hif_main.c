@@ -97,8 +97,8 @@ void *hif_get_targetdef(struct hif_opaque_softc *hif_ctx)
 void hif_vote_link_down(struct hif_opaque_softc *hif_ctx)
 {
 	struct hif_softc *scn = HIF_GET_SOFTC(hif_ctx);
-
 	QDF_BUG(scn);
+
 	scn->linkstate_vote--;
 	if (scn->linkstate_vote == 0)
 		hif_bus_prevent_linkdown(scn, false);
@@ -118,8 +118,8 @@ void hif_vote_link_down(struct hif_opaque_softc *hif_ctx)
 void hif_vote_link_up(struct hif_opaque_softc *hif_ctx)
 {
 	struct hif_softc *scn = HIF_GET_SOFTC(hif_ctx);
-
 	QDF_BUG(scn);
+
 	scn->linkstate_vote++;
 	if (scn->linkstate_vote == 1)
 		hif_bus_prevent_linkdown(scn, true);
@@ -140,8 +140,8 @@ void hif_vote_link_up(struct hif_opaque_softc *hif_ctx)
 bool hif_can_suspend_link(struct hif_opaque_softc *hif_ctx)
 {
 	struct hif_softc *scn = HIF_GET_SOFTC(hif_ctx);
-
 	QDF_BUG(scn);
+
 	return scn->linkstate_vote == 0;
 }
 
@@ -408,8 +408,7 @@ struct hif_opaque_softc *hif_open(qdf_device_t qdf_ctx, uint32_t mode,
 	qdf_atomic_init(&scn->active_tasklet_cnt);
 	qdf_atomic_init(&scn->link_suspended);
 	qdf_atomic_init(&scn->tasklet_from_intr);
-	qdf_mem_copy(&scn->callbacks, cbk,
-		     sizeof(struct hif_driver_state_callbacks));
+	qdf_mem_copy(&scn->callbacks, cbk, sizeof(struct hif_driver_state_callbacks));
 	scn->bus_type  = bus_type;
 	status = hif_bus_open(scn, bus_type);
 	if (status != QDF_STATUS_SUCCESS) {
@@ -444,10 +443,17 @@ void hif_close(struct hif_opaque_softc *hif_ctx)
 
 	if (scn->target_info.hw_name) {
 		char *hw_name = scn->target_info.hw_name;
-
 		scn->target_info.hw_name = "ErrUnloading";
 		qdf_mem_free(hw_name);
 	}
+
+	if (scn->vaddr_rri_on_ddr)
+		qdf_mem_free_consistent(scn->qdf_dev, scn->qdf_dev->dev,
+					(CE_COUNT*sizeof(uint32_t)),
+				scn->vaddr_rri_on_ddr, scn->paddr_rri_on_ddr,
+				0);
+
+	scn->vaddr_rri_on_ddr = NULL;
 	hif_bus_close(scn);
 	qdf_mem_free(scn);
 }
@@ -464,8 +470,7 @@ void hif_close(struct hif_opaque_softc *hif_ctx)
  * Return: QDF_STATUS
  */
 QDF_STATUS hif_enable(struct hif_opaque_softc *hif_ctx, struct device *dev,
-					  void *bdev,
-					  const struct hif_bus_id *bid,
+					  void *bdev, const hif_bus_id *bid,
 					  enum qdf_bus_type bus_type,
 					  enum hif_enable_type type)
 {
@@ -501,7 +506,7 @@ QDF_STATUS hif_enable(struct hif_opaque_softc *hif_ctx, struct device *dev,
 
 	scn->hif_init_done = true;
 
-	HIF_DBG("%s: OK", __func__);
+	HIF_TRACE("%s: OK", __func__);
 
 	return QDF_STATUS_SUCCESS;
 }
@@ -525,7 +530,7 @@ void hif_disable(struct hif_opaque_softc *hif_ctx, enum hif_disable_type type)
 
 	scn->notice_send = false;
 
-	HIF_DBG("%s: X", __func__);
+	HIF_INFO("%s: X", __func__);
 }
 
 void hif_display_stats(struct hif_opaque_softc *hif_ctx)
@@ -606,6 +611,7 @@ void hif_crash_shutdown(struct hif_opaque_softc *hif_ctx)
 {
 	HIF_INFO_MED("%s: Collecting target RAM dump disabled",
 		__func__);
+	return;
 }
 #endif /* TARGET_RAMDUMP_AFTER_KERNEL_PANIC */
 
@@ -736,7 +742,6 @@ end:
 bool hif_needs_bmi(struct hif_opaque_softc *hif_ctx)
 {
 	struct hif_softc *hif_sc = HIF_GET_SOFTC(hif_ctx);
-
 	return hif_sc->bus_type != QDF_BUS_TYPE_SNOC;
 }
 
@@ -748,7 +753,6 @@ bool hif_needs_bmi(struct hif_opaque_softc *hif_ctx)
 enum qdf_bus_type hif_get_bus_type(struct hif_opaque_softc *hif_hdl)
 {
 	struct hif_softc *scn = HIF_GET_SOFTC(hif_hdl);
-
 	return scn->bus_type;
 }
 
@@ -926,8 +930,7 @@ uint32_t hif_get_conparam(struct hif_softc *scn)
  *
  * Return: pointer to HIF Callbacks
  */
-struct hif_driver_state_callbacks *hif_get_callbacks_handle(
-							struct hif_softc *scn)
+struct hif_driver_state_callbacks *hif_get_callbacks_handle(struct hif_softc *scn)
 {
 	return &scn->callbacks;
 }
@@ -996,7 +999,6 @@ qdf_nbuf_t hif_batch_send(struct hif_opaque_softc *osc, qdf_nbuf_t msdu,
 		uint32_t transfer_id, u_int32_t len, uint32_t sendhead)
 {
 	void *ce_tx_hdl = hif_get_ce_handle(osc, CE_HTT_TX_CE);
-
 	return ce_batch_send((struct CE_handle *)ce_tx_hdl, msdu, transfer_id,
 			len, sendhead);
 }
@@ -1012,7 +1014,6 @@ qdf_nbuf_t hif_batch_send(struct hif_opaque_softc *osc, qdf_nbuf_t msdu,
 void hif_update_tx_ring(struct hif_opaque_softc *osc, u_int32_t num_htt_cmpls)
 {
 	void *ce_tx_hdl = hif_get_ce_handle(osc, CE_HTT_TX_CE);
-
 	ce_update_tx_ring(ce_tx_hdl, num_htt_cmpls);
 }
 
@@ -1031,7 +1032,6 @@ int hif_send_single(struct hif_opaque_softc *osc, qdf_nbuf_t msdu, uint32_t
 		transfer_id, u_int32_t len)
 {
 	void *ce_tx_hdl = hif_get_ce_handle(osc, CE_HTT_TX_CE);
-
 	return ce_send_single((struct CE_handle *)ce_tx_hdl, msdu, transfer_id,
 			len);
 }
@@ -1051,7 +1051,6 @@ int hif_send_fast(struct hif_opaque_softc *osc, qdf_nbuf_t nbuf,
 		uint32_t transfer_id, uint32_t download_len)
 {
 	void *ce_tx_hdl = hif_get_ce_handle(osc, CE_HTT_TX_CE);
-
 	return ce_send_fast((struct CE_handle *)ce_tx_hdl, nbuf,
 			transfer_id, download_len);
 }
@@ -1070,7 +1069,6 @@ void hif_reg_write(struct hif_opaque_softc *hif_ctx, uint32_t offset,
 		uint32_t value)
 {
 	struct hif_softc *scn = HIF_GET_SOFTC(hif_ctx);
-
 	hif_write32_mb(scn->mem + offset, value);
 
 }
@@ -1087,7 +1085,6 @@ uint32_t hif_reg_read(struct hif_opaque_softc *hif_ctx, uint32_t offset)
 {
 
 	struct hif_softc *scn = HIF_GET_SOFTC(hif_ctx);
-
 	return hif_read32_mb(scn->mem + offset);
 }
 

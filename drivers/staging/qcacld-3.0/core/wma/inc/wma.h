@@ -50,7 +50,6 @@
 #include "cdp_txrx_cmn.h"
 #include "ol_defines.h"
 #include "dbglog.h"
-#include "wma_spectral.h"
 
 /* Platform specific configuration for max. no. of fragments */
 #define QCA_OL_11AC_TX_MAX_FRAGS            2
@@ -63,7 +62,6 @@
 #define WMA_WAKE_LOCK_TIMEOUT              1000
 #define WMA_RESUME_TIMEOUT                 6000
 #define MAX_MEM_CHUNKS                     32
-#define NAN_CLUSTER_ID_BYTES               4
 
 #define WMA_CRASH_INJECT_TIMEOUT           5000
 
@@ -217,8 +215,7 @@ enum ds_mode {
 #define WMA_ROAM_LOW_RSSI_TRIGGER_VERYLOW    (10)
 #define WMA_ROAM_BEACON_WEIGHT_DEFAULT       (14)
 #define WMA_ROAM_OPP_SCAN_PERIOD_DEFAULT     (120000)
-#define WMA_ROAM_OPP_SCAN_AGING_PERIOD_DEFAULT \
-					(WMA_ROAM_OPP_SCAN_PERIOD_DEFAULT * 5)
+#define WMA_ROAM_OPP_SCAN_AGING_PERIOD_DEFAULT (WMA_ROAM_OPP_SCAN_PERIOD_DEFAULT * 5)
 #define WMA_ROAM_BMISS_FIRST_BCNT_DEFAULT    (10)
 #define WMA_ROAM_BMISS_FINAL_BCNT_DEFAULT    (10)
 #define WMA_ROAM_BMISS_FIRST_BCNT_DEFAULT_P2P (15)
@@ -652,7 +649,6 @@ enum wma_phy_idx {
 struct wma_mem_chunk {
 	uint32_t *vaddr;
 	uint32_t paddr;
-
 	qdf_dma_mem_context(memctx);
 	uint32_t len;
 	uint32_t req_id;
@@ -1111,8 +1107,9 @@ struct wma_txrx_node {
 	bool is_vdev_valid;
 	struct sir_vdev_wow_stats wow_stats;
 	struct sme_rcpi_req *rcpi_req;
-	struct action_frame_random_filter *action_frame_filter;
 	bool in_bmps;
+	struct beacon_filter_param beacon_filter;
+	bool beacon_filter_enabled;
 };
 
 #if defined(QCA_WIFI_FTM)
@@ -1466,16 +1463,12 @@ struct peer_debug_info {
  * handle of other modules.
  * @saved_wmi_init_cmd: Saved WMI INIT command
  * @bpf_packet_filter_enable: BPF filter enabled or not
- * @active_uc_bpf_mode: Setting that determines how BPF is applied in active
- * mode for uc packets
- * @active_mc_bc_bpf_mode: Setting that determines how BPF is applied in
- * active mode for MC/BC packets
+ * @active_bpf_mode: Setting that determines how BPF is applied in active mode
  * @service_ready_ext_evt: Wait event for service ready ext
  * @wmi_cmd_rsp_wake_lock: wmi command response wake lock
  * @wmi_cmd_rsp_runtime_lock: wmi command response bus lock
  * @saved_chan: saved channel list sent as part of WMI_SCAN_CHAN_LIST_CMDID
  * @fw_mem_dump_enabled: Fw memory dump support
- * @ss_configs: spectral scan config parameters
  * @ito_repeat_count: Indicates ito repeated count
  */
 typedef struct {
@@ -1641,7 +1634,6 @@ typedef struct {
 	 * the serialized MC thread context with a timer.
 	 */
 	qdf_mc_timer_t service_ready_ext_timer;
-
 	QDF_STATUS (*csr_roam_synch_cb)(tpAniSirGlobal mac,
 		roam_offload_synch_ind *roam_synch_data,
 		tpSirBssDescription  bss_desc_ptr,
@@ -1655,8 +1647,7 @@ typedef struct {
 	uint32_t fine_time_measurement_cap;
 	bool bpf_enabled;
 	bool bpf_packet_filter_enable;
-	enum active_bpf_mode active_uc_bpf_mode;
-	enum active_bpf_mode active_mc_bc_bpf_mode;
+	enum active_bpf_mode active_bpf_mode;
 	struct wma_ini_config ini_config;
 	struct wma_valid_channels saved_chan;
 	/* NAN datapath support enabled in firmware */
@@ -1670,15 +1661,13 @@ typedef struct {
 	bool rcpi_enabled;
 	tSirLLStatsResults *link_stats_results;
 	bool fw_mem_dump_enabled;
+	bool tx_bfee_8ss_enabled;
 	tSirAddonPsReq ps_setting;
 	struct peer_debug_info *peer_dbg;
 	bool auto_power_save_enabled;
 	uint8_t in_imps;
 	uint64_t tx_fail_cnt;
 	uint64_t wmi_desc_fail_count;
-#ifdef FEATURE_SPECTRAL_SCAN
-	struct vdev_spectral_configure_params ss_configs;
-#endif
 	uint8_t  ito_repeat_count;
 } t_wma_handle, *tp_wma_handle;
 
@@ -1837,7 +1826,6 @@ struct wma_vdev_start_req {
 	uint32_t preferred_tx_streams;
 	uint32_t preferred_rx_streams;
 	uint8_t beacon_tx_rate;
-	bool ldpc_rx_enabled;
 };
 
 /**
@@ -2493,109 +2481,6 @@ bool wma_is_wow_bitmask_zero(uint32_t *bitmask,
  */
 QDF_STATUS wma_process_roaming_config(tp_wma_handle wma_handle,
 				     tSirRoamOffloadScanReq *roam_req);
-
-/**
- * wma_register_phy_err_event_handler() - register phy error event handler
- * @wma_handle: wma handle
- *
- * Return: none
- */
-void wma_register_phy_err_event_handler(tp_wma_handle wma_handle);
-
-#ifdef FEATURE_SPECTRAL_SCAN
-/**
- * wma_ieee80211_secondary20_channel_offset() - finds the offset for
- * secondary channel
- * @chan: channel for which secondary offset to find
- *
- * Return: secondary offset
- */
-int8_t wma_ieee80211_secondary20_channel_offset(
-			struct dfs_ieee80211_channel *chan);
-#else
-static inline int8_t wma_ieee80211_secondary20_channel_offset(
-			struct dfs_ieee80211_channel *chan)
-{
-	return 0;
-}
-#endif
-
-#ifdef WMI_INTERFACE_EVENT_LOGGING
-static inline void wma_print_wmi_cmd_log(uint32_t count,
-					 qdf_abstract_print *print,
-					 void *print_priv)
-{
-	t_wma_handle *wma = cds_get_context(QDF_MODULE_ID_WMA);
-
-	if (wma)
-		wmi_print_cmd_log(wma->wmi_handle, count, print, print_priv);
-}
-
-static inline void wma_print_wmi_cmd_tx_cmp_log(uint32_t count,
-						qdf_abstract_print *print,
-						void *print_priv)
-{
-	t_wma_handle *wma = cds_get_context(QDF_MODULE_ID_WMA);
-
-	if (wma)
-		wmi_print_cmd_tx_cmp_log(wma->wmi_handle, count, print,
-					 print_priv);
-}
-
-static inline void wma_print_wmi_mgmt_cmd_log(uint32_t count,
-					      qdf_abstract_print *print,
-					      void *print_priv)
-{
-	t_wma_handle *wma = cds_get_context(QDF_MODULE_ID_WMA);
-
-	if (wma)
-		wmi_print_mgmt_cmd_log(wma->wmi_handle, count, print,
-				       print_priv);
-}
-
-static inline void wma_print_wmi_mgmt_cmd_tx_cmp_log(uint32_t count,
-						     qdf_abstract_print *print,
-						     void *print_priv)
-{
-	t_wma_handle *wma = cds_get_context(QDF_MODULE_ID_WMA);
-
-	if (wma)
-		wmi_print_mgmt_cmd_tx_cmp_log(wma->wmi_handle, count, print,
-					      print_priv);
-}
-
-static inline void wma_print_wmi_event_log(uint32_t count,
-					   qdf_abstract_print *print,
-					   void *print_priv)
-{
-	t_wma_handle *wma = cds_get_context(QDF_MODULE_ID_WMA);
-
-	if (wma)
-		wmi_print_event_log(wma->wmi_handle, count, print, print_priv);
-}
-
-static inline void wma_print_wmi_rx_event_log(uint32_t count,
-					      qdf_abstract_print *print,
-					      void *print_priv)
-{
-	t_wma_handle *wma = cds_get_context(QDF_MODULE_ID_WMA);
-
-	if (wma)
-		wmi_print_rx_event_log(wma->wmi_handle, count, print,
-				       print_priv);
-}
-
-static inline void wma_print_wmi_mgmt_event_log(uint32_t count,
-						qdf_abstract_print *print,
-						void *print_priv)
-{
-	t_wma_handle *wma = cds_get_context(QDF_MODULE_ID_WMA);
-
-	if (wma)
-		wmi_print_mgmt_event_log(wma->wmi_handle, count, print,
-					 print_priv);
-}
-#endif /* WMI_INTERFACE_EVENT_LOGGING */
 
 /**
  * wma_ipa_uc_stat_request() - set ipa config parameters

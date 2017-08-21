@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2017 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012-2016 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -26,15 +26,18 @@
  */
 
 #include "sme_api.h"
-#include <sir_common.h>
-#include <ani_global.h>
+#include "sms_debug.h"
 #include "csr_inside_api.h"
 #include "sme_inside.h"
 #include "p2p_api.h"
 #include "cfg_api.h"
 #include "wma.h"
 
-/* handle SME remain on channel request. */
+/*------------------------------------------------------------------
+ *
+ * handle SME remain on channel request.
+ *
+ *------------------------------------------------------------------*/
 
 QDF_STATUS p2p_process_remain_on_channel_cmd(tpAniSirGlobal pMac,
 					     tSmeCmd *p2pRemainonChn)
@@ -46,12 +49,14 @@ QDF_STATUS p2p_process_remain_on_channel_cmd(tpAniSirGlobal pMac,
 		CSR_GET_SESSION(pMac, p2pRemainonChn->sessionId);
 
 	if (!pSession) {
-		sme_err("session %d not found", p2pRemainonChn->sessionId);
+		sms_log(pMac, LOGE, FL("  session %d not found "),
+			p2pRemainonChn->sessionId);
 		goto error;
 	}
 
 	if (!pSession->sessionActive) {
-		sme_err("session %d is invalid or listen is disabled",
+		sms_log(pMac, LOGE,
+			FL("  session %d is invalid or listen is disabled "),
 			p2pRemainonChn->sessionId);
 		goto error;
 	}
@@ -59,7 +64,8 @@ QDF_STATUS p2p_process_remain_on_channel_cmd(tpAniSirGlobal pMac,
 
 	if (len > 0xFFFF) {
 		/*In coming len for Msg is more then 16bit value */
-		sme_err("Message length is very large, %d", len);
+		sms_log(pMac, LOGE, FL("  Message length is very large, %d"),
+			len);
 		goto error;
 	}
 
@@ -67,7 +73,7 @@ QDF_STATUS p2p_process_remain_on_channel_cmd(tpAniSirGlobal pMac,
 	if (NULL == pMsg)
 		goto error;
 	else {
-		QDF_TRACE(QDF_MODULE_ID_SME, QDF_TRACE_LEVEL_DEBUG, "%s call",
+		QDF_TRACE(QDF_MODULE_ID_SME, QDF_TRACE_LEVEL_INFO, "%s call",
 			  __func__);
 		pMsg->messageType = eWNI_SME_REMAIN_ON_CHANNEL_REQ;
 		pMsg->length = (uint16_t) len;
@@ -91,7 +97,11 @@ error:
 	return status;
 }
 
-/* handle LIM remain on channel rsp: Success/failure. */
+/*------------------------------------------------------------------
+ *
+ * handle LIM remain on channel rsp: Success/failure.
+ *
+ *------------------------------------------------------------------*/
 
 QDF_STATUS sme_remain_on_chn_rsp(tpAniSirGlobal pMac, uint8_t *pMsg)
 {
@@ -104,7 +114,7 @@ QDF_STATUS sme_remain_on_chn_rsp(tpAniSirGlobal pMac, uint8_t *pMsg)
 
 	csr_get_active_scan_entry(pMac, rsp->scan_id, &pEntry);
 	if (!pEntry) {
-		sme_err("No cmd found in active list");
+		sms_log(pMac, LOGE, FL("No cmd found in active list."));
 		return status;
 	}
 
@@ -119,15 +129,19 @@ QDF_STATUS sme_remain_on_chn_rsp(tpAniSirGlobal pMac, uint8_t *pMsg)
 
 	fFound = csr_ll_remove_entry(&pMac->sme.smeScanCmdActiveList, pEntry,
 				     LL_ACCESS_LOCK);
-	if (fFound)
+	if (fFound) {
 		/* Now put this command back on the avilable command list */
 		sme_release_command(pMac, pCommand);
-
+	}
 	sme_process_pending_queue(pMac);
 	return status;
 }
 
-/* Handle the remain on channel ready indication from PE */
+/*------------------------------------------------------------------
+ *
+ * Handle the remain on channel ready indication from PE
+ *
+ *------------------------------------------------------------------*/
 
 QDF_STATUS sme_remain_on_chn_ready(tHalHandle hHal, uint8_t *pMsg)
 {
@@ -140,10 +154,11 @@ QDF_STATUS sme_remain_on_chn_ready(tHalHandle hHal, uint8_t *pMsg)
 
 	csr_get_active_scan_entry(pMac, rsp->scan_id, &pEntry);
 	if (!pEntry) {
-		sme_err("No cmd found in active list");
+		sms_log(pMac, LOGE, FL("No cmd found in active list."));
 		return status;
 	}
-	sme_debug("Ready Ind %d %d", rsp->session_id, rsp->scan_id);
+	sms_log(pMac, LOG1,
+		FL("Ready Ind %d %d"), rsp->session_id, rsp->scan_id);
 	pCommand = GET_BASE_ADDR(pEntry, tSmeCmd, Link);
 	if (eSmeCommandRemainOnChannel == pCommand->command) {
 		RoamInfo.roc_scan_id = rsp->scan_id;
@@ -162,13 +177,12 @@ QDF_STATUS sme_p2p_open(tHalHandle hHal)
 	tpAniSirGlobal pMac = PMAC_STRUCT(hHal);
 	QDF_STATUS status = QDF_STATUS_SUCCESS;
 
-	/* If static structure is too big, Need to change this function to
-	 * allocate memory dynamically
-	 */
+	/* If static structure is too big, Need to change this function to allocate memory dynamically */
 	qdf_mem_zero(&pMac->p2pContext, sizeof(tp2pContext));
 
-	if (!QDF_IS_STATUS_SUCCESS(status))
+	if (!QDF_IS_STATUS_SUCCESS(status)) {
 		sme_p2p_close(hHal);
+	}
 
 	return status;
 }
@@ -214,18 +228,19 @@ tSirRFBand get_rf_band(uint8_t channel)
 	return SIR_BAND_UNKNOWN;
 }
 
-/*
- * p2p_remain_on_channel() -
- *  API to post the remain on channel command.
- *
- * hHal - The handle returned by mac_open.
- * sessinId - HDD session ID.
- * channel - Channel to remain on channel.
- * duration - Duration for which we should remain on channel
- * callback - callback function.
- * pContext - argument to the callback function
- * Return QDF_STATUS
- */
+/* ---------------------------------------------------------------------------
+
+    \fn p2p_remain_on_channel
+    \brief  API to post the remain on channel command.
+    \param  hHal - The handle returned by mac_open.
+    \param  sessinId - HDD session ID.
+    \param  channel - Channel to remain on channel.
+    \param  duration - Duration for which we should remain on channel
+    \param  callback - callback function.
+    \param  pContext - argument to the callback function
+    \return QDF_STATUS
+
+   -------------------------------------------------------------------------------*/
 QDF_STATUS p2p_remain_on_channel(tHalHandle hHal, uint8_t sessionId,
 				 uint8_t channel, uint32_t duration,
 				 remainOnChanCallback callback,
@@ -241,10 +256,11 @@ QDF_STATUS p2p_remain_on_channel(tHalHandle hHal, uint8_t sessionId,
 	if (pRemainChlCmd == NULL)
 		return QDF_STATUS_E_FAILURE;
 
-	if (SIR_BAND_5_GHZ == get_rf_band(channel))
+	if (SIR_BAND_5_GHZ == get_rf_band(channel)) {
 		phyMode = WNI_CFG_PHY_MODE_11A;
-	else
+	} else {
 		phyMode = WNI_CFG_PHY_MODE_11G;
+	}
 
 	cfg_set_int(pMac, WNI_CFG_PHY_MODE, phyMode);
 
@@ -260,11 +276,11 @@ QDF_STATUS p2p_remain_on_channel(tHalHandle hHal, uint8_t sessionId,
 		pRemainChlCmd->u.remainChlCmd.callbackCtx = pContext;
 		pRemainChlCmd->u.remainChlCmd.scan_id = scan_id;
 
-		/* Put it at the head of the Q if we just finish finding the
-		 * peer and ready to send a frame
-		 */
+		/* Put it at the head of the Q if we just finish finding the peer and ready to send a frame */
 		status = csr_queue_sme_command(pMac, pRemainChlCmd, false);
 	} while (0);
+
+	sms_log(pMac, LOGW, "exiting function %s", __func__);
 
 	return status;
 }
@@ -277,7 +293,7 @@ QDF_STATUS p2p_send_action(tHalHandle hHal, uint8_t sessionId,
 	tSirMbMsgP2p *pMsg;
 	uint16_t msgLen;
 
-	QDF_TRACE(QDF_MODULE_ID_SME, QDF_TRACE_LEVEL_DEBUG,
+	QDF_TRACE(QDF_MODULE_ID_SME, QDF_TRACE_LEVEL_INFO_MED,
 		  " %s sends action frame", __func__);
 	msgLen = (uint16_t) ((sizeof(tSirMbMsgP2p)) + len);
 	pMsg = qdf_mem_malloc(msgLen);

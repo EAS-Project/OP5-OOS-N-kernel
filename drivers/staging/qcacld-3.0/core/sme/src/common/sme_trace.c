@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2017 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2013-2016 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -25,20 +25,23 @@
  * to the Linux Foundation.
  */
 
-/*
- * DOC: smeTrace.c
- *  Implementation for trace related APIs
- *
- * Author Kiran Kumar Reddy CH L V
- */
+/************************************************************************
+   smeTrace.c
+
+   \brief implementation for trace related APIs
+
+   \author Kiran Kumar Reddy CH L V
+
+   ========================================================================*/
 #include "ani_global.h"          /* for tpAniSirGlobal */
+#include "sms_debug.h"
 #include "mac_trace.h"
 #include "sme_trace.h"
 #include "sme_internal.h"
 #ifndef SME_TRACE_RECORD
 void sme_trace_init(tpAniSirGlobal pMac)
 {
-
+	return;
 }
 #endif
 #ifdef SME_TRACE_RECORD
@@ -165,6 +168,7 @@ static uint8_t *sme_trace_get_rx_msg_string(uint32_t code)
 
 	default:
 		return "UNKNOWN";
+		break;
 	}
 }
 
@@ -209,6 +213,7 @@ static uint8_t *sme_trace_get_command_string(uint32_t command)
 		CASE_RETURN_STRING(eSmeCommandNdpDataEndInitiatorRequest);
 	default:
 		return "UNKNOWN";
+		break;
 	}
 }
 
@@ -217,28 +222,28 @@ static void sme_trace_dump(tpAniSirGlobal mac_ctx, tp_qdf_trace_record record,
 {
 	switch (record->code) {
 	case TRACE_CODE_SME_COMMAND:
-		sme_debug("%04d %012llu %s S%d %-14s %-30s(0x%x)",
+		sms_log(mac_ctx, LOG1, "%04d %012llu %s S%d %-14s %-30s(0x%x)",
 			rec_index, record->qtime, record->time, record->session,
 			"SME COMMAND:",
 			sme_trace_get_command_string(record->data),
 			record->data);
 		break;
 	case TRACE_CODE_SME_TX_WMA_MSG:
-		sme_debug("%04d %012llu %s S%d %-14s %-30s(0x%x)",
+		sms_log(mac_ctx, LOG1, "%04d %012llu %s S%d %-14s %-30s(0x%x)",
 			rec_index, record->qtime, record->time, record->session,
 			"TX WMA Msg:",
 			mac_trace_get_wma_msg_string((uint16_t)record->data),
 			record->data);
 		break;
 	case TRACE_CODE_SME_RX_WMA_MSG:
-		sme_debug("%04d %012llu %s S%d %-14s %-30s(0x%x)",
+		sms_log(mac_ctx, LOG1, "%04d %012llu %s S%d %-14s %-30s(0x%x)",
 			rec_index, record->qtime, record->time, record->session,
 			"RX WMA Msg:",
 			mac_trace_get_sme_msg_string((uint16_t)record->data),
 			record->data);
 		break;
 	default:
-		sme_debug("%04d %012llu %s S%d %-14s %-30s(0x%x)",
+		sms_log(mac_ctx, LOG1, "%04d %012llu %s S%d %-14s %-30s(0x%x)",
 			rec_index, record->qtime, record->time, record->session,
 			"RX HDD MSG:",
 			sme_trace_get_rx_msg_string(record->code),
@@ -249,7 +254,6 @@ static void sme_trace_dump(tpAniSirGlobal mac_ctx, tp_qdf_trace_record record,
 
 void sme_trace_init(tpAniSirGlobal pMac)
 {
-	qdf_trace_register(QDF_MODULE_ID_SME, (tp_qdf_trace_cb)
-				&sme_trace_dump);
+	qdf_trace_register(QDF_MODULE_ID_SME, (tp_qdf_trace_cb) &sme_trace_dump);
 }
 #endif
