@@ -23,7 +23,6 @@
 
 #include <qdf_debugfs.h>
 #include <i_qdf_debugfs.h>
-#include <qdf_module.h>
 
 /* entry for root debugfs directory*/
 static struct dentry *qdf_debugfs_root;
@@ -37,7 +36,7 @@ QDF_STATUS qdf_debugfs_init(void)
 
 	return QDF_STATUS_SUCCESS;
 }
-qdf_export_symbol(qdf_debugfs_init);
+EXPORT_SYMBOL(qdf_debugfs_init);
 
 QDF_STATUS qdf_debugfs_exit(void)
 {
@@ -46,7 +45,7 @@ QDF_STATUS qdf_debugfs_exit(void)
 
 	return QDF_STATUS_SUCCESS;
 }
-qdf_export_symbol(qdf_debugfs_exit);
+EXPORT_SYMBOL(qdf_debugfs_exit);
 
 struct dentry *qdf_debugfs_get_root(void)
 {

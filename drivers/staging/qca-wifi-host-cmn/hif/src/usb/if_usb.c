@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2017 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2013-2016 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -48,7 +48,10 @@ void *fw_ram_seg_addr[FW_RAM_SEG_CNT];
 
 
 static int hif_usb_unload_dev_num = -1;
-struct hif_usb_softc *g_usb_sc;
+struct hif_usb_softc *g_usb_sc = NULL;
+
+void hif_usb_device_deinit(struct hif_usb_softc *sc);
+QDF_STATUS hif_usb_device_init(struct hif_usb_softc *sc);
 
 /**
  * hif_usb_diag_write_cold_reset() - reset SOC by sending a diag command
@@ -184,7 +187,7 @@ exit:
  */
 QDF_STATUS hif_usb_enable_bus(struct hif_softc *scn,
 			struct device *dev, void *bdev,
-			const struct hif_bus_id *bid,
+			const hif_bus_id *bid,
 			enum hif_enable_type type)
 
 {
@@ -231,11 +234,10 @@ QDF_STATUS hif_usb_enable_bus(struct hif_softc *scn,
 	/* disable lpm to avoid usb2.0 probe timeout */
 	hif_usb_disable_lpm(usbdev);
 
-	/* params need to be added - TODO
-	 * scn->enableuartprint = 1;
-	 * scn->enablefwlog = 0;
-	 * scn->max_no_of_peers = 1;
-	 */
+	/* params need to be added - TO DO
+	scn->enableuartprint = 1;
+	scn->enablefwlog = 0;
+	scn->max_no_of_peers = 1; */
 
 	sc->interface = interface;
 	sc->reboot_notifier.notifier_call = hif_usb_reboot;
@@ -371,7 +373,6 @@ int hif_usb_bus_resume(struct hif_softc *hif_ctx)
 int hif_usb_bus_reset_resume(struct hif_softc *hif_ctx)
 {
 	int ret = 0;
-
 	HIF_ENTER();
 	if (hif_usb_diag_write_cold_reset(hif_ctx) != QDF_STATUS_SUCCESS)
 		ret = 1;
@@ -453,8 +454,7 @@ void hif_usb_reg_tbl_attach(struct hif_softc *scn)
 			return;
 
 		/* assign target register table if we find
-		 * corresponding type
-		 */
+		corresponding type */
 		hif_register_tbl_attach(scn, hif_type);
 		target_register_tbl_attach(scn, target_type);
 		/* read the chip revision*/

@@ -68,8 +68,7 @@ do {                                                             \
 		htt_htc_misc_pkt_list_add(pdev, pkt);            \
 } while (0)
 #else
-#define HTT_SEND_HTC_PKT(pdev, ppkt) \
-	htc_send_pkt(pdev->htc_pdev, &pkt->htc_pkt);
+#define HTT_SEND_HTC_PKT(pdev, ppkt) htc_send_pkt(pdev->htc_pdev, &pkt->htc_pkt);
 #endif
 
 
@@ -114,7 +113,7 @@ void htt_h2t_send_complete(void *context, HTC_PACKET *htc_pkt)
 	htt_htc_pkt_free(pdev, htt_pkt);
 }
 
-enum htc_send_full_action htt_h2t_full(void *context, HTC_PACKET *pkt)
+HTC_SEND_FULL_ACTION htt_h2t_full(void *context, HTC_PACKET *pkt)
 {
 /* FIX THIS */
 	return HTC_SEND_FULL_KEEP;
@@ -308,8 +307,7 @@ QDF_STATUS htt_h2t_rx_ring_rfs_cfg_msg_ll(struct htt_pdev_t *pdev)
 	qdf_nbuf_t msg;
 	uint32_t *msg_word;
 
-	QDF_TRACE(QDF_MODULE_ID_HTT, QDF_TRACE_LEVEL_INFO,
-		  "Receive flow steering configuration, disable gEnableFlowSteering(=0) in ini if FW doesnot support it\n");
+	qdf_print("Receive flow steering configuration, disable gEnableFlowSteering(=0) in ini if FW doesnot support it\n");
 	pkt = htt_htc_pkt_alloc(pdev);
 	if (!pkt)
 		return QDF_STATUS_E_NOMEM; /* failure */
@@ -344,11 +342,9 @@ QDF_STATUS htt_h2t_rx_ring_rfs_cfg_msg_ll(struct htt_pdev_t *pdev)
 	HTT_H2T_MSG_TYPE_SET(*msg_word, HTT_H2T_MSG_TYPE_RFS_CONFIG);
 	if (ol_cfg_is_flow_steering_enabled(pdev->ctrl_pdev)) {
 		HTT_RX_RFS_CONFIG_SET(*msg_word, 1);
-	    QDF_TRACE(QDF_MODULE_ID_HTT, QDF_TRACE_LEVEL_INFO,
-		"Enable Rx flow steering\n");
+	    qdf_print("Enable Rx flow steering\n");
 	} else {
-	    QDF_TRACE(QDF_MODULE_ID_HTT, QDF_TRACE_LEVEL_INFO,
-	    "Disable Rx flow steering\n");
+	    qdf_print("Disable Rx flow steering\n");
 	}
 
 	SET_HTC_PACKET_INFO_TX(&pkt->htc_pkt,
@@ -371,8 +367,7 @@ QDF_STATUS htt_h2t_rx_ring_rfs_cfg_msg_ll(struct htt_pdev_t *pdev)
  */
 QDF_STATUS htt_h2t_rx_ring_rfs_cfg_msg_ll(struct htt_pdev_t *pdev)
 {
-	QDF_TRACE(QDF_MODULE_ID_HTT, QDF_TRACE_LEVEL_INFO,
-		  "Doesnot support receive flow steering configuration\n");
+	qdf_print("Doesnot support receive flow steering configuration\n");
 	return QDF_STATUS_SUCCESS;
 }
 #endif /* HELIUMPLUS */
@@ -390,10 +385,9 @@ QDF_STATUS htt_h2t_rx_ring_cfg_msg_ll(struct htt_pdev_t *pdev)
 	if (!pkt)
 		return A_ERROR; /* failure */
 
-	/*
-	 * show that this is not a tx frame download
-	 *  (not required, but helpful)
-	 */
+	/* show that this is not a tx frame download
+	   (not required, but helpful)
+	*/
 	pkt->msdu_id = HTT_TX_COMPL_INV_MSDU_ID;
 	pkt->pdev_ctxt = NULL;  /* not used during send-done callback */
 
@@ -449,8 +443,7 @@ QDF_STATUS htt_h2t_rx_ring_cfg_msg_ll(struct htt_pdev_t *pdev)
 
 		tmp = qdf_get_upper_32_bits(pdev->rx_ring.base_paddr);
 		if (tmp & 0xfffffe0) {
-			QDF_TRACE(QDF_MODULE_ID_HTT, QDF_TRACE_LEVEL_INFO,
-				  "%s:%d paddr > 37 bits!. Trimmed.",
+			qdf_print("%s:%d paddr > 37 bits!. Trimmed.",
 				  __func__, __LINE__);
 			tmp &= 0x01f;
 		}
@@ -482,11 +475,9 @@ QDF_STATUS htt_h2t_rx_ring_cfg_msg_ll(struct htt_pdev_t *pdev)
 		enable_hdr = 1;
 		enable_ppdu_start = 1;
 		enable_ppdu_end = 1;
-		QDF_TRACE(QDF_MODULE_ID_HTT, QDF_TRACE_LEVEL_INFO,
-			  "%s : %d Pkt log is enabled\n",  __func__, __LINE__);
+		qdf_print("Pkt log is enabled\n");
 	} else {
-		QDF_TRACE(QDF_MODULE_ID_HTT, QDF_TRACE_LEVEL_INFO,
-			  "%s : %d Pkt log is disabled\n",  __func__, __LINE__);
+		qdf_print("Pkt log is disabled\n");
 		enable_ctrl_data = 0;
 		enable_mgmt_data = 0;
 		enable_null_data = 0;
@@ -513,9 +504,7 @@ QDF_STATUS htt_h2t_rx_ring_cfg_msg_ll(struct htt_pdev_t *pdev)
 		enable_ppdu_start = 1;
 		enable_ppdu_end   = 1;
 		/* Disable ASPM for monitor mode */
-		QDF_TRACE(QDF_MODULE_ID_HTT, QDF_TRACE_LEVEL_INFO,
-			  "%s : %d Monitor mode is enabled\n",
-			  __func__, __LINE__);
+		qdf_print("Monitor mode is enabled\n");
 	}
 
 	HTT_RX_RING_CFG_ENABLED_802_11_HDR_SET(*msg_word, enable_hdr);
@@ -599,10 +588,8 @@ htt_h2t_rx_ring_cfg_msg_hl(struct htt_pdev_t *pdev)
 	if (!pkt)
 		return A_ERROR; /* failure */
 
-	/*
-	 * show that this is not a tx frame download
-	 * (not required, but helpful)
-	 */
+	/* show that this is not a tx frame download
+	 * (not required, but helpful) */
 	pkt->msdu_id = HTT_TX_COMPL_INV_MSDU_ID;
 	pkt->pdev_ctxt = NULL; /* not used during send-done callback */
 
@@ -741,8 +728,7 @@ htt_h2t_rx_ring_cfg_msg_hl(struct htt_pdev_t *pdev)
  */
 QDF_STATUS htt_h2t_rx_ring_rfs_cfg_msg_hl(struct htt_pdev_t *pdev)
 {
-	QDF_TRACE(QDF_MODULE_ID_HTT, QDF_TRACE_LEVEL_INFO,
-		  "Doesnot support Receive flow steering configuration\n");
+	qdf_print("Doesnot support Receive flow steering configuration\n");
 	return QDF_STATUS_SUCCESS;
 }
 
@@ -763,8 +749,8 @@ htt_h2t_dbg_stats_get(struct htt_pdev_t *pdev,
 
 	if (stats_type_upload_mask >= 1 << HTT_DBG_NUM_STATS ||
 	    stats_type_reset_mask >= 1 << HTT_DBG_NUM_STATS) {
-		QDF_TRACE(QDF_MODULE_ID_HTT, QDF_TRACE_LEVEL_ERROR,
-			  "%#x %#x stats not supported\n",
+		/* FIX THIS - add more details? */
+		qdf_print("%#x %#x stats not supported\n",
 			  stats_type_upload_mask, stats_type_reset_mask);
 		htt_htc_pkt_free(pdev, pkt);
 		return -EINVAL;      /* failure */

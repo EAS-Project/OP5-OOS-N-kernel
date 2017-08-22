@@ -37,6 +37,7 @@
 #include "sch_global.h"
 #include "sys_global.h"
 #include "cfg_global.h"
+#include "utils_global.h"
 #include "sir_api.h"
 
 #include "csr_api.h"
@@ -914,6 +915,7 @@ typedef struct sAniSirGlobal {
 	tAniSirLim lim;
 	tAniSirSch sch;
 	tAniSirSys sys;
+	tAniSirUtils utils;
 
 	/* PAL/HDD handle */
 	tHddHandle hHdd;
@@ -964,6 +966,7 @@ typedef struct sAniSirGlobal {
 	/* 802.11p enable */
 	bool enable_dot11p;
 
+	bool allow_adj_ch_bcn;
 	/* DBS capability based on INI and FW capability */
 	uint8_t hw_dbs_capable;
 	/* Based on INI parameter */

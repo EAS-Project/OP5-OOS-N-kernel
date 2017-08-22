@@ -45,7 +45,6 @@ static inline void ce_enable_irq_in_individual_register(struct hif_softc *scn,
 		int ce_id)
 {
 	uint32_t offset;
-
 	offset = HOST_IE_ADDRESS + CE_BASE_ADDRESS(ce_id);
 	hif_write32_mb(scn->mem + offset, 1);
 }
@@ -54,7 +53,6 @@ static inline void ce_disable_irq_in_individual_register(struct hif_softc *scn,
 		int ce_id)
 {
 	uint32_t offset;
-
 	offset = HOST_IE_ADDRESS + CE_BASE_ADDRESS(ce_id);
 	hif_write32_mb(scn->mem + offset, 0);
 	hif_read32_mb(scn->mem + offset);

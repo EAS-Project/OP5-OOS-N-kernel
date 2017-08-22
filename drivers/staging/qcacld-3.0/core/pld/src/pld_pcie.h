@@ -41,6 +41,7 @@ static inline int pld_pcie_register_driver(void)
 
 static inline void pld_pcie_unregister_driver(void)
 {
+	return;
 }
 
 static inline int pld_pcie_get_ce_id(int irq)
@@ -69,6 +70,7 @@ static inline int pld_pcie_set_fw_log_mode(u8 fw_log_mode)
 }
 static inline void pld_pcie_intr_notify_q6(void)
 {
+	return;
 }
 #else
 int pld_pcie_wlan_enable(struct pld_wlan_enable_cfg *config,
@@ -128,6 +130,7 @@ pld_pcie_get_fw_files_for_target(struct pld_fw_files *pfw_files,
 }
 static inline void pld_pcie_link_down(void)
 {
+	return;
 }
 static inline int pld_pcie_shadow_control(bool enable)
 {
@@ -154,6 +157,7 @@ static inline int pld_pcie_wlan_get_dfs_nol(void *info, u16 info_len)
 }
 static inline void pld_pcie_schedule_recovery_work(void)
 {
+	return;
 }
 static inline void *pld_pcie_get_virt_ramdump_mem(unsigned long *size)
 {
@@ -161,15 +165,19 @@ static inline void *pld_pcie_get_virt_ramdump_mem(unsigned long *size)
 }
 static inline void pld_pcie_device_crashed(void)
 {
+	return;
 }
 static inline void pld_pcie_device_self_recovery(void)
 {
+	return;
 }
 static inline void pld_pcie_request_pm_qos(u32 qos_val)
 {
+	return;
 }
 static inline void pld_pcie_remove_pm_qos(void)
 {
+	return;
 }
 static inline int pld_pcie_request_bus_bandwidth(int bandwidth)
 {
@@ -181,6 +189,7 @@ static inline int pld_pcie_get_platform_cap(struct pld_platform_cap *cap)
 }
 static inline void pld_pcie_set_driver_status(enum pld_driver_status status)
 {
+	return;
 }
 static inline int pld_pcie_auto_suspend(void)
 {
@@ -192,9 +201,11 @@ static inline int pld_pcie_auto_resume(void)
 }
 static inline void pld_pcie_lock_pm_sem(void)
 {
+	return;
 }
 static inline void pld_pcie_release_pm_sem(void)
 {
+	return;
 }
 static inline int pld_pcie_power_on(struct device *dev)
 {

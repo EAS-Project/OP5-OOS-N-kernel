@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2014-2017 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012, 2014-2016 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -38,6 +38,7 @@
 #include "cds_api.h"
 #include "cfg_priv.h"
 #include "lim_trace.h"
+#include "cfg_debug.h"
 
 /*--------------------------------------------------------------------*/
 /* ATTENTION:  The functions contained in this module are to be used  */
@@ -76,17 +77,24 @@ cfg_send_host_msg(tpAniSirGlobal pMac, uint16_t msgType, uint32_t msgLen,
 	uint32_t *pMsg, *pEnd;
 	tSirMsgQ mmhMsg;
 
+	/* sanity */
 	if ((paramNum > 0) && (NULL == pParamList)) {
-		pe_err("pParamList NULL when paramNum greater than 0!");
+		PELOGE(cfg_log(pMac, LOGE,
+			       FL
+				       ("pParamList NULL when paramNum greater than 0!"));
+		       )
 		return;
 	}
 	if ((dataLen > 0) && (NULL == pData)) {
-		pe_err("pData NULL when dataLen greater than 0!");
+		PELOGE(cfg_log(pMac, LOGE,
+			       FL("pData NULL when dataLen greater than 0!"));
+		       )
 		return;
 	}
+	/* Allocate message buffer */
 	pMsg = qdf_mem_malloc(msgLen);
 	if (NULL == pMsg) {
-		pe_err("Memory allocation failure!");
+		PELOGE(cfg_log(pMac, LOGE, FL("Memory allocation failure!"));)
 		return;
 	}
 	/* Fill in message details */
@@ -120,7 +128,7 @@ cfg_send_host_msg(tpAniSirGlobal pMac, uint16_t msgType, uint32_t msgLen,
 		break;
 
 	default:
-		pe_warn("Unknown msg: %d!", (int)msgType);
+		PELOGE(cfg_log(pMac, LOGE, FL("Unknown msg %d!"), (int)msgType);)
 		qdf_mem_free(pMsg);
 		return;
 	}

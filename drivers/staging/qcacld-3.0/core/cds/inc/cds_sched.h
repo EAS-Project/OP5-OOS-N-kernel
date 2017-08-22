@@ -50,7 +50,6 @@
 #include "qdf_lock.h"
 #include "qdf_mc_timer.h"
 #include "cds_config.h"
-#include "cds_reg_service.h"
 
 #define TX_POST_EVENT               0x001
 #define TX_SUSPEND_EVENT            0x002
@@ -85,9 +84,9 @@
 ** OL Rx thread.
 */
 #define CDS_MAX_OL_RX_PKT 4000
-#endif
 
 typedef void (*cds_ol_rx_thread_cb)(void *context, void *rxpkt, uint16_t staid);
+#endif
 
 /*
 ** QDF Message queue definition.
@@ -101,6 +100,7 @@ typedef struct _cds_mq_type {
 
 } cds_mq_type, *p_cds_mq_type;
 
+#ifdef QCA_CONFIG_SMP
 /*
 ** CDS message wrapper for data rx from TXRX
 */
@@ -118,6 +118,7 @@ struct cds_ol_rx_pkt {
 	cds_ol_rx_thread_cb callback;
 
 };
+#endif
 
 /*
 ** CDS Scheduler context
@@ -267,7 +268,6 @@ typedef struct _cds_context_type {
 	qdf_event_t ProbeEvent;
 
 	uint32_t driver_state;
-	unsigned long fw_state;
 
 	qdf_event_t wmaCompleteEvent;
 
@@ -331,8 +331,6 @@ typedef struct _cds_context_type {
 
 	/* This is to track if HW mode change is in progress */
 	uint32_t hw_mode_change_in_progress;
-	uint16_t unsafe_channel_count;
-	uint16_t unsafe_channel_list[NUM_CHANNELS];
 } cds_context_type, *p_cds_contextType;
 
 extern struct _cds_sched_context *gp_cds_sched_context;
@@ -441,7 +439,6 @@ void cds_indicate_rxpkt(p_cds_sched_context pSchedContext,
 static inline
 struct cds_ol_rx_pkt *cds_alloc_ol_rx_pkt(p_cds_sched_context pSchedContext)
 {
-	return NULL;
 }
 
 /**

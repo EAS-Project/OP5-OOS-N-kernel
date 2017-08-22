@@ -141,7 +141,7 @@ int hif_napi_create(struct hif_opaque_softc   *hif_ctx,
 			goto hnc_err;
 		}
 
-		HIF_DBG("%s: NAPI structures initialized, rc=%d",
+		HIF_INFO("%s: NAPI structures initialized, rc=%d",
 			 __func__, rc);
 	}
 	for (i = 0; i < hif->ce_count; i++) {
@@ -199,7 +199,7 @@ int hif_napi_create(struct hif_opaque_softc   *hif_ctx,
 		 * protection as there should be no-one around yet
 		 */
 		napid->ce_map |= (0x01 << i);
-		HIF_DBG("%s: NAPI id %d created for pipe %d", __func__,
+		HIF_INFO("%s: NAPI id %d created for pipe %d", __func__,
 			 napii->id, i);
 	}
 	NAPI_DEBUG("napi map = %x", napid->ce_map);
@@ -276,7 +276,7 @@ int hif_napi_destroy(struct hif_opaque_softc *hif_ctx,
 		if (hif->napi_data.state == HIF_NAPI_CONF_UP) {
 			if (force) {
 				napi_disable(&(napii->napi));
-				HIF_DBG("%s: NAPI entry %d force disabled",
+				HIF_INFO("%s: NAPI entry %d force disabled",
 					 __func__, id);
 				NAPI_DEBUG("NAPI %d force disabled", id);
 			} else {
@@ -313,7 +313,7 @@ int hif_napi_destroy(struct hif_opaque_softc *hif_ctx,
 				qdf_spinlock_destroy(&(napid->lock));
 				memset(napid,
 				       0, sizeof(struct qca_napi_data));
-				HIF_DBG("%s: no NAPI instances. Zapped.",
+				HIF_INFO("%s: no NAPI instances. Zapped.",
 					 __func__);
 			}
 		}
@@ -356,7 +356,7 @@ int hif_napi_lro_flush_cb_register(struct hif_opaque_softc *hif_hdl,
 				}
 				napii->lro_flush_cb = lro_flush_handler;
 				napii->lro_ctx = data;
-				HIF_DBG("Registering LRO for ce_id %d NAPI callback for %d flush_cb %p, lro_data %p\n",
+				HIF_ERROR("Registering LRO for ce_id %d NAPI callback for %d flush_cb %p, lro_data %p\n",
 					i, napii->id, napii->lro_flush_cb,
 					napii->lro_ctx);
 				rc++;
@@ -522,25 +522,25 @@ int hif_napi_event(struct hif_opaque_softc *hif_ctx, enum qca_napi_event event,
 	case NAPI_EVT_INT_STATE: {
 		int on = (data != ((void *)0));
 
-		HIF_DBG("%s: recved evnt: STATE_CMD %d; v = %d (state=0x%0x)",
+		HIF_INFO("%s: recved evnt: STATE_CMD %d; v = %d (state=0x%0x)",
 			 __func__, event,
 			 on, prev_state);
 		if (on)
 			if (prev_state & HIF_NAPI_CONF_UP) {
-				HIF_DBG("%s: duplicate NAPI conf ON msg",
+				HIF_INFO("%s: duplicate NAPI conf ON msg",
 					 __func__);
 			} else {
-				HIF_DBG("%s: setting state to ON",
+				HIF_INFO("%s: setting state to ON",
 					 __func__);
 				napid->state |= HIF_NAPI_CONF_UP;
 			}
 		else /* off request */
 			if (prev_state & HIF_NAPI_CONF_UP) {
-				HIF_DBG("%s: setting state to OFF",
+				HIF_INFO("%s: setting state to OFF",
 				 __func__);
 				napid->state &= ~HIF_NAPI_CONF_UP;
 			} else {
-				HIF_DBG("%s: duplicate NAPI conf OFF msg",
+				HIF_INFO("%s: duplicate NAPI conf OFF msg",
 					 __func__);
 			}
 		break;
@@ -577,7 +577,7 @@ int hif_napi_event(struct hif_opaque_softc *hif_ctx, enum qca_napi_event event,
 				   __func__);
 			blacklist_pending = BLACKLIST_OFF_PENDING;
 			/*
-			 * Ideally we should "collapse" interrupts here, since
+			.*.Ideally we should "collapse" interrupts here, since
 			 * we are "dispersing" interrupts in the "else" case.
 			 * This allows the possibility that our interrupts may
 			 * still be on the perf cluster the next time we enter
@@ -650,7 +650,6 @@ int hif_napi_event(struct hif_opaque_softc *hif_ctx, enum qca_napi_event event,
 			rc = 1;
 			for (i = 0; i < CE_COUNT_MAX; i++) {
 				struct qca_napi_info *napii = napid->napis[i];
-
 				if (napii) {
 					napi = &(napii->napi);
 					NAPI_DEBUG("%s: enabling NAPI %d",
@@ -662,7 +661,6 @@ int hif_napi_event(struct hif_opaque_softc *hif_ctx, enum qca_napi_event event,
 			rc = 0;
 			for (i = 0; i < CE_COUNT_MAX; i++) {
 				struct qca_napi_info *napii = napid->napis[i];
-
 				if (napii) {
 					napi = &(napii->napi);
 					NAPI_DEBUG("%s: disabling NAPI %d",
@@ -674,7 +672,7 @@ int hif_napi_event(struct hif_opaque_softc *hif_ctx, enum qca_napi_event event,
 			}
 		}
 	} else {
-		HIF_DBG("%s: no change in hif napi state (still %d)",
+		HIF_INFO("%s: no change in hif napi state (still %d)",
 			 __func__, prev_state);
 	}
 
@@ -763,7 +761,7 @@ bool hif_napi_correct_cpu(struct qca_napi_info *napi_info)
 	bool right_cpu = true;
 	int rc = 0;
 	cpumask_t cpumask;
-	int cpu;
+	int cpu ;
 	struct qca_napi_data *napid;
 
 	napid = hif_napi_get_all(GET_HIF_OPAQUE_HDL(napi_info->hif_ctx));
@@ -785,8 +783,7 @@ bool hif_napi_correct_cpu(struct qca_napi_info *napi_info)
 			irq_modify_status(napi_info->irq, 0, IRQ_NO_BALANCING);
 
 			if (rc)
-				HIF_ERROR("error setting irq affinity hint: %d",
-					  rc);
+				HIF_ERROR("error setting irq affinity hint: %d", rc);
 			else
 				napi_info->stats[cpu].cpu_corrected++;
 		}
@@ -885,7 +882,7 @@ int hif_napi_poll(struct hif_opaque_softc *hif_ctx,
 	if ((ce_state) &&
 	    (!ce_check_rx_pending(ce_state) || (0 == rc) ||
 	     !poll_on_right_cpu)) {
-		napi_info->stats[cpu].napi_completes++;
+			napi_info->stats[cpu].napi_completes++;
 
 		hif_record_ce_desc_event(hif, ce_state->id, NAPI_COMPLETE,
 					 NULL, NULL, 0);
@@ -947,11 +944,12 @@ void hif_napi_update_yield_stats(struct CE_state *ce_state,
 	if (unlikely(NULL == hif)) {
 		QDF_ASSERT(NULL != hif);
 		return;
-	}
-	napi_data = &(hif->napi_data);
-	if (unlikely(NULL == napi_data)) {
-		QDF_ASSERT(NULL != napi_data);
-		return;
+	} else {
+		napi_data = &(hif->napi_data);
+		if (unlikely(NULL == napi_data)) {
+			QDF_ASSERT(NULL != napi_data);
+			return;
+		}
 	}
 
 	if (unlikely(NULL == napi_data->napis[ce_id]))
@@ -992,7 +990,9 @@ void hif_napi_stats(struct qca_napi_data *napid)
 	qdf_print("lilclhead=%d, bigclhead=%d",
 		  napid->lilcl_head, napid->bigcl_head);
 	for (i = 0; i < NR_CPUS; i++) {
-		qdf_print("CPU[%02d]: state:%d crid=%02d clid=%02d crmk:0x%0lx thmk:0x%0lx frq:%d napi = 0x%08x lnk:%d",
+		qdf_print("CPU[%02d]: state:%d crid=%02d clid=%02d "
+			  "crmk:0x%0lx thmk:0x%0lx frq:%d "
+			  "napi = 0x%08x lnk:%d",
 			  i,
 			  cpu[i].state, cpu[i].core_id, cpu[i].cluster_id,
 			  cpu[i].core_mask.bits[0],
@@ -1071,7 +1071,8 @@ static int hnc_link_clusters(struct qca_napi_data *napid)
 				continue;
 			}
 			if (cl_done & (0x01 << cl)) {
-				NAPI_DEBUG("Cluster already processed. SKIPPED\n");
+				NAPI_DEBUG("Cluster already processed. "
+					   "SKIPPED\n");
 				continue;
 			} else {
 				if (more == 0) {
@@ -1082,7 +1083,8 @@ static int hnc_link_clusters(struct qca_napi_data *napid)
 					prev = -1;
 				};
 				if ((curcl >= 0) && (curcl != cl)) {
-					NAPI_DEBUG("Entry cl(%d) != curcl(%d). SKIPPED\n",
+					NAPI_DEBUG("Entry cl(%d) != curcl(%d). "
+						   "SKIPPED\n",
 						   cl, curcl);
 					continue;
 				}
@@ -1422,8 +1424,9 @@ retry_collapse:
 			if (napid->napi_cpu[i].state == QCA_NAPI_CPU_UP) {
 				destidx = i;
 				break;
+			} else {
+				i = napid->napi_cpu[i].cluster_nxt;
 			}
-			i = napid->napi_cpu[i].cluster_nxt;
 		}
 		if ((destidx < 0) && (head == napid->lilcl_head)) {
 			NAPI_DEBUG("%s: COLLAPSE: no lilcl dest, try bigcl",
@@ -1546,7 +1549,6 @@ static inline void hif_napi_bl_irq(struct qca_napi_data *napid, bool bl_flag)
 {
 	int i;
 	struct qca_napi_info *napii;
-
 	for (i = 0; i < CE_COUNT_MAX; i++) {
 		/* check if NAPI is enabled on the CE */
 		if (!(napid->ce_map & (0x01 << i)))
@@ -1563,7 +1565,7 @@ static inline void hif_napi_bl_irq(struct qca_napi_data *napid, bool bl_flag)
 		else
 			irq_modify_status(napii->irq,
 					  IRQ_NO_BALANCING, 0);
-		HIF_DBG("%s: bl_flag %d CE %d", __func__, bl_flag, i);
+		HIF_INFO("%s: bl_flag %d CE %d", __func__, bl_flag, i);
 	}
 }
 
@@ -1579,6 +1581,7 @@ static inline int hif_napi_core_ctl_set_boost(bool boost)
 	return 0;
 }
 #endif
+
 /**
  * hif_napi_cpu_blacklist() - en(dis)ables blacklisting for NAPI RX interrupts.
  * @napid: pointer to qca_napi_data structure
@@ -1595,8 +1598,7 @@ static inline int hif_napi_core_ctl_set_boost(bool boost)
  *         for BLACKLIST_ON op    - return value from core_ctl_set_boost API
  *         for BLACKLIST_OFF op   - return value from core_ctl_set_boost API
  */
-int hif_napi_cpu_blacklist(struct qca_napi_data *napid,
-			   enum qca_blacklist_op op)
+int hif_napi_cpu_blacklist(struct qca_napi_data *napid, enum qca_blacklist_op op)
 {
 	int rc = 0;
 	static int ref_count; /* = 0 by the compiler */

@@ -34,6 +34,8 @@
 #define _WMI_UNIFIED_API_H_
 
 #include <osdep.h>
+#include "a_types.h"
+#include "ol_defines.h"
 #ifdef CONFIG_MCL
 #include "wmi.h"
 #endif
@@ -1374,30 +1376,4 @@ QDF_STATUS wmi_unified_set_arp_stats_req(void *wmi_hdl,
 					 struct set_arp_stats *req_buf);
 QDF_STATUS wmi_unified_get_arp_stats_req(void *wmi_hdl,
 					 struct get_arp_stats *req_buf);
-
-#ifdef WMI_INTERFACE_EVENT_LOGGING
-void wmi_print_cmd_log(wmi_unified_t wmi, uint32_t count,
-		       qdf_abstract_print *print, void *print_priv);
-
-void wmi_print_cmd_tx_cmp_log(wmi_unified_t wmi, uint32_t count,
-			      qdf_abstract_print *print, void *print_priv);
-
-void wmi_print_mgmt_cmd_log(wmi_unified_t wmi, uint32_t count,
-			    qdf_abstract_print *print, void *print_priv);
-
-void wmi_print_mgmt_cmd_tx_cmp_log(wmi_unified_t wmi, uint32_t count,
-				   qdf_abstract_print *print, void *print_priv);
-
-void wmi_print_event_log(wmi_unified_t wmi, uint32_t count,
-			 qdf_abstract_print *print, void *print_priv);
-
-void wmi_print_rx_event_log(wmi_unified_t wmi, uint32_t count,
-			    qdf_abstract_print *print, void *print_priv);
-
-void wmi_print_mgmt_event_log(wmi_unified_t wmi, uint32_t count,
-			      qdf_abstract_print *print, void *print_priv);
-#endif /* WMI_INTERFACE_EVENT_LOGGING */
-
-QDF_STATUS wmi_unified_send_dbs_scan_sel_params_cmd(void *wmi_hdl,
-				   struct wmi_dbs_scan_sel_params *wmi_param);
 #endif /* _WMI_UNIFIED_API_H_ */

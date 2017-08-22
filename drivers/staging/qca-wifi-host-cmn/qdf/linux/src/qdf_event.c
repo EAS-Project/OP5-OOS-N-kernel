@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2017 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2016 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -37,7 +37,6 @@
 /* Include Files */
 #include "qdf_event.h"
 #include <linux/export.h>
-#include <qdf_module.h>
 
 /* Function Definitions and Documentation */
 
@@ -80,7 +79,7 @@ QDF_STATUS qdf_event_create(qdf_event_t *event)
 
 	return QDF_STATUS_SUCCESS;
 }
-qdf_export_symbol(qdf_event_create);
+EXPORT_SYMBOL(qdf_event_create);
 
 /**
  * qdf_event_set() - sets a QDF event
@@ -117,7 +116,7 @@ QDF_STATUS qdf_event_set(qdf_event_t *event)
 
 	return QDF_STATUS_SUCCESS;
 }
-qdf_export_symbol(qdf_event_set);
+EXPORT_SYMBOL(qdf_event_set);
 
 /**
  * qdf_event_reset() - resets a QDF event
@@ -156,7 +155,7 @@ QDF_STATUS qdf_event_reset(qdf_event_t *event)
 	INIT_COMPLETION(event->complete);
 	return QDF_STATUS_SUCCESS;
 }
-qdf_export_symbol(qdf_event_reset);
+EXPORT_SYMBOL(qdf_event_reset);
 
 /**
  * qdf_event_destroy() - Destroys a QDF event
@@ -204,7 +203,7 @@ QDF_STATUS qdf_event_destroy(qdf_event_t *event)
 
 	return QDF_STATUS_SUCCESS;
 }
-qdf_export_symbol(qdf_event_destroy);
+EXPORT_SYMBOL(qdf_event_destroy);
 
 /**
  * qdf_wait_single_event() - Waits for a single event to be set.
@@ -246,7 +245,6 @@ QDF_STATUS qdf_wait_single_event(qdf_event_t *event, uint32_t timeout)
 
 	if (timeout) {
 		long ret;
-
 		ret = wait_for_completion_timeout(&event->complete,
 						  msecs_to_jiffies(timeout));
 		if (0 >= ret)
@@ -259,4 +257,4 @@ QDF_STATUS qdf_wait_single_event(qdf_event_t *event, uint32_t timeout)
 	}
 	return QDF_STATUS_SUCCESS;
 }
-qdf_export_symbol(qdf_wait_single_event);
+EXPORT_SYMBOL(qdf_wait_single_event);

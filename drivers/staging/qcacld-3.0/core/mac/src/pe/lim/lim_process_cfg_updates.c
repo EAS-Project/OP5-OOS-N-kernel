@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2017 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012-2016 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -53,11 +53,11 @@ static void lim_set_default_key_id_and_keys(tpAniSirGlobal pMac)
 #ifdef FIXME_GEN6
 	uint32_t val;
 	uint32_t dkCfgId;
-
-	pe_debug("Setting default keys at SP");
+	PELOG1(lim_log(pMac, LOG1, FL("Setting default keys at SP"));)
 	if (wlan_cfg_get_int(pMac, WNI_CFG_WEP_DEFAULT_KEYID,
 			     &val) != eSIR_SUCCESS) {
-		pe_err("Unable to retrieve defaultKeyId from CFG");
+		lim_log(pMac, LOGP,
+			FL("Unable to retrieve defaultKeyId from CFG"));
 	}
 	dkCfgId = limGetCfgIdOfDefaultKeyid(val);
 #endif
@@ -79,9 +79,10 @@ void lim_set_cfg_protection(tpAniSirGlobal pMac, tpPESession pesessionEntry)
 			qdf_mem_set((void *)&pesessionEntry->cfgProtection,
 				    sizeof(tCfgProtection), 0);
 		else {
-			pe_debug("frm11a = %d, from11b = %d, frm11g = %d, "
+			lim_log(pMac, LOG1,
+				FL(" frm11a = %d, from11b = %d, frm11g = %d, "
 				   "ht20 = %d, nongf = %d, lsigTxop = %d, "
-				   "rifs = %d, obss = %d",
+				   "rifs = %d, obss = %d"),
 				pesessionEntry->cfgProtection.fromlla,
 				pesessionEntry->cfgProtection.fromllb,
 				pesessionEntry->cfgProtection.fromllg,
@@ -94,14 +95,16 @@ void lim_set_cfg_protection(tpAniSirGlobal pMac, tpPESession pesessionEntry)
 	} else {
 		if (wlan_cfg_get_int(pMac, WNI_CFG_FORCE_POLICY_PROTECTION, &val)
 		    != eSIR_SUCCESS) {
-			pe_err("reading WNI_CFG_FORCE_POLICY_PROTECTION cfg failed");
+			lim_log(pMac, LOGP,
+				FL
+					("reading WNI_CFG_FORCE_POLICY_PROTECTION cfg failed"));
 			return;
 		} else
 			pMac->lim.gLimProtectionControl = (uint8_t) val;
 
 		if (wlan_cfg_get_int(pMac, WNI_CFG_PROTECTION_ENABLED, &val) !=
 		    eSIR_SUCCESS) {
-			pe_err("reading protection cfg failed");
+			lim_log(pMac, LOGP, FL("reading protection cfg failed"));
 			return;
 		}
 
@@ -156,8 +159,9 @@ void lim_handle_param_update(tpAniSirGlobal pMac, eUpdateIEsType cfgId)
 	tSirMsgQ msg = { 0 };
 	uint32_t status;
 
-	pe_debug("Handling CFG parameter id %X update", cfgId);
-
+	PELOG3(lim_log
+		       (pMac, LOG3, FL("Handling CFG parameter id %X update"), cfgId);
+	       )
 	switch (cfgId) {
 	case eUPDATE_IE_PROBE_BCN:
 	{
@@ -165,7 +169,10 @@ void lim_handle_param_update(tpAniSirGlobal pMac, eUpdateIEsType cfgId)
 		status = lim_post_msg_api(pMac, &msg);
 
 		if (status != TX_SUCCESS)
-			pe_err("Failed lim_post_msg_api %u", status);
+			PELOGE(lim_log
+				       (pMac, LOGE,
+				       FL("Failed lim_post_msg_api %u"), status);
+			       )
 			break;
 	}
 	default:
@@ -201,8 +208,9 @@ void lim_handle_cf_gparam_update(tpAniSirGlobal pMac, uint32_t cfgId)
 	uint16_t val16;
 	tSirMacHTParametersInfo *pAmpduParamInfo;
 
-	pe_debug("Handling CFG parameter id %X update", cfgId);
-
+	PELOG3(lim_log
+		       (pMac, LOG3, FL("Handling CFG parameter id %X update"), cfgId);
+	       )
 	switch (cfgId) {
 	case WNI_CFG_WEP_DEFAULT_KEYID:
 
@@ -217,8 +225,11 @@ void lim_handle_cf_gparam_update(tpAniSirGlobal pMac, uint32_t cfgId)
 	case WNI_CFG_EXCLUDE_UNENCRYPTED:
 		if (wlan_cfg_get_int(pMac, WNI_CFG_EXCLUDE_UNENCRYPTED,
 				     &val1) != eSIR_SUCCESS) {
-			pe_err("Unable to retrieve excludeUnencr from CFG");
+			lim_log(pMac, LOGP,
+				FL("Unable to retrieve excludeUnencr from CFG"));
 		}
+		lim_log(pMac, LOGE,
+			FL("Unsupported CFG: WNI_CFG_EXCLUDE_UNENCRYPTED"));
 
 		break;
 
@@ -244,19 +255,28 @@ void lim_handle_cf_gparam_update(tpAniSirGlobal pMac, uint32_t cfgId)
 		status = lim_post_msg_api(pMac, &msg);
 
 		if (status != TX_SUCCESS)
-			pe_err("Failed lim_post_msg_api %u", status);
+			PELOGE(lim_log
+				       (pMac, LOGE,
+				       FL("Failed lim_post_msg_api %u"), status);
+			       )
 			break;
 	}
 
 	case WNI_CFG_MPDU_DENSITY:
 		if (wlan_cfg_get_int(pMac, WNI_CFG_HT_AMPDU_PARAMS, &val1) !=
 		    eSIR_SUCCESS) {
-			pe_err("could not retrieve HT AMPDU Param CFG");
+			PELOGE(lim_log
+				       (pMac, LOGE,
+				       FL("could not retrieve HT AMPDU Param CFG"));
+			       )
 			break;
 		}
 		if (wlan_cfg_get_int(pMac, WNI_CFG_MPDU_DENSITY, &val2) !=
 		    eSIR_SUCCESS) {
-			pe_err("could not retrieve MPDU Density CFG");
+			PELOGE(lim_log
+				       (pMac, LOGE,
+				       FL("could not retrieve MPDU Density CFG"));
+			       )
 			break;
 		}
 		val16 = (uint16_t) val1;
@@ -265,17 +285,27 @@ void lim_handle_cf_gparam_update(tpAniSirGlobal pMac, uint32_t cfgId)
 		if (cfg_set_int
 			    (pMac, WNI_CFG_HT_AMPDU_PARAMS,
 			    *(uint8_t *) pAmpduParamInfo) != eSIR_SUCCESS)
-			pe_err("could not update HT AMPDU Param CFG");
+			PELOGE(lim_log
+				       (pMac, LOGE,
+				       FL("could not update HT AMPDU Param CFG"));
+			       )
+
 			break;
 	case WNI_CFG_MAX_RX_AMPDU_FACTOR:
 		if (wlan_cfg_get_int(pMac, WNI_CFG_HT_AMPDU_PARAMS, &val1) !=
 		    eSIR_SUCCESS) {
-			pe_err("could not retrieve HT AMPDU Param CFG");
+			PELOGE(lim_log
+				       (pMac, LOGE,
+				       FL("could not retrieve HT AMPDU Param CFG"));
+			       )
 			break;
 		}
 		if (wlan_cfg_get_int(pMac, WNI_CFG_MAX_RX_AMPDU_FACTOR, &val2) !=
 		    eSIR_SUCCESS) {
-			pe_err("could not retrieve AMPDU Factor CFG");
+			PELOGE(lim_log
+				       (pMac, LOGE,
+				       FL("could not retrieve AMPDU Factor CFG"));
+			       )
 			break;
 		}
 		val16 = (uint16_t) val1;
@@ -284,13 +314,19 @@ void lim_handle_cf_gparam_update(tpAniSirGlobal pMac, uint32_t cfgId)
 		if (cfg_set_int
 			    (pMac, WNI_CFG_HT_AMPDU_PARAMS,
 			    *(uint8_t *) pAmpduParamInfo) != eSIR_SUCCESS)
-			pe_err("could not update HT AMPDU Param CFG");
+			PELOGE(lim_log
+				       (pMac, LOGE,
+				       FL("could not update HT AMPDU Param CFG"));
+			       )
 			break;
 
 	case WNI_CFG_DOT11_MODE:
 		if (wlan_cfg_get_int(pMac, WNI_CFG_DOT11_MODE, &val1) !=
 		    eSIR_SUCCESS) {
-			pe_err("could not retrieve Dot11 Mode CFG");
+			PELOGE(lim_log
+				       (pMac, LOGE,
+				       FL("could not retrieve Dot11 Mode  CFG"));
+			       )
 			break;
 		}
 		break;
@@ -298,7 +334,8 @@ void lim_handle_cf_gparam_update(tpAniSirGlobal pMac, uint32_t cfgId)
 	case WNI_CFG_SCAN_IN_POWERSAVE:
 		if (wlan_cfg_get_int(pMac, WNI_CFG_SCAN_IN_POWERSAVE, &val1) !=
 		    eSIR_SUCCESS) {
-			pe_err("Unable to get WNI_CFG_SCAN_IN_POWERSAVE");
+			lim_log(pMac, LOGE,
+				FL("Unable to get WNI_CFG_SCAN_IN_POWERSAVE "));
 			break;
 		}
 		pMac->lim.gScanInPowersave = (uint8_t) val1;
@@ -307,7 +344,8 @@ void lim_handle_cf_gparam_update(tpAniSirGlobal pMac, uint32_t cfgId)
 	case WNI_CFG_ASSOC_STA_LIMIT:
 		if (wlan_cfg_get_int(pMac, WNI_CFG_ASSOC_STA_LIMIT, &val1) !=
 		    eSIR_SUCCESS) {
-			pe_err("Unable to get WNI_CFG_ASSOC_STA_LIMIT");
+			lim_log(pMac, LOGE,
+				FL("Unable to get WNI_CFG_ASSOC_STA_LIMIT"));
 			break;
 		}
 		pMac->lim.gLimAssocStaLimit = (uint16_t) val1;
@@ -341,7 +379,7 @@ void lim_apply_configuration(tpAniSirGlobal pMac, tpPESession psessionEntry)
 {
 	uint32_t val = 0, phyMode;
 
-	pe_debug("Applying config");
+	PELOG2(lim_log(pMac, LOG2, FL("Applying config"));)
 
 	psessionEntry->limSentCapsChangeNtf = false;
 
@@ -364,7 +402,10 @@ void lim_apply_configuration(tpAniSirGlobal pMac, tpPESession psessionEntry)
 		   as a part of join request for a BT-AMP station */
 
 		if (psessionEntry->statypeForBss == STA_ENTRY_SELF) {
-			pe_debug("Initializing BT-AMP beacon generation");
+			PELOG1(lim_log
+				       (pMac, LOG1,
+				       FL("Initializing BT-AMP beacon generation"));
+			       )
 			sch_set_beacon_interval(pMac, psessionEntry);
 			sch_set_fixed_beacon_fields(pMac, psessionEntry);
 		}
@@ -372,12 +413,14 @@ void lim_apply_configuration(tpAniSirGlobal pMac, tpPESession psessionEntry)
 
 	if (wlan_cfg_get_int(pMac, WNI_CFG_SCAN_IN_POWERSAVE, &val) !=
 	    eSIR_SUCCESS) {
-		pe_err("could not retrieve WNI_CFG_SCAN_IN_POWERSAVE");
+		lim_log(pMac, LOGP,
+			FL("could not retrieve WNI_CFG_SCAN_IN_POWERSAVE"));
 		return;
 	}
 
-	pe_debug("pMac->lim.gScanInPowersave = %hu",
+	PELOG1(lim_log(pMac, LOG1, FL("pMac->lim.gScanInPowersave = %hu"),
 		       pMac->lim.gScanInPowersave);
+	       )
 	pMac->lim.gScanInPowersave = (uint8_t) val;
 
 } /*** end lim_apply_configuration() ***/
@@ -406,7 +449,7 @@ static void lim_update_config(tpAniSirGlobal pMac, tpPESession psessionEntry)
 	sir_copy_mac_addr(pMac->lim.gLimMyMacAddr, psessionEntry->selfMacAddr);
 
 	if (wlan_cfg_get_int(pMac, WNI_CFG_SHORT_PREAMBLE, &val) != eSIR_SUCCESS)
-		pe_err("cfg get short preamble failed");
+		lim_log(pMac, LOGP, FL("cfg get short preamble failed"));
 	psessionEntry->beaconParams.fShortPreamble = (val) ? 1 : 0;
 
 	/* In STA case this parameter is filled during the join request */
@@ -414,27 +457,27 @@ static void lim_update_config(tpAniSirGlobal pMac, tpPESession psessionEntry)
 	    LIM_IS_IBSS_ROLE(psessionEntry)) {
 		if (wlan_cfg_get_int(pMac, WNI_CFG_WME_ENABLED, &val) !=
 		    eSIR_SUCCESS)
-			pe_err("cfg get wme enabled failed");
+			lim_log(pMac, LOGP, FL("cfg get wme enabled failed"));
 		psessionEntry->limWmeEnabled = (val) ? 1 : 0;
 	}
 
 	if (wlan_cfg_get_int(pMac, WNI_CFG_WSM_ENABLED, &val) != eSIR_SUCCESS)
-		pe_err("cfg get wsm enabled failed");
+		lim_log(pMac, LOGP, FL("cfg get wsm enabled failed"));
 	psessionEntry->limWsmEnabled = (val) ? 1 : 0;
 
 	if ((!psessionEntry->limWmeEnabled) && (psessionEntry->limWsmEnabled)) {
-		pe_err("Can't enable WSM without WME");
+		PELOGE(lim_log(pMac, LOGE, FL("Can't enable WSM without WME"));)
 		psessionEntry->limWsmEnabled = 0;
 	}
 	/* In STA , this parameter is filled during the join request */
 	if (LIM_IS_AP_ROLE(psessionEntry) || LIM_IS_IBSS_ROLE(psessionEntry)) {
 		if (wlan_cfg_get_int(pMac, WNI_CFG_QOS_ENABLED, &val) !=
 		    eSIR_SUCCESS)
-			pe_err("cfg get qos enabled failed");
+			lim_log(pMac, LOGP, FL("cfg get qos enabled failed"));
 		psessionEntry->limQosEnabled = (val) ? 1 : 0;
 	}
 	if (wlan_cfg_get_int(pMac, WNI_CFG_HCF_ENABLED, &val) != eSIR_SUCCESS)
-		pe_err("cfg get hcf enabled failed");
+		lim_log(pMac, LOGP, FL("cfg get hcf enabled failed"));
 	psessionEntry->limHcfEnabled = (val) ? 1 : 0;
 
 	/* AP: WSM should enable HCF as well, for STA enable WSM only after */
@@ -443,13 +486,13 @@ static void lim_update_config(tpAniSirGlobal pMac, tpPESession psessionEntry)
 		psessionEntry->limHcfEnabled = 1;
 
 	if (wlan_cfg_get_int(pMac, WNI_CFG_11D_ENABLED, &val) != eSIR_SUCCESS)
-		pe_err("cfg get 11d enabled failed");
+		lim_log(pMac, LOGP, FL("cfg get 11d enabled failed"));
 	psessionEntry->lim11dEnabled = (val) ? 1 : 0;
 
 	if (wlan_cfg_get_int(pMac, WNI_CFG_ASSOC_STA_LIMIT, &val) != eSIR_SUCCESS) {
-		pe_err("cfg get assoc sta limit failed");
+		lim_log(pMac, LOGP, FL("cfg get assoc sta limit failed"));
 	}
 	pMac->lim.gLimAssocStaLimit = (uint16_t) val;
 
-	pe_debug("Updated Lim shadow state based on CFG");
+	PELOG1(lim_log(pMac, LOG1, FL("Updated Lim shadow state based on CFG"));)
 }
