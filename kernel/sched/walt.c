@@ -102,8 +102,10 @@ walt_dec_cumulative_runnable_avg(struct rq *rq,
 
 static void
 fixup_cumulative_runnable_avg(struct rq *rq,
-			      struct task_struct *p, s64 task_load_delta)
+			      struct task_struct *p, u64 new_task_load)
 {
+	s64 task_load_delta = (s64)new_task_load - task_load(p);
+
 	rq->cumulative_runnable_avg += task_load_delta;
 	if ((s64)rq->cumulative_runnable_avg < 0)
 		panic("cra less than zero: tld: %lld, task_load(p) = %u\n",
@@ -196,6 +198,7 @@ update_window_start(struct rq *rq, u64 wallclock)
 
 	nr_windows = div64_u64(delta, walt_ravg_window);
 	rq->window_start += (u64)nr_windows * (u64)walt_ravg_window;
+	cpufreq_update_util(rq, 0);
 }
 
 static u64 scale_exec_time(u64 delta, struct rq *rq)
@@ -796,11 +799,11 @@ void walt_set_window_start(struct rq *rq)
 	int cpu = cpu_of(rq);
 	struct rq *sync_rq = cpu_rq(sync_cpu);
 
-	if (rq->window_start)
+	if (likely(rq->window_start))
 		return;
 
 	if (cpu == sync_cpu) {
-		rq->window_start = walt_ktime_clock();
+		rq->window_start = 1;
 	} else {
 		raw_spin_unlock(&rq->lock);
 		double_rq_lock(rq, sync_rq);

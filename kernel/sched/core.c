@@ -1331,7 +1331,9 @@ static void __migrate_swap_task(struct task_struct *p, int cpu)
 		dst_rq = cpu_rq(cpu);
 
 		deactivate_task(src_rq, p, 0);
+		p->on_rq = TASK_ON_RQ_MIGRATING;
 		set_task_cpu(p, cpu);
+		p->on_rq = TASK_ON_RQ_QUEUED;
 		activate_task(dst_rq, p, 0);
 		check_preempt_curr(dst_rq, p, 0);
 	} else {
@@ -2992,20 +2994,20 @@ static void sched_freq_tick_pelt(int cpu)
 #ifdef CONFIG_SCHED_WALT
 static void sched_freq_tick_walt(int cpu)
 {
-	unsigned long cpu_utilization = cpu_util(cpu);
+	unsigned long cpu_utilization = cpu_util_freq(cpu);
 	unsigned long capacity_curr = capacity_curr_of(cpu);
 
 	if (walt_disabled || !sysctl_sched_use_walt_cpu_util)
 		return sched_freq_tick_pelt(cpu);
 
 	/*
-	 * Add a margin to the WALT utilization.
+	 * Add a margin to the WALT utilization to check if we will need to
+	 * increase frequency.
 	 * NOTE: WALT tracks a single CPU signal for all the scheduling
 	 * classes, thus this margin is going to be added to the DL class as
 	 * well, which is something we do not do in sched_freq_tick_pelt case.
 	 */
-	cpu_utilization = add_capacity_margin(cpu_utilization);
-	if (cpu_utilization <= capacity_curr)
+	if (add_capacity_margin(cpu_utilization) <= capacity_curr)
 		return;
 
 	/*
