@@ -77,8 +77,8 @@ function make_modules {
 function make_zip {
         cp -vr $ZIMAGE_DIR/$KERNEL $REPACK_DIR/zImage
         cd $REPACK_DIR
-        zip -r9 RenderZenith-"$VARIANT"-R.zip *
-        mv RenderZenith-"$VARIANT"-R.zip $ZIP_MOVE
+        zip -r9 RenderZenith-"$VARIANT"-V.zip *
+        mv RenderZenith-"$VARIANT"-V.zip $ZIP_MOVE
         cd $KERNEL_DIR
 }
 
@@ -89,17 +89,17 @@ echo "RenderZenith Creation Script:"
 echo -e "${restore}"
 
 echo "Pick Toolchain..."
-select choice in LINARO-aarch64-linux-gnu-4.9.4-012017 LINARO-aarch64-linux-gnu-6.3.1-052017 LINARO-aarch64-linux-gnu-7.1.1-052017
+select choice in LINARO-aarch64-linux-gnu-4.9.4-012017 LINARO-aarch64-linux-gnu-6.4.1-082017 LINARO-aarch64-linux-gnu-7.1.1-082017
 do
 case "$choice" in
     "LINARO-aarch64-linux-gnu-4.9.4-012017")
         export CROSS_COMPILE=${HOME}/android/source/toolchains/LINARO-aarch64-linux-gnu-4.9.4-012017/bin/aarch64-linux-gnu-
         break;;
-    "LINARO-aarch64-linux-gnu-6.3.1-052017")
-        export CROSS_COMPILE=${HOME}/android/source/toolchains/LINARO-aarch64-linux-gnu-6.3.1-052017/bin/aarch64-linux-gnu-
+    "LINARO-aarch64-linux-gnu-6.4.1-082017")
+        export CROSS_COMPILE=${HOME}/android/source/toolchains/LINARO-aarch64-linux-gnu-6.4.1-082017/bin/aarch64-linux-gnu-
         break;;
-    "LINARO-aarch64-linux-gnu-7.1.1-052017")
-        export CROSS_COMPILE=${HOME}/android/source/toolchains/LINARO-aarch64-linux-gnu-7.1.1-052017/bin/aarch64-linux-gnu-
+    "LINARO-aarch64-linux-gnu-7.1.1-082017")
+        export CROSS_COMPILE=${HOME}/android/source/toolchains/LINARO-aarch64-linux-gnu-7.1.1-082017/bin/aarch64-linux-gnu-
         break;;
 
 esac
