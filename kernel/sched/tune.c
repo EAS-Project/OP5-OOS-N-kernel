@@ -22,6 +22,8 @@ extern struct target_nrg schedtune_target_nrg;
 
 #ifdef CONFIG_DYNAMIC_STUNE_BOOST
 unsigned int top_app_idx = 0;
+int default_topapp_boost = 0;
+struct cgroup_subsys_state *topapp_css;
 #endif /* CONFIG_DYNAMIC_STUNE_BOOST */
 
 /* Performance Boost region (B) threshold params */
@@ -523,11 +525,6 @@ int schedtune_cpu_boost(int cpu)
 	struct boost_groups *bg;
 
 	bg = &per_cpu(cpu_boost_groups, cpu);
-
-#ifdef CONFIG_DYNAMIC_STUNE_BOOST
-	if (allocated_group[top_app_idx] != NULL && bg->group[top_app_idx].tasks > 0 && sched_dynamic_stune_boost > bg->boost_max)
-		return sched_dynamic_stune_boost;
-#endif /* CONFIG_DYNAMIC_STUNE_BOOST */
 	return bg->boost_max;
 }
 
@@ -591,6 +588,44 @@ boost_read(struct cgroup_subsys_state *css, struct cftype *cft)
 	return st->boost;
 }
 
+#ifdef CONFIG_DYNAMIC_STUNE_BOOST
+int
+dynamic_boost_write(struct cgroup_subsys_state *css, int boost)
+{
+	struct schedtune *st = css_st(css);
+	unsigned threshold_idx;
+	int boost_pct;
+
+	if (boost < -100 || boost > 100)
+		return -EINVAL;
+	boost_pct = boost;
+
+	/*
+	 * Update threshold params for Performance Boost (B)
+	 * and Performance Constraint (C) regions.
+	 * The current implementatio uses the same cuts for both
+	 * B and C regions.
+	 */
+	threshold_idx = clamp(boost_pct, 0, 99) / 10;
+	st->perf_boost_idx = threshold_idx;
+	st->perf_constrain_idx = threshold_idx;
+
+	st->boost = boost;
+	if (css == &root_schedtune.css) {
+		sysctl_sched_cfs_boost = boost;
+		perf_boost_idx  = threshold_idx;
+		perf_constrain_idx  = threshold_idx;
+	}
+
+	/* Update CPU boost */
+	schedtune_boostgroup_update(st->idx, st->boost);
+
+	trace_sched_tune_config(st->boost);
+
+	return 0;
+}
+#endif /* CONFIG_DYNAMIC_STUNE_BOOST */
+
 static int
 boost_write(struct cgroup_subsys_state *css, struct cftype *cft,
 	    s64 boost)
@@ -619,6 +654,12 @@ boost_write(struct cgroup_subsys_state *css, struct cftype *cft,
 		perf_boost_idx  = threshold_idx;
 		perf_constrain_idx  = threshold_idx;
 	}
+
+#ifdef CONFIG_DYNAMIC_STUNE_BOOST
+        // Remember default top-app boost value
+        if (st->idx == top_app_idx)
+                default_topapp_boost = boost;
+#endif /* CONFIG_DYNAMIC_STUNE_BOOST */
 
 	/* Update CPU boost */
 	schedtune_boostgroup_update(st->idx, st->boost);
@@ -664,8 +705,11 @@ schedtune_boostgroup_init(struct schedtune *st)
      * This observation is likely due to SchedTune cgroups being initialized in alphabetical order.
      * E.g. background, foreground, system-background, top-app (last)
      */
-	if (st->idx > top_app_idx)
+	if (st->idx > top_app_idx) {
 		top_app_idx = st->idx;
+                topapp_css = &st->css;
+                default_topapp_boost = st->boost;
+        }
 
 	pr_info("STUNE INIT: top app idx: %d\n", top_app_idx);
 #endif /* CONFIG_DYNAMIC_STUNE_BOOST */
