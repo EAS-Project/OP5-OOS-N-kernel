@@ -26,7 +26,7 @@
 #include <sound/tlv.h>
 #include <btfm_slim.h>
 
-int bt_soc_enable_status = 0;
+static int bt_soc_enable_status;
 
 
 static int btfm_slim_codec_write(struct snd_soc_codec *codec, unsigned int reg,
