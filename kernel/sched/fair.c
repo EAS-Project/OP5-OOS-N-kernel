@@ -5429,13 +5429,6 @@ static int group_idle_state(struct energy_env *eenv, struct sched_group *sg)
 	/* Take non-cpuidle idling into account (active idle/arch_cpu_idle()) */
 	state++;
 
-	/*
-	 * Try to estimate if a deeper idle state is
-	 * achievable when we move the task.
-	 */
-	for_each_cpu(i, sched_group_cpus(sg))
-		grp_util += cpu_util(i);
-
 	src_in_grp = cpumask_test_cpu(eenv->src_cpu, sched_group_cpus(sg));
 	dst_in_grp = cpumask_test_cpu(eenv->dst_cpu, sched_group_cpus(sg));
 	if (src_in_grp == dst_in_grp) {
@@ -5444,10 +5437,16 @@ static int group_idle_state(struct energy_env *eenv, struct sched_group *sg)
 		 */
 		goto end;
 	}
-	/* add or remove util as appropriate to indicate what group util
-	 * will be (worst case - no concurrent execution) after moving the task
+
+	/*
+	 * Try to estimate if a deeper idle state is
+	 * achievable when we move the task.
 	 */
-	grp_util += src_in_grp ? -eenv->util_delta : eenv->util_delta;
+	for_each_cpu(i, sched_group_cpus(sg)) {
+		grp_util += cpu_util_wake(i, eenv->task);
+		if (unlikely(i == eenv->trg_cpu))
+			grp_util += eenv->util_delta;
+	}
 
 	if (grp_util <=
 		((long)sg->sgc->max_capacity * (int)sg->group_weight)) {
@@ -5534,13 +5533,13 @@ static int sched_group_energy(struct energy_env *eenv)
 
 				if (sg->group_weight == 1) {
 					/* Remove capacity of src CPU (before task move) */
-					if (eenv->util_delta == 0 &&
+					if (eenv->trg_cpu == eenv->src_cpu &&
 					    cpumask_test_cpu(eenv->src_cpu, sched_group_cpus(sg))) {
 						eenv->cap.before = sg->sge->cap_states[cap_idx].cap;
 						eenv->cap.delta -= eenv->cap.before;
 					}
 					/* Add capacity of dst CPU  (after task move) */
-					if (eenv->util_delta != 0 &&
+					if (eenv->trg_cpu == eenv->dst_cpu &&
 					    cpumask_test_cpu(eenv->dst_cpu, sched_group_cpus(sg))) {
 						eenv->cap.after = sg->sge->cap_states[cap_idx].cap;
 						eenv->cap.delta += eenv->cap.after;
@@ -6312,7 +6311,9 @@ done:
 
 /*
  * cpu_util_wake: Compute cpu utilization with any contributions from
- * the waking task p removed.
+ * the waking task p removed.  check_for_migration() looks for a better CPU of
+ * rq->curr. For that case we should return cpu util with contributions from
+ * currently running task p removed.
  */
 static int cpu_util_wake(int cpu, struct task_struct *p)
 {
@@ -6325,7 +6326,8 @@ static int cpu_util_wake(int cpu, struct task_struct *p)
 	 * utilization from cpu utilization. Instead just use
 	 * cpu_util for this case.
 	 */
-	if (!walt_disabled && sysctl_sched_use_walt_cpu_util)
+	if (!walt_disabled && sysctl_sched_use_walt_cpu_util &&
+	    p->state == TASK_WAKING)
 		return cpu_util(cpu);
 #endif
 	/* Task has no contribution or is new */
@@ -6706,7 +6708,8 @@ static int select_energy_cpu_brute(struct task_struct *p, int prev_cpu, int sync
 
 
 #ifdef CONFIG_SCHED_WALT
-		if (!walt_disabled && sysctl_sched_use_walt_cpu_util)
+		if (!walt_disabled && sysctl_sched_use_walt_cpu_util &&
+			p->state == TASK_WAKING)
 			delta = task_util(p);
 #endif
 		/* Not enough spare capacity on previous cpu */
@@ -6720,6 +6723,7 @@ static int select_energy_cpu_brute(struct task_struct *p, int prev_cpu, int sync
 			/* No energy saving for target_cpu, try backup */
 			target_cpu = tmp_backup;
 			eenv.dst_cpu = target_cpu;
+			eenv.trg_cpu = target_cpu;
 			if (tmp_backup < 0 ||
 			    tmp_backup == prev_cpu ||
 			    energy_diff(&eenv) >= 0) {
@@ -9429,8 +9433,18 @@ static int active_load_balance_cpu_stop(void *data)
 	int busiest_cpu = cpu_of(busiest_rq);
 	int target_cpu = busiest_rq->push_cpu;
 	struct rq *target_rq = cpu_rq(target_cpu);
-	struct sched_domain *sd;
+	struct sched_domain *sd = NULL;
 	struct task_struct *p = NULL;
+	struct task_struct *push_task;
+	int push_task_detached = 0;
+	struct lb_env env = {
+		.sd		= sd,
+		.dst_cpu	= target_cpu,
+		.dst_rq		= target_rq,
+		.src_cpu	= busiest_rq->cpu,
+		.src_rq		= busiest_rq,
+		.idle		= CPU_IDLE,
+	};
 
 	raw_spin_lock_irq(&busiest_rq->lock);
 
@@ -9450,6 +9464,17 @@ static int active_load_balance_cpu_stop(void *data)
 	 */
 	BUG_ON(busiest_rq == target_rq);
 
+	push_task = busiest_rq->push_task;
+	if (push_task) {
+		if (task_on_rq_queued(push_task) &&
+			task_cpu(push_task) == busiest_cpu &&
+					cpu_online(target_cpu)) {
+			detach_task(push_task, &env);
+			push_task_detached = 1;
+		}
+		goto out_unlock;
+	}
+
 	/* Search for an sd spanning us and the target CPU. */
 	rcu_read_lock();
 	for_each_domain(target_cpu, sd) {
@@ -9459,15 +9484,7 @@ static int active_load_balance_cpu_stop(void *data)
 	}
 
 	if (likely(sd)) {
-		struct lb_env env = {
-			.sd		= sd,
-			.dst_cpu	= target_cpu,
-			.dst_rq		= target_rq,
-			.src_cpu	= busiest_rq->cpu,
-			.src_rq		= busiest_rq,
-			.idle		= CPU_IDLE,
-		};
-
+		env.sd = sd;
 		schedstat_inc(sd, alb_count);
 		update_rq_clock(busiest_rq);
 
@@ -9485,7 +9502,17 @@ static int active_load_balance_cpu_stop(void *data)
 	rcu_read_unlock();
 out_unlock:
 	busiest_rq->active_balance = 0;
+
+	if (push_task)
+		busiest_rq->push_task = NULL;
+
 	raw_spin_unlock(&busiest_rq->lock);
+
+	if (push_task) {
+		if (push_task_detached)
+			attach_one_task(target_rq, push_task);
+		put_task_struct(push_task);
+	}
 
 	if (p)
 		attach_one_task(target_rq, p);
@@ -9949,6 +9976,47 @@ static void rq_offline_fair(struct rq *rq)
 
 	/* Ensure any throttled groups are reachable by pick_next_task */
 	unthrottle_offline_cfs_rqs(rq);
+}
+
+static inline int
+kick_active_balance(struct rq *rq, struct task_struct *p, int new_cpu)
+{
+	int rc = 0;
+
+	/* Invoke active balance to force migrate currently running task */
+	raw_spin_lock(&rq->lock);
+	if (!rq->active_balance) {
+		rq->active_balance = 1;
+		rq->push_cpu = new_cpu;
+		get_task_struct(p);
+		rq->push_task = p;
+		rc = 1;
+	}
+	raw_spin_unlock(&rq->lock);
+
+	return rc;
+}
+
+void check_for_migration(struct rq *rq, struct task_struct *p)
+{
+	int new_cpu;
+	int active_balance;
+	int cpu = task_cpu(p);
+
+	if (rq->misfit_task) {
+		if (rq->curr->state != TASK_RUNNING ||
+		    rq->curr->nr_cpus_allowed == 1)
+			return;
+
+		new_cpu = select_energy_cpu_brute(p, cpu, 0);
+		if (capacity_orig_of(new_cpu) > capacity_orig_of(cpu)) {
+			active_balance = kick_active_balance(rq, p, new_cpu);
+			if (active_balance)
+				stop_one_cpu_nowait(cpu,
+						active_load_balance_cpu_stop,
+						rq, &rq->active_balance_work);
+		}
+	}
 }
 
 #endif /* CONFIG_SMP */
