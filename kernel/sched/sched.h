@@ -1212,19 +1212,38 @@ static const u32 prio_to_wmult[40] = {
  /*  15 */ 119304647, 148102320, 186737708, 238609294, 286331153,
 };
 
+/*
+ * {de,en}queue flags:
+ *
+ * DEQUEUE_SLEEP  - task is no longer runnable
+ * ENQUEUE_WAKEUP - task just became runnable
+ *
+ * SAVE/RESTORE - an otherwise spurious dequeue/enqueue, done to ensure tasks
+ *                are in a known state which allows modification. Such pairs
+ *                should preserve as much state as possible.
+ *
+ * MOVE - paired with SAVE/RESTORE, explicitly does not preserve the location
+ *        in the runqueue.
+ *
+ * ENQUEUE_HEAD      - place at front of runqueue (tail if not specified)
+ * ENQUEUE_REPLENISH - CBS (replenish runtime and postpone deadline)
+ * ENQUEUE_WAKING    - sched_class::task_waking was called
+ *
+ */
+#define DEQUEUE_SLEEP		0x01
+#define DEQUEUE_SAVE		0x02 /* matches ENQUEUE_RESTORE */
+#define DEQUEUE_MOVE		0x04 /* matches ENQUEUE_MOVE */
 #define ENQUEUE_WAKEUP		0x01
-#define ENQUEUE_HEAD		0x02
+#define ENQUEUE_RESTORE		0x02
+#define ENQUEUE_MOVE		0x04
+#define ENQUEUE_HEAD		0x08
+#define ENQUEUE_REPLENISH	0x10
 #ifdef CONFIG_SMP
-#define ENQUEUE_WAKING		0x04	/* sched_class::task_waking was called */
+#define ENQUEUE_WAKING		0x20
 #else
 #define ENQUEUE_WAKING		0x00
 #endif
-#define ENQUEUE_REPLENISH	0x08
-#define ENQUEUE_RESTORE	0x10
-#define ENQUEUE_WAKEUP_NEW	0x20
-
-#define DEQUEUE_SLEEP		0x01
-#define DEQUEUE_SAVE		0x02
+#define ENQUEUE_WAKEUP_NEW	0x40
 
 #define RETRY_TASK		((void *)-1UL)
 
@@ -1621,6 +1640,10 @@ static inline bool sched_freq(void)
 	return static_key_false(&__sched_freq);
 }
 
+/*
+ * sched_capacity_reqs expects capacity requests to be normalised.
+ * All capacities should sum to the range of 0-1024.
+ */
 DECLARE_PER_CPU(struct sched_capacity_reqs, cpu_sched_capacity_reqs);
 void update_cpu_capacity_request(int cpu, bool request);
 
@@ -2092,3 +2115,8 @@ static inline void cpufreq_update_this_cpu(struct rq *rq, unsigned int flags) {}
 #else /* arch_scale_freq_capacity */
 #define arch_scale_freq_invariant()     (false)
 #endif
+
+/*
+ * task_may_not_preempt - check whether a task may not be preemptible soon
+ */
+extern bool task_may_not_preempt(struct task_struct *task, int cpu);
