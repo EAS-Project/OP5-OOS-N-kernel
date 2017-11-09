@@ -331,7 +331,6 @@ static inline u64 timekeeping_delta_to_ns(struct tk_read_base *tkr,
 static inline s64 timekeeping_get_ns(struct tk_read_base *tkr)
 {
 	cycle_t delta;
-	u64 nsec;
 
 	delta = timekeeping_get_delta(tkr);
 	return timekeeping_delta_to_ns(tkr, delta);
